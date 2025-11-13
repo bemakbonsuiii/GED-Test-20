@@ -4,7 +4,16 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { Trash2, Plus, Tag, X } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Trash2, Plus, Tag, X, Target, CheckCircle2, Zap } from "lucide-react";
+
+type TodoType = "Task" | "Deliverable" | "Quick Win";
 
 interface Todo {
   id: string;
@@ -12,6 +21,7 @@ interface Todo {
   completed: boolean;
   createdAt: number;
   tags: string[];
+  type: TodoType;
 }
 
 type FilterType = "all" | "active" | "completed";
@@ -29,11 +39,21 @@ const TAG_COLORS = [
   "bg-cyan-500",
 ];
 
+const TODO_TYPE_CONFIG: Record<
+  TodoType,
+  { icon: React.ComponentType<{ className?: string }>; color: string }
+> = {
+  Task: { icon: CheckCircle2, color: "bg-blue-500" },
+  Deliverable: { icon: Target, color: "bg-purple-500" },
+  "Quick Win": { icon: Zap, color: "bg-green-500" },
+};
+
 const Home = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [filter, setFilter] = useState<FilterType>("all");
   const [selectedTagFilter, setSelectedTagFilter] = useState<string | null>(null);
+  const [selectedTypeFilter, setSelectedTypeFilter] = useState<TodoType | null>(null);
   const [tagInput, setTagInput] = useState("");
   const [editingTodoId, setEditingTodoId] = useState<string | null>(null);
 
@@ -45,6 +65,7 @@ const Home = () => {
         const migrated = parsed.map((todo: any) => ({
           ...todo,
           tags: todo.tags || [],
+          type: todo.type || "Task",
         }));
         setTodos(migrated);
       } catch (e) {
@@ -84,6 +105,7 @@ const Home = () => {
       completed: false,
       createdAt: Date.now(),
       tags: [],
+      type: "Task",
     };
 
     setTodos([newTodo, ...todos]);
@@ -103,6 +125,12 @@ const Home = () => {
     if (editingTodoId === id) {
       setEditingTodoId(null);
     }
+  };
+
+  const updateTodoType = (id: string, type: TodoType) => {
+    setTodos(
+      todos.map((todo) => (todo.id === id ? { ...todo, type } : todo))
+    );
   };
 
   const addTagToTodo = (todoId: string, tag: string) => {
@@ -142,12 +170,16 @@ const Home = () => {
     if (filter === "active" && todo.completed) return false;
     if (filter === "completed" && !todo.completed) return false;
     if (selectedTagFilter && !todo.tags.includes(selectedTagFilter)) return false;
+    if (selectedTypeFilter && todo.type !== selectedTypeFilter) return false;
     return true;
   });
 
   const activeCount = todos.filter((todo) => !todo.completed).length;
   const completedCount = todos.filter((todo) => todo.completed).length;
   const allTags = getAllTags();
+
+  const typeCount = (type: TodoType) =>
+    todos.filter((todo) => todo.type === type).length;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 py-12 px-4">
@@ -213,6 +245,34 @@ const Home = () => {
               )}
             </div>
 
+            <div className="space-y-2">
+              <div className="text-sm text-muted-foreground">Filter by type:</div>
+              <div className="flex gap-2 flex-wrap">
+                <Button
+                  variant={selectedTypeFilter === null ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedTypeFilter(null)}
+                >
+                  All Types
+                </Button>
+                {(Object.keys(TODO_TYPE_CONFIG) as TodoType[]).map((type) => {
+                  const Icon = TODO_TYPE_CONFIG[type].icon;
+                  return (
+                    <Button
+                      key={type}
+                      variant={selectedTypeFilter === type ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setSelectedTypeFilter(type)}
+                      className="gap-1.5"
+                    >
+                      <Icon className="h-3.5 w-3.5" />
+                      {type} ({typeCount(type)})
+                    </Button>
+                  );
+                })}
+              </div>
+            </div>
+
             {allTags.length > 0 && (
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -254,102 +314,135 @@ const Home = () => {
                     ? "No completed tasks yet."
                     : selectedTagFilter
                     ? `No tasks with tag "${selectedTagFilter}"`
+                    : selectedTypeFilter
+                    ? `No ${selectedTypeFilter} tasks`
                     : "No tasks yet. Add one to get started!"}
                 </div>
               ) : (
-                filteredTodos.map((todo) => (
-                  <div
-                    key={todo.id}
-                    className="p-3 rounded-lg border bg-background hover:bg-accent/50 transition-colors group"
-                  >
-                    <div className="flex items-start gap-3">
-                      <Checkbox
-                        checked={todo.completed}
-                        onCheckedChange={() => toggleTodo(todo.id)}
-                        className="mt-0.5"
-                      />
-                      <div className="flex-1 space-y-2">
-                        <span
-                          className={`block ${
-                            todo.completed
-                              ? "line-through text-muted-foreground"
-                              : "text-foreground"
-                          }`}
-                        >
-                          {todo.text}
-                        </span>
-                        <div className="flex flex-wrap gap-1.5">
-                          {todo.tags.map((tag) => (
-                            <Badge
-                              key={tag}
-                              variant="secondary"
-                              className="gap-1 pr-1 text-xs"
+                filteredTodos.map((todo) => {
+                  const TypeIcon = TODO_TYPE_CONFIG[todo.type].icon;
+                  return (
+                    <div
+                      key={todo.id}
+                      className="p-3 rounded-lg border bg-background hover:bg-accent/50 transition-colors group"
+                    >
+                      <div className="flex items-start gap-3">
+                        <Checkbox
+                          checked={todo.completed}
+                          onCheckedChange={() => toggleTodo(todo.id)}
+                          className="mt-0.5"
+                        />
+                        <div className="flex-1 space-y-2">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span
+                              className={`flex-1 ${
+                                todo.completed
+                                  ? "line-through text-muted-foreground"
+                                  : "text-foreground"
+                              }`}
                             >
-                              <span
-                                className={`h-2 w-2 rounded-full ${getTagColor(tag)}`}
-                              />
-                              {tag}
-                              <button
-                                onClick={() => removeTagFromTodo(todo.id, tag)}
-                                className="ml-1 hover:bg-background/50 rounded-full p-0.5"
-                              >
-                                <X className="h-3 w-3" />
-                              </button>
-                            </Badge>
-                          ))}
-                          {editingTodoId === todo.id ? (
-                            <form
-                              onSubmit={(e) => {
-                                e.preventDefault();
-                                addTagToTodo(todo.id, tagInput);
-                              }}
-                              className="flex gap-1"
+                              {todo.text}
+                            </span>
+                            <Select
+                              value={todo.type}
+                              onValueChange={(value: TodoType) =>
+                                updateTodoType(todo.id, value)
+                              }
                             >
-                              <Input
-                                type="text"
-                                placeholder="Tag name..."
-                                value={tagInput}
-                                onChange={(e) => setTagInput(e.target.value)}
-                                className="h-6 text-xs w-24"
-                                autoFocus
-                                onBlur={() => {
-                                  if (!tagInput.trim()) {
-                                    setEditingTodoId(null);
+                              <SelectTrigger className="w-auto h-7 text-xs gap-1.5 border-0 bg-muted/50 hover:bg-muted">
+                                <TypeIcon className="h-3.5 w-3.5" />
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {(Object.keys(TODO_TYPE_CONFIG) as TodoType[]).map(
+                                  (type) => {
+                                    const Icon = TODO_TYPE_CONFIG[type].icon;
+                                    return (
+                                      <SelectItem key={type} value={type}>
+                                        <div className="flex items-center gap-2">
+                                          <Icon className="h-4 w-4" />
+                                          {type}
+                                        </div>
+                                      </SelectItem>
+                                    );
                                   }
+                                )}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="flex flex-wrap gap-1.5">
+                            {todo.tags.map((tag) => (
+                              <Badge
+                                key={tag}
+                                variant="secondary"
+                                className="gap-1 pr-1 text-xs"
+                              >
+                                <span
+                                  className={`h-2 w-2 rounded-full ${getTagColor(tag)}`}
+                                />
+                                {tag}
+                                <button
+                                  onClick={() => removeTagFromTodo(todo.id, tag)}
+                                  className="ml-1 hover:bg-background/50 rounded-full p-0.5"
+                                >
+                                  <X className="h-3 w-3" />
+                                </button>
+                              </Badge>
+                            ))}
+                            {editingTodoId === todo.id ? (
+                              <form
+                                onSubmit={(e) => {
+                                  e.preventDefault();
+                                  addTagToTodo(todo.id, tagInput);
                                 }}
-                              />
+                                className="flex gap-1"
+                              >
+                                <Input
+                                  type="text"
+                                  placeholder="Tag name..."
+                                  value={tagInput}
+                                  onChange={(e) => setTagInput(e.target.value)}
+                                  className="h-6 text-xs w-24"
+                                  autoFocus
+                                  onBlur={() => {
+                                    if (!tagInput.trim()) {
+                                      setEditingTodoId(null);
+                                    }
+                                  }}
+                                />
+                                <Button
+                                  type="submit"
+                                  size="sm"
+                                  className="h-6 px-2 text-xs"
+                                >
+                                  Add
+                                </Button>
+                              </form>
+                            ) : (
                               <Button
-                                type="submit"
+                                variant="outline"
                                 size="sm"
                                 className="h-6 px-2 text-xs"
+                                onClick={() => setEditingTodoId(todo.id)}
                               >
-                                Add
+                                <Plus className="h-3 w-3 mr-1" />
+                                Tag
                               </Button>
-                            </form>
-                          ) : (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="h-6 px-2 text-xs"
-                              onClick={() => setEditingTodoId(todo.id)}
-                            >
-                              <Plus className="h-3 w-3 mr-1" />
-                              Tag
-                            </Button>
-                          )}
+                            )}
+                          </div>
                         </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => deleteTodo(todo.id)}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8"
+                        >
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                        </Button>
                       </div>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => deleteTodo(todo.id)}
-                        className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8"
-                      >
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                      </Button>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
           </CardContent>
