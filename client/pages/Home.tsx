@@ -481,12 +481,12 @@ const Home = () => {
                         <div className="flex-1 min-w-0">
                           <div className="font-medium text-sm truncate">{meeting.text}</div>
                           <div className="flex items-center gap-2 mt-1 flex-wrap">
-                            {meeting.dueDate && (
-                              <Badge variant="outline" className="text-xs gap-1">
-                                <CalendarIcon className="h-3 w-3" />
-                                {format(new Date(meeting.dueDate), "MMM d")}
-                              </Badge>
-                            )}
+                            <Badge variant="outline" className="text-xs gap-1">
+                              <CalendarIcon className="h-3 w-3" />
+                              {meeting.dueDate
+                                ? format(new Date(meeting.dueDate), "MMM d")
+                                : "No date"}
+                            </Badge>
                             {meeting.meetingTime && (
                               <Badge variant="outline" className="text-xs gap-1">
                                 <Clock className="h-3 w-3" />
