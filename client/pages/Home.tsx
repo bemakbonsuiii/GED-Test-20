@@ -50,6 +50,7 @@ interface Todo {
   createdAt: number;
   type: TodoType;
   dueDate?: number;
+  dueTime?: string;
   project?: string;
   workspace: WorkspaceType;
   priority: Priority;
@@ -90,6 +91,7 @@ const Home = () => {
   const [newTodoIsEOD, setNewTodoIsEOD] = useState(false);
   const [newTodoAgenda, setNewTodoAgenda] = useState("");
   const [newTodoMeetingTime, setNewTodoMeetingTime] = useState("");
+  const [newTodoDueTime, setNewTodoDueTime] = useState("");
 
   useEffect(() => {
     const saved = localStorage.getItem("todos");
@@ -106,6 +108,7 @@ const Home = () => {
           isEOD: todo.isEOD || false,
           agenda: todo.agenda,
           meetingTime: todo.meetingTime,
+          dueTime: todo.dueTime,
         }));
         setTodos(migrated);
       } catch (e) {
@@ -154,6 +157,11 @@ const Home = () => {
       const dateWithTime = new Date(newTodoDueDate);
       dateWithTime.setHours(parseInt(hours), parseInt(minutes));
       dueDateTime = dateWithTime.getTime();
+    } else if (newTodoType !== "Meeting" && newTodoDueDate && newTodoDueTime) {
+      const [hours, minutes] = newTodoDueTime.split(":");
+      const dateWithTime = new Date(newTodoDueDate);
+      dateWithTime.setHours(parseInt(hours), parseInt(minutes));
+      dueDateTime = dateWithTime.getTime();
     }
 
     const newTodo: Todo = {
@@ -164,6 +172,7 @@ const Home = () => {
       type: newTodoType,
       workspace: getActualWorkspace(),
       dueDate: dueDateTime,
+      dueTime: newTodoType !== "Meeting" ? (newTodoDueTime || undefined) : undefined,
       project: newTodoProject || undefined,
       priority: newTodoPriority,
       isEOD: newTodoIsEOD,
@@ -183,6 +192,7 @@ const Home = () => {
     setNewTodoIsEOD(false);
     setNewTodoAgenda("");
     setNewTodoMeetingTime("");
+    setNewTodoDueTime("");
   };
 
   const toggleTodo = (id: string) => {
