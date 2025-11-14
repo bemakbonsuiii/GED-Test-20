@@ -193,6 +193,12 @@ const Home = () => {
     setNewTodoWorkspace(parent.workspace);
     setNewTodoText("");
     setNewTodoType(allowedTypes[0]); // Default to first allowed type
+
+    // Inherit parent's due date, project, and priority
+    setNewTodoDueDate(parent.dueDate ? new Date(parent.dueDate) : undefined);
+    setNewTodoProject(parent.project || "");
+    setNewTodoPriority(parent.priority);
+
     setDialogStep("type");
     setIsCreateDialogOpen(true);
   };
