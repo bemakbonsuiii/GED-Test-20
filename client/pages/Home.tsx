@@ -765,6 +765,7 @@ const Home = () => {
                       setNewTodoIsEOD(false);
                       setNewTodoAgenda("");
                       setNewTodoMeetingTime("");
+                      setNewTodoDueTime("");
                     }}
                   >
                     Cancel
@@ -969,6 +970,7 @@ const Home = () => {
                       setNewTodoIsEOD(false);
                       setNewTodoAgenda("");
                       setNewTodoMeetingTime("");
+                      setNewTodoDueTime("");
                     }}
                   >
                     Cancel
