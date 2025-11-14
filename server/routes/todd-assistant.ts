@@ -70,18 +70,25 @@ SUGGESTIONS: ["todo-id-1", "todo-id-2"]
 Be concise but friendly. Address the user's specific question.`;
 
     const eodItems = incompleteTodos.filter(t => t.isEOD);
+    const now = Date.now();
+    const futureStartItems = incompleteTodos.filter(t => t.startDate && t.startDate > now);
 
-    const userPrompt = `${eodItems.length > 0 ? `⚠️ URGENT EOD ITEMS (must complete today): ${eodItems.length}\n` : ''}Current todos:
-${JSON.stringify(incompleteTodos.slice(0, 50).map(t => ({
-  id: t.id,
-  text: t.text,
-  type: t.type,
-  priority: t.priority,
-  dueDate: t.dueDate,
-  isEOD: t.isEOD ? "⚠️ EOD - URGENT" : false,
-  isPriority: t.isPriority,
-  project: t.project
-})), null, 2)}
+    const userPrompt = `${eodItems.length > 0 ? `⚠️ URGENT EOD ITEMS (must complete today): ${eodItems.length}\n` : ''}${futureStartItems.length > 0 ? `⏳ FUTURE START ITEMS (cannot start yet): ${futureStartItems.length}\n` : ''}Current todos:
+${JSON.stringify(incompleteTodos.slice(0, 50).map(t => {
+  const canStart = !t.startDate || t.startDate <= now;
+  return {
+    id: t.id,
+    text: t.text,
+    type: t.type,
+    priority: t.priority,
+    startDate: t.startDate,
+    canStartNow: canStart ? true : `⏳ CANNOT START UNTIL ${new Date(t.startDate!).toLocaleDateString()}`,
+    dueDate: t.dueDate,
+    isEOD: t.isEOD ? "⚠️ EOD - URGENT" : false,
+    isPriority: t.isPriority,
+    project: t.project
+  };
+}), null, 2)}
 
 Current priority list:
 ${priorityTodos.length > 0 ? JSON.stringify(priorityTodos.map(t => ({
