@@ -1430,7 +1430,6 @@ const Home = () => {
           {/* Project Pages Navigation */}
           {workspace !== "everything" && (() => {
             const currentWorkspaceProjects = getWorkspaceProjects(workspace as WorkspaceType);
-            if (currentWorkspaceProjects.length === 0) return null;
 
             return (
               <div className="flex justify-center mb-6">
@@ -1443,13 +1442,15 @@ const Home = () => {
                   </CardHeader>
                   <CardContent>
                     <div className="flex flex-wrap gap-2">
-                      <Button
-                        variant={selectedProjectPage === null ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setSelectedProjectPage(null)}
-                      >
-                        All {workspace.charAt(0).toUpperCase() + workspace.slice(1)} To-Dos
-                      </Button>
+                      {currentWorkspaceProjects.length > 0 && (
+                        <Button
+                          variant={selectedProjectPage === null ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setSelectedProjectPage(null)}
+                        >
+                          All {workspace.charAt(0).toUpperCase() + workspace.slice(1)} To-Dos
+                        </Button>
+                      )}
                       <Button
                         variant="outline"
                         size="sm"
