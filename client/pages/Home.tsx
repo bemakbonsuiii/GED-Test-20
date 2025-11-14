@@ -1034,7 +1034,7 @@ const Home = () => {
                     />
                     <datalist id={`workspace-projects-${todo.workspace}`}>
                       {getWorkspaceProjects(todo.workspace).map((proj) => (
-                        <option key={proj} value={proj} />
+                        <option key={proj.id} value={proj.name} />
                       ))}
                     </datalist>
                     <Button type="submit" size="sm" className="h-6 px-2 text-xs">
@@ -1451,19 +1451,28 @@ const Home = () => {
                       >
                         All {workspace.charAt(0).toUpperCase() + workspace.slice(1)} To-Dos
                       </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => openCreateProjectDialog(workspace as WorkspaceType)}
+                        className="gap-2 border-dashed"
+                      >
+                        <Plus className="h-3 w-3" />
+                        New Project
+                      </Button>
                       {currentWorkspaceProjects.map((project) => {
-                        const projectTodosCount = todos.filter(t => t.project === project && t.workspace === workspace).length;
-                        const activeTodosCount = todos.filter(t => t.project === project && t.workspace === workspace && !t.completed).length;
+                        const projectTodosCount = todos.filter(t => t.project === project.name && t.workspace === workspace).length;
+                        const activeTodosCount = todos.filter(t => t.project === project.name && t.workspace === workspace && !t.completed).length;
                         return (
                           <Button
-                            key={project}
-                            variant={selectedProjectPage === project ? "default" : "outline"}
+                            key={project.id}
+                            variant={selectedProjectPage === project.name ? "default" : "outline"}
                             size="sm"
-                            onClick={() => setSelectedProjectPage(project)}
+                            onClick={() => setSelectedProjectPage(project.name)}
                             className="gap-2"
                           >
                             <Briefcase className="h-3 w-3" />
-                            {project}
+                            {project.name}
                             <Badge variant="secondary" className="ml-1 text-xs">
                               {activeTodosCount}/{projectTodosCount}
                             </Badge>
@@ -2956,7 +2965,7 @@ const Home = () => {
                     />
                     <datalist id={`edit-workspace-projects-${editingTodo.workspace}`}>
                       {getWorkspaceProjects(editingTodo.workspace).map((proj) => (
-                        <option key={proj} value={proj} />
+                        <option key={proj.id} value={proj.name} />
                       ))}
                     </datalist>
                     <p className="text-xs text-muted-foreground">
