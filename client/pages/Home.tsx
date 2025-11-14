@@ -173,6 +173,7 @@ const Home = () => {
   const [isDeadlinesExpanded, setIsDeadlinesExpanded] = useState(true);
   const [isFiltersExpanded, setIsFiltersExpanded] = useState(true);
   const [isTasksExpanded, setIsTasksExpanded] = useState(true);
+  const [isMetricsExpanded, setIsMetricsExpanded] = useState(true);
   const [newProjectName, setNewProjectName] = useState("");
   const [newProjectDescription, setNewProjectDescription] = useState("");
   const [newProjectWorkspace, setNewProjectWorkspace] = useState<WorkspaceType>("personal");
@@ -954,6 +955,88 @@ Return ONLY the todo IDs, no explanation needed.`;
       ? todos
       : todos.filter((todo) => todo.workspace === workspace);
     return allWorkspaceTodos.filter((todo) => todo.type === type).length;
+  };
+
+  // Metrics calculations
+  const getDailyTasksMetrics = () => {
+    const now = Date.now();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999);
+
+    const dailyTasks = todos.filter(t => {
+      if (t.completed) return false;
+      // EOD items
+      if (t.isEOD) return true;
+      // Items due today
+      if (t.dueDate) {
+        const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+        return dueTime >= today.getTime() && dueTime <= todayEnd.getTime();
+      }
+      return false;
+    });
+
+    const completedToday = todos.filter(t => {
+      if (!t.completed) return false;
+      if (t.isEOD) return true;
+      if (t.dueDate) {
+        const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+        return dueTime >= today.getTime() && dueTime <= todayEnd.getTime();
+      }
+      return false;
+    });
+
+    return {
+      total: dailyTasks.length,
+      completed: completedToday.length,
+      percentage: (dailyTasks.length + completedToday.length) > 0 ? Math.round((completedToday.length / (dailyTasks.length + completedToday.length)) * 100) : 0
+    };
+  };
+
+  const getActionableTasksMetrics = () => {
+    const now = Date.now();
+    const actionableTasks = todos.filter(t => {
+      if (t.completed) return false;
+      // No start date or start date has passed
+      return !t.startDate || t.startDate <= now;
+    });
+
+    const totalIncompleteTasks = todos.filter(t => !t.completed);
+
+    return {
+      actionable: actionableTasks.length,
+      total: totalIncompleteTasks.length,
+      percentage: totalIncompleteTasks.length > 0 ? Math.round((actionableTasks.length / totalIncompleteTasks.length) * 100) : 0
+    };
+  };
+
+  const getProjectsMetrics = () => {
+    const workspaceTypes: WorkspaceType[] = ['personal', 'work', 'creative'];
+    return workspaceTypes.map(ws => {
+      const wsProjects = projects.filter(p => p.workspace === ws);
+      const projectsData = wsProjects.map(project => {
+        const projectTodos = todos.filter(t => t.project === project.name && t.workspace === ws);
+        const completed = projectTodos.filter(t => t.completed).length;
+        return {
+          name: project.name,
+          total: projectTodos.length,
+          completed,
+          percentage: projectTodos.length > 0 ? Math.round((completed / projectTodos.length) * 100) : 0
+        };
+      });
+
+      const totalTodos = projectsData.reduce((acc, p) => acc + p.total, 0);
+      const totalCompleted = projectsData.reduce((acc, p) => acc + p.completed, 0);
+
+      return {
+        workspace: ws,
+        projects: projectsData,
+        overall: totalTodos > 0 ? Math.round((totalCompleted / totalTodos) * 100) : 0,
+        totalTodos,
+        totalCompleted
+      };
+    });
   };
 
   const SortablePriorityItem = ({ todo }: { todo: Todo }) => {
