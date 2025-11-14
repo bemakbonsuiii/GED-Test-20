@@ -1254,19 +1254,6 @@ const Home = () => {
                     <CardTitle>My Tasks</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-6">
-                        <form onSubmit={addTodo} className="flex gap-2">
-                          <Input
-                            type="text"
-                            placeholder="Add a new to-do..."
-                            value={inputValue}
-                            onChange={(e) => setInputValue(e.target.value)}
-                            className="flex-1"
-                          />
-                          <Button type="submit" size="icon">
-                            <Plus className="h-4 w-4" />
-                          </Button>
-                        </form>
-
                         <div className="flex gap-2 flex-wrap">
                           <Button
                             variant={filter === "all" ? "default" : "outline"}
