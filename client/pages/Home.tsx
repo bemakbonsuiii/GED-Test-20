@@ -867,7 +867,12 @@ const Home = () => {
                           onCheckedChange={() => toggleTodo(meeting.id)}
                         />
                         <div className="flex-1 min-w-0">
-                          <div className="font-medium text-sm break-words">{meeting.text}</div>
+                          <div
+                            className="font-medium text-sm break-words cursor-pointer hover:underline"
+                            onClick={() => openEditDialog(meeting)}
+                          >
+                            {meeting.text}
+                          </div>
                           <div className="flex items-center gap-2 mt-1 flex-wrap">
                             <Badge variant="outline" className="text-xs gap-1">
                               <CalendarIcon className="h-3 w-3" />
