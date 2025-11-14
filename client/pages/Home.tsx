@@ -2036,6 +2036,52 @@ const Home = () => {
             ) : (
               <>
                 <div className="space-y-4 py-4">
+                  {newTodoType !== "Meeting" && (
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Start Date (Optional)</label>
+                      <div className="flex gap-2">
+                        <Popover modal={true}>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className="w-full justify-start text-left font-normal"
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4" />
+                              {newTodoStartDate ? (
+                                format(newTodoStartDate, "PPP")
+                              ) : (
+                                <span>Pick a start date</span>
+                              )}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent
+                            className="w-auto p-0"
+                            align="start"
+                          >
+                            <Calendar
+                              mode="single"
+                              selected={newTodoStartDate}
+                              onSelect={(date) => setNewTodoStartDate(date)}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                        {newTodoStartDate && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setNewTodoStartDate(undefined)}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        )}
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        First date you can take action on this item
+                      </p>
+                    </div>
+                  )}
+
                   <div className="space-y-2">
                     <label className="text-sm font-medium">Due Date</label>
                     <div className="flex gap-2">
