@@ -832,6 +832,22 @@ const Home = () => {
                     </div>
                   )}
 
+                  {newTodoType !== "Meeting" && newTodoDueDate && (
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Due Time (Optional)</label>
+                      <Input
+                        type="time"
+                        value={newTodoDueTime}
+                        onChange={(e) => setNewTodoDueTime(e.target.value)}
+                      />
+                      {!newTodoDueTime && (
+                        <p className="text-xs text-muted-foreground">
+                          Optional: Set specific time for due date
+                        </p>
+                      )}
+                    </div>
+                  )}
+
                   <div className="space-y-2">
                     <label className="text-sm font-medium">Project</label>
                     {allProjects.length > 0 && !isCreatingNewProject ? (
