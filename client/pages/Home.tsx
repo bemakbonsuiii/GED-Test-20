@@ -889,8 +889,6 @@ const Home = () => {
                             mode="single"
                             selected={newTodoDueDate}
                             onSelect={(date) => {
-                              console.log('Date selected:', date);
-                              console.log('Current newTodoDueDate:', newTodoDueDate);
                               if (date) {
                                 setNewTodoDueDate(date);
                                 setDatePopoverOpen(false);
