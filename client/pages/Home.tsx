@@ -39,7 +39,8 @@ import {
 import { format, isPast, isToday, isTomorrow, differenceInDays } from "date-fns";
 
 type TodoType = "Task" | "Deliverable" | "Quick Win" | "Meeting";
-type Workspace = "personal" | "work" | "creative" | "everything";
+type WorkspaceType = "personal" | "work" | "creative";
+type Workspace = WorkspaceType | "everything";
 type Priority = "P0" | "P1" | "P2";
 
 interface Todo {
@@ -50,7 +51,7 @@ interface Todo {
   type: TodoType;
   dueDate?: number;
   project?: string;
-  workspace: Workspace;
+  workspace: WorkspaceType;
   priority: Priority;
   isEOD: boolean;
   agenda?: string;
