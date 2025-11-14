@@ -885,6 +885,7 @@ const Home = () => {
                             mode="single"
                             selected={newTodoDueDate}
                             onSelect={(date) => {
+                              console.log('Date selected:', date);
                               setNewTodoDueDate(date);
                             }}
                             initialFocus
