@@ -60,6 +60,8 @@ import {
   GripVertical,
   Sparkles,
   Send,
+  ChevronUp,
+  ChevronDown,
 } from "lucide-react";
 import { format, isPast, isToday, isTomorrow, differenceInDays } from "date-fns";
 
