@@ -66,6 +66,7 @@ import {
 import { format, isPast, isToday, isTomorrow, differenceInDays } from "date-fns";
 import { MetricsWidget } from "../components/MetricsWidget";
 import { CircularScore } from "../components/CircularScore";
+import { AlertsWidget } from "../components/AlertsWidget";
 
 type TodoType = "Task" | "Deliverable" | "Quick Win" | "Meeting";
 type WorkspaceType = "personal" | "work" | "creative";
