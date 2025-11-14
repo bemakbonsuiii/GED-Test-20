@@ -1246,11 +1246,12 @@ const Home = () => {
                     })
                     .map((type) => {
                     const Icon = TODO_TYPE_CONFIG[type].icon;
+                    const typeConfig = TODO_TYPE_CONFIG[type];
                     return (
                       <Button
                         key={type}
                         variant={newTodoType === type ? "default" : "outline"}
-                        className="w-full justify-start h-auto py-4"
+                        className={`w-full justify-start h-auto py-4 border-2 ${newTodoType === type ? '' : `${typeConfig.borderLight} ${typeConfig.borderDark} ${typeConfig.bgLight} ${typeConfig.bgDark}`}`}
                         onClick={() => {
                           if (creatingChildForId && !newTodoText.trim()) {
                             return; // Don't proceed without text when creating a child
@@ -1260,7 +1261,7 @@ const Home = () => {
                         }}
                         disabled={creatingChildForId && !newTodoText.trim()}
                       >
-                        <Icon className="h-5 w-5 mr-3" />
+                        <Icon className={`h-5 w-5 mr-3 ${newTodoType === type ? '' : `${typeConfig.textLight} ${typeConfig.textDark}`}`} />
                         <div className="text-left">
                           <div className="font-semibold">{type}</div>
                           <div className="text-xs text-muted-foreground">
