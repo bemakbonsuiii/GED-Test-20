@@ -259,56 +259,6 @@ const Home = () => {
             </div>
 
             <div className="flex flex-wrap gap-1.5 items-center">
-              {todo.tags.map((tag) => (
-                <Badge key={tag} variant="secondary" className="gap-1 pr-1 text-xs">
-                  <span className={`h-2 w-2 rounded-full ${getTagColor(tag)}`} />
-                  {tag}
-                  <button
-                    onClick={() => removeTagFromTodo(todo.id, tag)}
-                    className="ml-1 hover:bg-background/50 rounded-full p-0.5"
-                  >
-                    <X className="h-3 w-3" />
-                  </button>
-                </Badge>
-              ))}
-
-              {editingTodoId === todo.id ? (
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    addTagToTodo(todo.id, tagInput);
-                  }}
-                  className="flex gap-1"
-                >
-                  <Input
-                    type="text"
-                    placeholder="Tag name..."
-                    value={tagInput}
-                    onChange={(e) => setTagInput(e.target.value)}
-                    className="h-6 text-xs w-24"
-                    autoFocus
-                    onBlur={() => {
-                      if (!tagInput.trim()) {
-                        setEditingTodoId(null);
-                      }
-                    }}
-                  />
-                  <Button type="submit" size="sm" className="h-6 px-2 text-xs">
-                    Add
-                  </Button>
-                </form>
-              ) : (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-6 px-2 text-xs"
-                  onClick={() => setEditingTodoId(todo.id)}
-                >
-                  <Plus className="h-3 w-3 mr-1" />
-                  Tag
-                </Button>
-              )}
-
               <Popover>
                 <PopoverTrigger asChild>
                   <Button variant="outline" size="sm" className="h-6 px-2 text-xs">
