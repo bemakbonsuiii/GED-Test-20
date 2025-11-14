@@ -986,9 +986,20 @@ const Home = () => {
               <>
                 <div className="space-y-3 py-4">
                   {creatingChildForId && (
-                    <p className="text-sm text-muted-foreground pb-2">
-                      Creating a child for: <strong>{todos.find(t => t.id === creatingChildForId)?.text}</strong>
-                    </p>
+                    <>
+                      <p className="text-sm text-muted-foreground">
+                        Creating a child for: <strong>{todos.find(t => t.id === creatingChildForId)?.text}</strong>
+                      </p>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">To-Do Description</label>
+                        <Input
+                          placeholder="What needs to be done?"
+                          value={newTodoText}
+                          onChange={(e) => setNewTodoText(e.target.value)}
+                          autoFocus
+                        />
+                      </div>
+                    </>
                   )}
                   {(Object.keys(TODO_TYPE_CONFIG) as TodoType[])
                     .filter((type) => {
