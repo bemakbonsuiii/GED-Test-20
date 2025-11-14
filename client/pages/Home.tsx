@@ -1026,6 +1026,7 @@ const Home = () => {
                       setNewTodoNotes("");
                       setNewTodoLinks("");
                       setNewTodoParentId(undefined);
+                      setCreatingChildForId(null);
                     }}
                   >
                     Cancel
