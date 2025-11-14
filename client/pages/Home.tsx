@@ -1723,12 +1723,29 @@ const Home = () => {
             {/* Upcoming Meetings and Deadlines */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
               <Card>
-                <CardHeader className="pb-3">
+                <CardHeader className="pb-3 cursor-pointer hover:bg-accent/50 transition-colors" onClick={() => setIsMeetingsExpanded(!isMeetingsExpanded)}>
                   <CardTitle className="text-lg flex items-center gap-2">
                     <Users className="h-5 w-5" />
                     Upcoming Meetings
+                    {meetingTodos.length > 0 && (
+                      <Badge variant="secondary" className="ml-auto">
+                        {meetingTodos.length}
+                      </Badge>
+                    )}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="ml-auto h-6 w-6 p-0"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsMeetingsExpanded(!isMeetingsExpanded);
+                      }}
+                    >
+                      {isMeetingsExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                    </Button>
                   </CardTitle>
                 </CardHeader>
+                {isMeetingsExpanded && (
                 <CardContent>
                   {meetingTodos.length === 0 ? (
                     <div className="text-center py-4 text-muted-foreground text-sm">
@@ -1793,16 +1810,37 @@ const Home = () => {
                     </div>
                   )}
                 </CardContent>
+                )}
               </Card>
 
               {/* Upcoming Deadlines */}
               <Card>
-                <CardHeader className="pb-3">
+                <CardHeader className="pb-3 cursor-pointer hover:bg-accent/50 transition-colors" onClick={() => setIsDeadlinesExpanded(!isDeadlinesExpanded)}>
                   <CardTitle className="text-lg flex items-center gap-2">
                     <CalendarIcon className="h-5 w-5" />
                     Upcoming Deadlines
+                    {(() => {
+                      const deadlineCount = workspaceTodos.filter(t => !t.completed && t.dueDate && t.type !== "Meeting").length;
+                      return deadlineCount > 0 ? (
+                        <Badge variant="secondary" className="ml-auto">
+                          {deadlineCount}
+                        </Badge>
+                      ) : null;
+                    })()}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="ml-auto h-6 w-6 p-0"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsDeadlinesExpanded(!isDeadlinesExpanded);
+                      }}
+                    >
+                      {isDeadlinesExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                    </Button>
                   </CardTitle>
                 </CardHeader>
+                {isDeadlinesExpanded && (
                 <CardContent>
                   {(() => {
                     const upcomingDeadlines = workspaceTodos
@@ -1878,6 +1916,7 @@ const Home = () => {
                     );
                   })()}
                 </CardContent>
+                )}
               </Card>
             </div>
 
