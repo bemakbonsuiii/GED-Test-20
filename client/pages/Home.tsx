@@ -1704,7 +1704,12 @@ const Home = () => {
                         {viewingTodo.text}
                       </h3>
                       <div className="flex flex-wrap gap-2 mt-2">
-                        <Badge variant="outline">{viewingTodo.type}</Badge>
+                        <Badge
+                          variant="outline"
+                          className={`border-2 ${TODO_TYPE_CONFIG[viewingTodo.type].borderLight} ${TODO_TYPE_CONFIG[viewingTodo.type].borderDark} ${TODO_TYPE_CONFIG[viewingTodo.type].bgLight} ${TODO_TYPE_CONFIG[viewingTodo.type].bgDark} ${TODO_TYPE_CONFIG[viewingTodo.type].textLight} ${TODO_TYPE_CONFIG[viewingTodo.type].textDark}`}
+                        >
+                          {viewingTodo.type}
+                        </Badge>
                         <Badge variant={viewingTodo.priority === "P0" ? "destructive" : "default"}>
                           {viewingTodo.priority}
                         </Badge>
