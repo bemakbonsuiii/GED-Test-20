@@ -43,21 +43,27 @@ export async function handleAIPrioritize(req: Request, res: Response) {
       return res.json({ recommendations: [] });
     }
 
-    // Prepare todo data for AI
-    const todosData = incompleteTodos.map((todo) => ({
-      id: todo.id,
-      text: todo.text,
-      type: todo.type,
-      priority: todo.priority,
-      dueDate: todo.dueDate,
-      dueTime: todo.dueTime,
-      meetingTime: todo.meetingTime,
-      notes: todo.notes,
-      project: todo.project,
-      workspace: todo.workspace,
-      isEOD: todo.isEOD,
-      hasChildren: todos.some((t) => t.parentId === todo.id),
-    }));
+    // Prepare todo data for AI with parent-child relationships
+    const todosData = incompleteTodos.map((todo) => {
+      const hasChildren = todos.some((t) => t.parentId === todo.id && !t.completed);
+      const isChild = !!todo.parentId;
+      return {
+        id: todo.id,
+        text: todo.text,
+        type: todo.type,
+        priority: todo.priority,
+        dueDate: todo.dueDate,
+        dueTime: todo.dueTime,
+        meetingTime: todo.meetingTime,
+        notes: todo.notes,
+        project: todo.project,
+        workspace: todo.workspace,
+        isEOD: todo.isEOD,
+        hasChildren: hasChildren,
+        isChild: isChild,
+        parentId: todo.parentId
+      };
+    });
 
     const prompt = `You are a productivity assistant helping prioritize tasks. Analyze the following to-dos and recommend the top 3 that should be worked on next.
 
