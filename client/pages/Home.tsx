@@ -1598,9 +1598,16 @@ const Home = () => {
                       <p className="text-xs text-muted-foreground">Children ({getChildren(editingTodo.id).length}):</p>
                       <div className="space-y-1 ml-4 border-l-2 border-muted pl-3">
                         {getChildren(editingTodo.id).map((child) => (
-                          <div key={child.id} className="flex items-center gap-2 p-2 bg-background rounded border text-xs">
+                          <div
+                            key={child.id}
+                            className="flex items-center gap-2 p-2 bg-background rounded border text-xs cursor-pointer hover:bg-accent/50 transition-colors"
+                            onClick={() => {
+                              setEditingTodo(child);
+                            }}
+                          >
                             <Badge variant="outline" className="text-[10px]">{child.type}</Badge>
                             <span className="flex-1 break-words">{child.text}</span>
+                            <span className="text-[10px] text-muted-foreground">Click to edit</span>
                           </div>
                         ))}
                       </div>
