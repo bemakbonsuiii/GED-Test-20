@@ -2671,7 +2671,18 @@ const Home = () => {
                   )}
                   <div>
                     <p className="text-xs text-muted-foreground font-medium mb-1">Workspace</p>
-                    <p className="text-sm capitalize">{viewingTodo.workspace}</p>
+                    <Button
+                      variant="link"
+                      className="h-auto p-0 text-sm font-normal text-blue-600 dark:text-blue-400 hover:underline capitalize"
+                      onClick={() => {
+                        setWorkspace(viewingTodo.workspace);
+                        setSelectedProjectPage(null);
+                        setIsSummaryDialogOpen(false);
+                        setViewingTodo(null);
+                      }}
+                    >
+                      {viewingTodo.workspace}
+                    </Button>
                   </div>
                 </div>
 
