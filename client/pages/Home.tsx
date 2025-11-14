@@ -1067,7 +1067,7 @@ Return ONLY the todo IDs, no explanation needed.`;
       ? relevantTodos.filter(t => t.project === selectedProjectPage)
       : relevantTodos;
 
-    // Tasks due today (including EOD)
+    // Tasks due today (including EOD) - incomplete
     const tasksForToday = filteredByProject.filter(t => {
       if (t.completed) return false;
       if (t.isEOD) return true;
@@ -1078,7 +1078,7 @@ Return ONLY the todo IDs, no explanation needed.`;
       return false;
     });
 
-    // Meetings for today
+    // Meetings for today - incomplete
     const meetingsToday = filteredByProject.filter(t => {
       if (t.completed || t.type !== "Meeting") return false;
       if (t.dueDate) {
@@ -1088,15 +1088,25 @@ Return ONLY the todo IDs, no explanation needed.`;
       return false;
     });
 
-    const totalDailyWork = tasksForToday.length + meetingsToday.length;
+    // Completed tasks/meetings for today
+    const completedToday = filteredByProject.filter(t => {
+      if (!t.completed) return false;
+      if (t.isEOD) return true;
+      if (t.dueDate) {
+        const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+        return dueTime >= today.getTime() && dueTime <= todayEnd.getTime();
+      }
+      return false;
+    });
+
+    const incompleteDailyWork = tasksForToday.length + meetingsToday.length;
+    const totalDailyWork = incompleteDailyWork + completedToday.length;
 
     // If no work for today, return 0
     if (totalDailyWork === 0) return 0;
 
-    // Calculate work left as percentage of total daily work
-    // Assuming each task/meeting is equal weight
-    const workLeft = totalDailyWork;
-    const score = Math.min(100, Math.round((workLeft / Math.max(totalDailyWork, 1)) * 100));
+    // Calculate work left as percentage (100 = all work remaining, 0 = all work done)
+    const score = Math.min(100, Math.round((incompleteDailyWork / totalDailyWork) * 100));
 
     return score;
   };
@@ -1114,7 +1124,7 @@ Return ONLY the todo IDs, no explanation needed.`;
       ? relevantTodos.filter(t => t.project === selectedProjectPage)
       : relevantTodos;
 
-    // All incomplete tasks (excluding those with future start dates)
+    // All incomplete actionable tasks (excluding those with future start dates)
     const actionableTasks = filteredByProject.filter(t => {
       if (t.completed) return false;
       // Exclude tasks with future start dates
@@ -1122,14 +1132,18 @@ Return ONLY the todo IDs, no explanation needed.`;
       return true;
     });
 
-    // All incomplete tasks
-    const allIncompleteTasks = filteredByProject.filter(t => !t.completed);
+    // All tasks (excluding future start dates)
+    const allRelevantTasks = filteredByProject.filter(t => {
+      // Exclude tasks with future start dates
+      if (t.startDate && t.startDate > now) return false;
+      return true;
+    });
 
-    // If no incomplete tasks, return 0
-    if (allIncompleteTasks.length === 0) return 0;
+    // If no relevant tasks, return 0
+    if (allRelevantTasks.length === 0) return 0;
 
-    // Calculate percentage of actionable work
-    const score = Math.min(100, Math.round((actionableTasks.length / Math.max(allIncompleteTasks.length, 1)) * 100));
+    // Calculate work left as percentage (100 = all work remaining, 0 = all work done)
+    const score = Math.min(100, Math.round((actionableTasks.length / allRelevantTasks.length) * 100));
 
     return score;
   };
