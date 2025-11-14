@@ -867,7 +867,7 @@ const Home = () => {
                   <div className="space-y-2">
                     <label className="text-sm font-medium">Due Date</label>
                     <div className="flex gap-2">
-                      <Popover>
+                      <Popover open={dueDatePopoverOpen} onOpenChange={setDueDatePopoverOpen} modal={true}>
                         <PopoverTrigger asChild>
                           <Button
                             variant="outline"
@@ -882,24 +882,18 @@ const Home = () => {
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent
-                          className="w-auto p-0 z-[60]"
+                          className="w-auto p-0"
                           align="start"
-                          onInteractOutside={(e) => {
-                            const target = e.target as HTMLElement;
-                            // Prevent closing if clicking on calendar elements
-                            if (
-                              target.closest('.rdp') ||
-                              target.closest('[role="gridcell"]') ||
-                              target.closest('button[name^="day"]')
-                            ) {
-                              e.preventDefault();
-                            }
-                          }}
                         >
                           <Calendar
                             mode="single"
                             selected={newTodoDueDate}
-                            onSelect={setNewTodoDueDate}
+                            onSelect={(date) => {
+                              setNewTodoDueDate(date);
+                              if (date) {
+                                setDueDatePopoverOpen(false);
+                              }
+                            }}
                             initialFocus
                           />
                         </PopoverContent>
