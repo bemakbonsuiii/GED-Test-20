@@ -649,33 +649,50 @@ const Home = () => {
                             <div className="ml-6 space-y-2 border-l-2 border-muted/50 pl-3">
                               <span className="text-xs font-medium">Sub-items ({getChildren(child.id).length}):</span>
                               {getChildren(child.id).map((grandchild) => (
-                                <div key={grandchild.id} className="flex items-start gap-2 text-xs">
-                                  <Checkbox
-                                    checked={grandchild.completed}
-                                    onCheckedChange={() => toggleTodo(grandchild.id)}
-                                    className="mt-0.5 h-3 w-3"
-                                  />
-                                  <div className="flex-1 min-w-0">
-                                    <span className={`break-words ${grandchild.completed ? "line-through text-muted-foreground" : ""}`}>
-                                      {grandchild.text}
-                                    </span>
+                                <div key={grandchild.id} className="space-y-1">
+                                  <div className="flex items-start gap-2 text-xs">
+                                    <Checkbox
+                                      checked={grandchild.completed}
+                                      onCheckedChange={() => toggleTodo(grandchild.id)}
+                                      className="mt-0.5 h-3 w-3"
+                                    />
+                                    <div className="flex-1 min-w-0">
+                                      <span className={`break-words ${grandchild.completed ? "line-through text-muted-foreground" : ""}`}>
+                                        {grandchild.text}
+                                      </span>
+                                      <Badge variant="outline" className="text-[10px] ml-1 px-1 py-0">
+                                        {grandchild.type}
+                                      </Badge>
+                                    </div>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      className="h-4 px-1 text-xs"
+                                      onClick={() => unlinkTodo(grandchild.id)}
+                                    >
+                                      Unlink
+                                    </Button>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      onClick={() => deleteTodo(grandchild.id)}
+                                      className="h-4 w-4"
+                                    >
+                                      <Trash2 className="h-2 w-2 text-destructive" />
+                                    </Button>
                                   </div>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-4 px-1 text-xs"
-                                    onClick={() => unlinkTodo(grandchild.id)}
-                                  >
-                                    Unlink
-                                  </Button>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => deleteTodo(grandchild.id)}
-                                    className="h-4 w-4"
-                                  >
-                                    <Trash2 className="h-2 w-2 text-destructive" />
-                                  </Button>
+                                  {getAllowedChildTypes(grandchild.type).length > 0 && (
+                                    <div className="ml-4">
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="h-4 px-1.5 text-[10px]"
+                                        onClick={() => startCreatingChild(grandchild.id)}
+                                      >
+                                        + Child
+                                      </Button>
+                                    </div>
+                                  )}
                                 </div>
                               ))}
                             </div>
