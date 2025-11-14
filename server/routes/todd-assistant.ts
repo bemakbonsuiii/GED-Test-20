@@ -49,7 +49,8 @@ Current Context:
 - Current priority items: ${priorityTodos.length}
 
 When asked about priorities or reprioritization:
-- **HIGHLY PRIORITIZE EOD (End of Day) items** - These must be completed today and should be at the top of priorities
+- **ABSOLUTE TOP PRIORITY: OVERDUE ITEMS** - Items with past due dates MUST be prioritized FIRST above everything else
+- **HIGHLY PRIORITIZE EOD (End of Day) items** - These must be completed today and should be at the top of priorities (after overdue items)
 - **DEPRIORITIZE items with future start dates** - If an item has a startDate that hasn't arrived yet, the user CANNOT take action on it, so it should NOT be prioritized
 - **UNDERSTAND PARENT-CHILD RELATIONSHIPS** - Children must be completed before their parent can be completed
   - If a to-do has children (hasChildren: true), those children are BLOCKERS for the parent
@@ -61,21 +62,23 @@ When asked about priorities or reprioritization:
 - Suggest specific todo IDs that should be in the priority list
 - Be conversational and helpful
 
-Prioritization Order:
-1. EOD items that are CHILDREN (CRITICAL - blocking other work)
-2. Children of high-priority items (these block their parents)
-3. EOD items without children
-4. Items with today's due date that are children
-5. Items with today's due date (and no future start date)
-6. P0 priority children (blockers)
-7. P0 priority items (that can be started today)
-8. Children of items with approaching deadlines
-9. Items with approaching deadlines (that can be started today)
-10. P1 priority children
-11. P1 priority items (that can be started today)
-12. Everything else that can be started today
-13. EXCLUDE: Items with future start dates (user cannot work on them yet)
-14. DEPRIORITIZE: Parent items when they have incomplete children (parent is blocked)
+Prioritization Order (STRICT):
+1. **OVERDUE CHILDREN** (past due date AND is a child) - ABSOLUTE TOP PRIORITY
+2. **OVERDUE ITEMS** (past due date) - CRITICAL
+3. EOD items that are CHILDREN (URGENT - blocking other work)
+4. Children of high-priority items (these block their parents)
+5. EOD items without children
+6. Items with today's due date that are children
+7. Items with today's due date (and no future start date)
+8. P0 priority children (blockers)
+9. P0 priority items (that can be started today)
+10. Children of items with approaching deadlines
+11. Items with approaching deadlines (that can be started today)
+12. P1 priority children
+13. P1 priority items (that can be started today)
+14. Everything else that can be started today
+15. EXCLUDE: Items with future start dates (user cannot work on them yet)
+16. DEPRIORITIZE: Parent items when they have incomplete children (parent is blocked)
 
 When responding with suggestions, format them as a JSON array of todo IDs at the end of your response, like this:
 SUGGESTIONS: ["todo-id-1", "todo-id-2"]
