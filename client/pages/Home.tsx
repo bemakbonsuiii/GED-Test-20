@@ -68,6 +68,14 @@ type WorkspaceType = "personal" | "work" | "creative";
 type Workspace = WorkspaceType | "everything";
 type Priority = "P0" | "P1" | "P2";
 
+interface Project {
+  id: string;
+  name: string;
+  description: string;
+  workspace: WorkspaceType;
+  createdAt: number;
+}
+
 interface Todo {
   id: string;
   text: string;
@@ -149,6 +157,7 @@ const TODO_TYPE_CONFIG: Record<
 
 const Home = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [darkMode, setDarkMode] = useState(false);
   const [toddMessages, setToddMessages] = useState<Array<{ role: 'user' | 'assistant'; content: string; suggestions?: string[] }>>([]);
   const [toddInput, setToddInput] = useState("");
@@ -157,6 +166,10 @@ const Home = () => {
   const [inputValue, setInputValue] = useState("");
   const [isAddTodoExpanded, setIsAddTodoExpanded] = useState(false);
   const [isToddExpanded, setIsToddExpanded] = useState(false);
+  const [isCreateProjectDialogOpen, setIsCreateProjectDialogOpen] = useState(false);
+  const [newProjectName, setNewProjectName] = useState("");
+  const [newProjectDescription, setNewProjectDescription] = useState("");
+  const [newProjectWorkspace, setNewProjectWorkspace] = useState<WorkspaceType>("personal");
 
   const sensors = useSensors(
     useSensor(PointerSensor),
