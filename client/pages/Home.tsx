@@ -236,6 +236,15 @@ const Home = () => {
       }
     }
 
+    const savedProjects = localStorage.getItem("projects");
+    if (savedProjects) {
+      try {
+        setProjects(JSON.parse(savedProjects));
+      } catch (e) {
+        console.error("Failed to parse projects from localStorage");
+      }
+    }
+
     const savedDarkMode = localStorage.getItem("darkMode");
     if (savedDarkMode) {
       const isDark = savedDarkMode === "true";
@@ -249,6 +258,10 @@ const Home = () => {
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
+
+  useEffect(() => {
+    localStorage.setItem("projects", JSON.stringify(projects));
+  }, [projects]);
 
 
   useEffect(() => {
