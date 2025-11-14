@@ -1251,78 +1251,166 @@ const Home = () => {
               </Card>
             )}
 
-            <Card className="mb-6">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Users className="h-5 w-5" />
-                  Upcoming Meetings
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {meetingTodos.length === 0 ? (
-                  <div className="text-center py-4 text-muted-foreground text-sm">
-                    No upcoming meetings
-                  </div>
-                ) : (
-                  <div className="flex gap-3 overflow-x-auto pb-2">
-                    {meetingTodos.map((meeting) => {
-                      const meetingConfig = TODO_TYPE_CONFIG["Meeting"];
-                      return (
-                      <div
-                        key={meeting.id}
-                        className={`flex-shrink-0 flex items-center gap-3 p-3 rounded-lg border-2 transition-colors min-w-[300px] ${meetingConfig.bgLight} ${meetingConfig.bgDark} ${meetingConfig.borderLight} ${meetingConfig.borderDark} hover:shadow-md`}
-                      >
-                        <Checkbox
-                          checked={meeting.completed}
-                          onCheckedChange={() => toggleTodo(meeting.id)}
-                        />
-                        <div className="flex-1 min-w-0">
-                          <div
-                            className="font-medium text-sm break-words cursor-pointer hover:underline"
-                            onClick={() => openSummaryDialog(meeting)}
-                          >
-                            {meeting.text}
-                          </div>
-                          <div className="flex items-center gap-2 mt-1 flex-wrap">
-                            <Badge variant="outline" className="text-xs gap-1">
-                              <CalendarIcon className="h-3 w-3" />
-                              {meeting.dueDate
-                                ? format(new Date(meeting.dueDate), "MMM d")
-                                : "No date"}
-                            </Badge>
-                            {meeting.meetingTime && (
-                              <Badge variant="outline" className="text-xs gap-1">
-                                <Clock className="h-3 w-3" />
-                                {meeting.meetingTime}
-                              </Badge>
-                            )}
-                            <Badge
-                              variant={meeting.priority === "P0" ? "destructive" : "outline"}
-                              className={`text-xs ${
-                                meeting.priority === "P1" ? "border-orange-500 text-orange-500" : ""
-                              }`}
+            {/* Upcoming Meetings and Deadlines */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Users className="h-5 w-5" />
+                    Upcoming Meetings
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {meetingTodos.length === 0 ? (
+                    <div className="text-center py-4 text-muted-foreground text-sm">
+                      No upcoming meetings
+                    </div>
+                  ) : (
+                    <div className="flex gap-3 overflow-x-auto pb-2">
+                      {meetingTodos.map((meeting) => {
+                        const meetingConfig = TODO_TYPE_CONFIG["Meeting"];
+                        return (
+                        <div
+                          key={meeting.id}
+                          className={`flex-shrink-0 flex items-center gap-3 p-3 rounded-lg border-2 transition-colors min-w-[300px] ${meetingConfig.bgLight} ${meetingConfig.bgDark} ${meetingConfig.borderLight} ${meetingConfig.borderDark} hover:shadow-md`}
+                        >
+                          <Checkbox
+                            checked={meeting.completed}
+                            onCheckedChange={() => toggleTodo(meeting.id)}
+                          />
+                          <div className="flex-1 min-w-0">
+                            <div
+                              className="font-medium text-sm break-words cursor-pointer hover:underline"
+                              onClick={() => openSummaryDialog(meeting)}
                             >
-                              {meeting.priority}
-                            </Badge>
-                            {meeting.isEOD && (
-                              <Badge variant="default" className="text-xs bg-red-600">
-                                EOD
+                              {meeting.text}
+                            </div>
+                            <div className="flex items-center gap-2 mt-1 flex-wrap">
+                              <Badge variant="outline" className="text-xs gap-1">
+                                <CalendarIcon className="h-3 w-3" />
+                                {meeting.dueDate
+                                  ? format(new Date(meeting.dueDate), "MMM d")
+                                  : "No date"}
                               </Badge>
-                            )}
-                            {workspace === "everything" && (
-                              <Badge variant="secondary" className="text-xs capitalize">
-                                {meeting.workspace}
+                              {meeting.meetingTime && (
+                                <Badge variant="outline" className="text-xs gap-1">
+                                  <Clock className="h-3 w-3" />
+                                  {meeting.meetingTime}
+                                </Badge>
+                              )}
+                              <Badge
+                                variant={meeting.priority === "P0" ? "destructive" : "outline"}
+                                className={`text-xs ${
+                                  meeting.priority === "P1" ? "border-orange-500 text-orange-500" : ""
+                                }`}
+                              >
+                                {meeting.priority}
                               </Badge>
-                            )}
+                              {meeting.isEOD && (
+                                <Badge variant="default" className="text-xs bg-red-600">
+                                  EOD
+                                </Badge>
+                              )}
+                              {workspace === "everything" && (
+                                <Badge variant="secondary" className="text-xs capitalize">
+                                  {meeting.workspace}
+                                </Badge>
+                              )}
+                            </div>
                           </div>
                         </div>
-                      </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Upcoming Deadlines */}
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <CalendarIcon className="h-5 w-5" />
+                    Upcoming Deadlines
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {(() => {
+                    const upcomingDeadlines = todos
+                      .filter(t => !t.completed && t.dueDate)
+                      .sort((a, b) => {
+                        const dateA = new Date(a.dueDate!);
+                        const dateB = new Date(b.dueDate!);
+                        return dateA.getTime() - dateB.getTime();
+                      })
+                      .slice(0, 5);
+
+                    if (upcomingDeadlines.length === 0) {
+                      return (
+                        <div className="text-center py-8 text-muted-foreground text-sm">
+                          No upcoming deadlines
+                        </div>
                       );
-                    })}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+                    }
+
+                    return (
+                      <div className="space-y-3">
+                        {upcomingDeadlines.map((todo) => {
+                          const typeConfig = TODO_TYPE_CONFIG[todo.type];
+                          const daysUntil = Math.ceil((new Date(todo.dueDate!).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+                          const isOverdue = daysUntil < 0;
+                          const isToday = daysUntil === 0;
+
+                          return (
+                            <div
+                              key={todo.id}
+                              className={`flex items-center gap-3 p-3 rounded-lg border-2 transition-colors hover:shadow-md ${typeConfig.bgLight} ${typeConfig.bgDark} ${typeConfig.borderLight} ${typeConfig.borderDark}`}
+                            >
+                              <Checkbox
+                                checked={todo.completed}
+                                onCheckedChange={() => toggleTodo(todo.id)}
+                              />
+                              <div className="flex-1 min-w-0">
+                                <div
+                                  className="font-medium text-sm break-words cursor-pointer hover:underline"
+                                  onClick={() => openSummaryDialog(todo)}
+                                >
+                                  {todo.text}
+                                </div>
+                                <div className="flex items-center gap-2 mt-1 flex-wrap">
+                                  <Badge variant="outline" className="text-xs gap-1">
+                                    <CalendarIcon className="h-3 w-3" />
+                                    {format(new Date(todo.dueDate!), "MMM d")}
+                                  </Badge>
+                                  {isOverdue && (
+                                    <Badge variant="destructive" className="text-xs">
+                                      Overdue
+                                    </Badge>
+                                  )}
+                                  {isToday && (
+                                    <Badge variant="default" className="text-xs bg-red-600">
+                                      Due Today
+                                    </Badge>
+                                  )}
+                                  {!isOverdue && !isToday && daysUntil <= 3 && (
+                                    <Badge variant="outline" className="text-xs text-orange-600">
+                                      {daysUntil} day{daysUntil !== 1 ? 's' : ''}
+                                    </Badge>
+                                  )}
+                                  <Badge variant="outline" className="text-xs">
+                                    {todo.priority}
+                                  </Badge>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })()}
+                </CardContent>
+              </Card>
+            </div>
 
             {/* Priorities and Todd Assistant */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
