@@ -1046,7 +1046,7 @@ const Home = () => {
                 <DialogFooter>
                   <Button
                     variant="ghost"
-                    onClick={() => setDialogStep("type")}
+                    onClick={() => setDialogStep(workspace === "everything" ? "workspace" : "type")}
                   >
                     Back
                   </Button>
@@ -1057,6 +1057,7 @@ const Home = () => {
                       setDialogStep("type");
                       setNewTodoText("");
                       setNewTodoType("Task");
+                      setNewTodoWorkspace("personal");
                       setNewTodoDueDate(undefined);
                       setNewTodoProject("");
                       setIsCreatingNewProject(false);
