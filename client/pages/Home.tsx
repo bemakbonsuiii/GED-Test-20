@@ -170,6 +170,7 @@ const Home = () => {
   const [newProjectName, setNewProjectName] = useState("");
   const [newProjectDescription, setNewProjectDescription] = useState("");
   const [newProjectWorkspace, setNewProjectWorkspace] = useState<WorkspaceType>("personal");
+  const [pendingTodoData, setPendingTodoData] = useState<Partial<Todo> | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -317,6 +318,39 @@ const Home = () => {
     setNewProjectName("");
     setNewProjectDescription("");
     setIsCreateProjectDialogOpen(false);
+
+    // If there's a pending todo waiting for this project, create it now
+    if (pendingTodoData) {
+      const newTodo: Todo = {
+        ...pendingTodoData as Todo,
+        project: project.name,
+      };
+      setTodos([newTodo, ...todos]);
+      setPendingTodoData(null);
+      setIsCreateDialogOpen(false);
+      resetTodoForm();
+    }
+  };
+
+  const resetTodoForm = () => {
+    setDialogStep("type");
+    setNewTodoText("");
+    setNewTodoType("Task");
+    setNewTodoWorkspace("personal");
+    setNewTodoStartDate(undefined);
+    setNewTodoDueDate(undefined);
+    setNewTodoProject("");
+    setIsCreatingNewProject(false);
+    setNewTodoPriority("P2");
+    setNewTodoIsEOD(false);
+    setNewTodoAgenda("");
+    setNewTodoMeetingTime("");
+    setNewTodoDueTime("");
+    setDueDatePopoverOpen(false);
+    setNewTodoNotes("");
+    setNewTodoLinks("");
+    setNewTodoParentId(undefined);
+    setCreatingChildForId(null);
   };
 
   const openCreateProjectDialog = (targetWorkspace: WorkspaceType) => {
@@ -1577,7 +1611,7 @@ const Home = () => {
                                           onClick={() => addTodoToPriorities(todoId)}
                                           disabled={todo.isPriority}
                                         >
-                                          {todo.isPriority ? '✓ ' : '+ '}{todo.text}
+                                          {todo.isPriority ? '��� ' : '+ '}{todo.text}
                                         </Button>
                                       </div>
                                     );
