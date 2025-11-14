@@ -1867,6 +1867,79 @@ Return ONLY the todo IDs, no explanation needed.`;
               </Card>
             )}
 
+            {/* Priorities Widget */}
+            <Card className="mb-6 shadow-lg border-2 border-yellow-200 dark:border-yellow-800">
+                <CardHeader className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/30 dark:to-orange-950/30">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <CardTitle className="flex items-center gap-2">
+                        <Star className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+                        Today's Priorities
+                      </CardTitle>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Drag to reorder your priority items
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="default"
+                        size="sm"
+                        onClick={autoPrioritize}
+                        disabled={toddLoading}
+                        className="text-xs bg-yellow-600 hover:bg-yellow-700 dark:bg-yellow-500 dark:hover:bg-yellow-600"
+                      >
+                        <Sparkles className="h-3 w-3 mr-1" />
+                        Auto
+                      </Button>
+                      {todos.some(t => t.isPriority) && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={clearPriorities}
+                          className="text-xs"
+                        >
+                          Clear All
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-6">
+                  {(() => {
+                    const priorityTodos = todos
+                      .filter(t => t.isPriority && !t.completed)
+                      .sort((a, b) => (a.priorityOrder || 0) - (b.priorityOrder || 0));
+
+                    if (priorityTodos.length === 0) {
+                      return (
+                        <div className="text-center py-8 text-muted-foreground text-sm">
+                          No priority items yet. Star a to-do to add it here!
+                        </div>
+                      );
+                    }
+
+                    return (
+                      <DndContext
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragEnd={handleDragEnd}
+                      >
+                        <SortableContext
+                          items={priorityTodos.map(t => t.id)}
+                          strategy={verticalListSortingStrategy}
+                        >
+                          <div className="space-y-3">
+                            {priorityTodos.map((todo) => (
+                              <SortablePriorityItem key={todo.id} todo={todo} />
+                            ))}
+                          </div>
+                        </SortableContext>
+                      </DndContext>
+                    );
+                  })()}
+                </CardContent>
+            </Card>
+
             {/* Upcoming Meetings and Deadlines */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
               <Card>
@@ -2184,79 +2257,6 @@ Return ONLY the todo IDs, no explanation needed.`;
                 )}
               </Card>
             )}
-
-            {/* Priorities Widget */}
-            <Card className="mb-6 shadow-lg border-2 border-yellow-200 dark:border-yellow-800">
-                <CardHeader className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/30 dark:to-orange-950/30">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <CardTitle className="flex items-center gap-2">
-                        <Star className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
-                        Today's Priorities
-                      </CardTitle>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        Drag to reorder your priority items
-                      </p>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        variant="default"
-                        size="sm"
-                        onClick={autoPrioritize}
-                        disabled={toddLoading}
-                        className="text-xs bg-yellow-600 hover:bg-yellow-700 dark:bg-yellow-500 dark:hover:bg-yellow-600"
-                      >
-                        <Sparkles className="h-3 w-3 mr-1" />
-                        Auto
-                      </Button>
-                      {todos.some(t => t.isPriority) && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={clearPriorities}
-                          className="text-xs"
-                        >
-                          Clear All
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-6">
-                  {(() => {
-                    const priorityTodos = todos
-                      .filter(t => t.isPriority && !t.completed)
-                      .sort((a, b) => (a.priorityOrder || 0) - (b.priorityOrder || 0));
-
-                    if (priorityTodos.length === 0) {
-                      return (
-                        <div className="text-center py-8 text-muted-foreground text-sm">
-                          No priority items yet. Star a to-do to add it here!
-                        </div>
-                      );
-                    }
-
-                    return (
-                      <DndContext
-                        sensors={sensors}
-                        collisionDetection={closestCenter}
-                        onDragEnd={handleDragEnd}
-                      >
-                        <SortableContext
-                          items={priorityTodos.map(t => t.id)}
-                          strategy={verticalListSortingStrategy}
-                        >
-                          <div className="space-y-3">
-                            {priorityTodos.map((todo) => (
-                              <SortablePriorityItem key={todo.id} todo={todo} />
-                            ))}
-                          </div>
-                        </SortableContext>
-                      </DndContext>
-                    );
-                  })()}
-                </CardContent>
-            </Card>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2">
