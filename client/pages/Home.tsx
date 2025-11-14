@@ -440,7 +440,7 @@ const Home = () => {
                     ? "line-through text-muted-foreground"
                     : "text-foreground"
                 }`}
-                onClick={() => openEditDialog(todo)}
+                onClick={() => openSummaryDialog(todo)}
               >
                 {todo.text}
               </span>
