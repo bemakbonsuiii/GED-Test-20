@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
@@ -888,10 +889,11 @@ const Home = () => {
                   {newTodoType === "Meeting" && (
                     <div className="space-y-2">
                       <label className="text-sm font-medium">Agenda</label>
-                      <Input
+                      <Textarea
                         placeholder="Enter meeting agenda (optional)"
                         value={newTodoAgenda}
                         onChange={(e) => setNewTodoAgenda(e.target.value)}
+                        rows={3}
                       />
                     </div>
                   )}
