@@ -417,11 +417,12 @@ const Home = () => {
           <div className="flex-1 space-y-2">
             <div className="flex items-center gap-2 flex-wrap">
               <span
-                className={`flex-1 break-words ${
+                className={`flex-1 break-words cursor-pointer hover:underline ${
                   todo.completed
                     ? "line-through text-muted-foreground"
                     : "text-foreground"
                 }`}
+                onClick={() => openEditDialog(todo)}
               >
                 {todo.text}
               </span>
