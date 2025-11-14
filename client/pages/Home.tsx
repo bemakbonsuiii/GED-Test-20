@@ -689,7 +689,13 @@ const Home = () => {
     setToddLoading(true);
 
     try {
-      const autoPrioritizePrompt = "Analyze all my to-dos and automatically select the top 5 most important items I should focus on today. Prioritize EOD items, urgent deadlines, and high-priority tasks. Return ONLY the todo IDs, no explanation needed.";
+      // Get all todos from the current workspace (not filtered by project/type)
+      const currentWorkspaceTodos = workspace === "everything"
+        ? todos
+        : todos.filter((todo) => todo.workspace === workspace);
+
+      const workspaceLabel = workspace === "everything" ? "all workspaces" : `the ${workspace} workspace`;
+      const autoPrioritizePrompt = `Analyze all my to-dos in ${workspaceLabel} and automatically select the top 5 most important items I should focus on today. Prioritize EOD items, urgent deadlines, and high-priority tasks. Return ONLY the todo IDs, no explanation needed.`;
 
       const response = await fetch('/api/todd-assistant', {
         method: 'POST',
@@ -698,8 +704,8 @@ const Home = () => {
         },
         body: JSON.stringify({
           message: autoPrioritizePrompt,
-          todos: todos,
-          priorityTodos: todos.filter(t => t.isPriority).sort((a, b) => (a.priorityOrder || 0) - (b.priorityOrder || 0))
+          todos: currentWorkspaceTodos,
+          priorityTodos: currentWorkspaceTodos.filter(t => t.isPriority).sort((a, b) => (a.priorityOrder || 0) - (b.priorityOrder || 0))
         }),
       });
 
