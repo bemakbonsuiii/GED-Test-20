@@ -88,28 +88,12 @@ const Home = () => {
 
   const workspaceTodos = todos.filter((todo) => todo.workspace === workspace);
 
-  const getAllTags = (): string[] => {
-    const tagSet = new Set<string>();
-    workspaceTodos.forEach((todo) => {
-      todo.tags.forEach((tag) => tagSet.add(tag));
-    });
-    return Array.from(tagSet).sort();
-  };
-
   const getAllProjects = (): string[] => {
     const projectSet = new Set<string>();
     workspaceTodos.forEach((todo) => {
       if (todo.project) projectSet.add(todo.project);
     });
     return Array.from(projectSet).sort();
-  };
-
-  const getTagColor = (tag: string): string => {
-    let hash = 0;
-    for (let i = 0; i < tag.length; i++) {
-      hash = tag.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    return TAG_COLORS[Math.abs(hash) % TAG_COLORS.length];
   };
 
   const addTodo = (e: React.FormEvent) => {
@@ -167,35 +151,6 @@ const Home = () => {
     setEditingProject(null);
   };
 
-  const addTagToTodo = (todoId: string, tag: string) => {
-    const trimmedTag = tag.trim().toLowerCase();
-    if (!trimmedTag) return;
-
-    setTodos(
-      todos.map((todo) => {
-        if (todo.id === todoId && !todo.tags.includes(trimmedTag)) {
-          return { ...todo, tags: [...todo.tags, trimmedTag] };
-        }
-        return todo;
-      })
-    );
-    setTagInput("");
-  };
-
-  const removeTagFromTodo = (todoId: string, tagToRemove: string) => {
-    setTodos(
-      todos.map((todo) => {
-        if (todo.id === todoId) {
-          return {
-            ...todo,
-            tags: todo.tags.filter((tag) => tag !== tagToRemove),
-          };
-        }
-        return todo;
-      })
-    );
-  };
-
   const clearCompleted = () => {
     setTodos(todos.filter((todo) => todo.workspace !== workspace || !todo.completed));
   };
@@ -222,7 +177,6 @@ const Home = () => {
   const filteredTodos = workspaceTodos.filter((todo) => {
     if (filter === "active" && todo.completed) return false;
     if (filter === "completed" && !todo.completed) return false;
-    if (selectedTagFilter && !todo.tags.includes(selectedTagFilter)) return false;
     if (selectedTypeFilter && todo.type !== selectedTypeFilter) return false;
     if (selectedProjectFilter && todo.project !== selectedProjectFilter) return false;
     return true;
@@ -234,7 +188,6 @@ const Home = () => {
 
   const activeCount = workspaceTodos.filter((todo) => !todo.completed).length;
   const completedCount = workspaceTodos.filter((todo) => todo.completed).length;
-  const allTags = getAllTags();
   const allProjects = getAllProjects();
 
   const typeCount = (type: TodoType) =>
