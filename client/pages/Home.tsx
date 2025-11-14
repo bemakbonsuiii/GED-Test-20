@@ -127,6 +127,8 @@ const Home = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [aiRecommendations, setAiRecommendations] = useState<Array<{ id: string; reason: string }>>([]);
   const [loadingRecommendations, setLoadingRecommendations] = useState(false);
+  const [recommendationsError, setRecommendationsError] = useState<string | null>(null);
+  const fetchTimeoutRef = React.useRef<NodeJS.Timeout>();
   const [inputValue, setInputValue] = useState("");
   const [workspace, setWorkspace] = useState<Workspace>("everything");
   const [filter, setFilter] = useState<FilterType>("all");
@@ -197,13 +199,28 @@ const Home = () => {
   }, [todos]);
 
   useEffect(() => {
-    // Refresh AI recommendations when incomplete todos count changes
-    const incompleteTodosCount = todos.filter(t => !t.completed).length;
-    if (incompleteTodosCount > 0) {
-      fetchAIRecommendations();
-    } else {
-      setAiRecommendations([]);
+    // Debounce AI recommendations refresh to avoid rate limits
+    if (fetchTimeoutRef.current) {
+      clearTimeout(fetchTimeoutRef.current);
     }
+
+    const incompleteTodosCount = todos.filter(t => !t.completed).length;
+    if (incompleteTodosCount === 0) {
+      setAiRecommendations([]);
+      setRecommendationsError(null);
+      return;
+    }
+
+    // Wait 2 seconds after last change before fetching
+    fetchTimeoutRef.current = setTimeout(() => {
+      fetchAIRecommendations();
+    }, 2000);
+
+    return () => {
+      if (fetchTimeoutRef.current) {
+        clearTimeout(fetchTimeoutRef.current);
+      }
+    };
   }, [todos.length, todos.filter(t => !t.completed).length]);
 
   useEffect(() => {
@@ -354,10 +371,12 @@ const Home = () => {
     const incompleteTodos = todos.filter(t => !t.completed);
     if (incompleteTodos.length === 0) {
       setAiRecommendations([]);
+      setRecommendationsError(null);
       return;
     }
 
     setLoadingRecommendations(true);
+    setRecommendationsError(null);
     try {
       const response = await fetch('/api/ai-prioritize', {
         method: 'POST',
@@ -368,13 +387,19 @@ const Home = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get AI recommendations');
+        const errorData = await response.json().catch(() => ({}));
+        if (response.status === 429) {
+          throw new Error('Rate limit reached. Recommendations will refresh in a moment.');
+        }
+        throw new Error(errorData.error || 'Failed to get AI recommendations');
       }
 
       const data = await response.json();
       setAiRecommendations(data.recommendations || []);
-    } catch (error) {
+      setRecommendationsError(null);
+    } catch (error: any) {
       console.error('Error fetching AI recommendations:', error);
+      setRecommendationsError(error.message);
       setAiRecommendations([]);
     } finally {
       setLoadingRecommendations(false);
