@@ -167,6 +167,9 @@ const Home = () => {
   const [isAddTodoExpanded, setIsAddTodoExpanded] = useState(false);
   const [isToddExpanded, setIsToddExpanded] = useState(false);
   const [isCreateProjectDialogOpen, setIsCreateProjectDialogOpen] = useState(false);
+  const [isMeetingsExpanded, setIsMeetingsExpanded] = useState(true);
+  const [isDeadlinesExpanded, setIsDeadlinesExpanded] = useState(true);
+  const [isFiltersExpanded, setIsFiltersExpanded] = useState(true);
   const [newProjectName, setNewProjectName] = useState("");
   const [newProjectDescription, setNewProjectDescription] = useState("");
   const [newProjectWorkspace, setNewProjectWorkspace] = useState<WorkspaceType>("personal");
