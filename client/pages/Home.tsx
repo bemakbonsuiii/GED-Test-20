@@ -488,10 +488,11 @@ const Home = () => {
 
   const renderTodoItem = (todo: Todo) => {
     const TypeIcon = TODO_TYPE_CONFIG[todo.type].icon;
+    const typeConfig = TODO_TYPE_CONFIG[todo.type];
     return (
       <div
         key={todo.id}
-        className="p-3 rounded-lg border bg-background hover:bg-accent/50 transition-colors group"
+        className={`p-3 rounded-lg border-2 transition-colors group ${typeConfig.bgLight} ${typeConfig.bgDark} ${typeConfig.borderLight} ${typeConfig.borderDark} hover:shadow-md`}
       >
         <div className="flex items-start gap-3">
           <Checkbox
