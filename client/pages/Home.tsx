@@ -2654,7 +2654,19 @@ const Home = () => {
                   {viewingTodo.project && (
                     <div>
                       <p className="text-xs text-muted-foreground font-medium mb-1">Project</p>
-                      <p className="text-sm">{viewingTodo.project}</p>
+                      <Button
+                        variant="link"
+                        className="h-auto p-0 text-sm font-normal text-blue-600 dark:text-blue-400 hover:underline"
+                        onClick={() => {
+                          setWorkspace(viewingTodo.workspace);
+                          setSelectedProjectPage(viewingTodo.project || null);
+                          setIsSummaryDialogOpen(false);
+                          setViewingTodo(null);
+                        }}
+                      >
+                        <Briefcase className="h-3 w-3 mr-1" />
+                        {viewingTodo.project}
+                      </Button>
                     </div>
                   )}
                   <div>
