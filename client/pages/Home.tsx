@@ -884,10 +884,15 @@ const Home = () => {
                           className="w-auto p-0 z-[60]"
                           align="start"
                           onInteractOutside={(e) => {
-                            e.preventDefault();
-                          }}
-                          onPointerDownOutside={(e) => {
-                            e.preventDefault();
+                            const target = e.target as HTMLElement;
+                            // Prevent closing if clicking on calendar elements
+                            if (
+                              target.closest('.rdp') ||
+                              target.closest('[role="gridcell"]') ||
+                              target.closest('button[name^="day"]')
+                            ) {
+                              e.preventDefault();
+                            }
                           }}
                         >
                           <Calendar
