@@ -156,6 +156,7 @@ const Home = () => {
   const fetchTimeoutRef = useRef<NodeJS.Timeout>();
   const [inputValue, setInputValue] = useState("");
   const [isAddTodoExpanded, setIsAddTodoExpanded] = useState(false);
+  const [isToddExpanded, setIsToddExpanded] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -1323,15 +1324,32 @@ const Home = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 py-12 px-4">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-8 relative">
-          <Button
-            variant="default"
-            size="icon"
-            onClick={() => setIsAddTodoExpanded(!isAddTodoExpanded)}
-            className="absolute left-0 top-0 rounded-full shadow-lg bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
-            title={isAddTodoExpanded ? "Close" : "Add new to-do"}
-          >
-            {isAddTodoExpanded ? <X className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
-          </Button>
+          <div className="absolute left-0 top-0 flex gap-2">
+            <Button
+              variant="default"
+              size="icon"
+              onClick={() => {
+                setIsAddTodoExpanded(!isAddTodoExpanded);
+                if (!isAddTodoExpanded) setIsToddExpanded(false);
+              }}
+              className="rounded-full shadow-lg bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+              title={isAddTodoExpanded ? "Close" : "Add new to-do"}
+            >
+              {isAddTodoExpanded ? <X className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
+            </Button>
+            <Button
+              variant="default"
+              size="icon"
+              onClick={() => {
+                setIsToddExpanded(!isToddExpanded);
+                if (!isToddExpanded) setIsAddTodoExpanded(false);
+              }}
+              className="rounded-full shadow-lg bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600"
+              title={isToddExpanded ? "Close" : "Ask Todd"}
+            >
+              {isToddExpanded ? <X className="h-5 w-5" /> : <Sparkles className="h-5 w-5" />}
+            </Button>
+          </div>
           <Button
             variant="outline"
             size="icon"
