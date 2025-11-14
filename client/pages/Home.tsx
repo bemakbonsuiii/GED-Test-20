@@ -1931,6 +1931,7 @@ const Home = () => {
                       setNewTodoText("");
                       setNewTodoType("Task");
                       setNewTodoWorkspace("personal");
+                      setNewTodoStartDate(undefined);
                       setNewTodoDueDate(undefined);
                       setNewTodoProject("");
                       setIsCreatingNewProject(false);
@@ -2014,6 +2015,7 @@ const Home = () => {
                       setNewTodoText("");
                       setNewTodoType("Task");
                       setNewTodoWorkspace("personal");
+                      setNewTodoStartDate(undefined);
                       setNewTodoDueDate(undefined);
                       setNewTodoProject("");
                       setIsCreatingNewProject(false);
@@ -2348,6 +2350,7 @@ const Home = () => {
                       setNewTodoText("");
                       setNewTodoType("Task");
                       setNewTodoWorkspace("personal");
+                      setNewTodoStartDate(undefined);
                       setNewTodoDueDate(undefined);
                       setNewTodoProject("");
                       setIsCreatingNewProject(false);
