@@ -1086,6 +1086,98 @@ const Home = () => {
                 )}
               </CardContent>
             </Card>
+
+            {/* AI Recommended Priorities */}
+            <Card className="shadow-lg border-2 border-purple-200 dark:border-purple-800">
+              <CardHeader className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/30 dark:to-blue-950/30">
+                <CardTitle className="flex items-center gap-2">
+                  <Zap className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                  AI Recommended Priorities
+                </CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Based on your tasks, deadlines, and priorities
+                </p>
+              </CardHeader>
+              <CardContent className="pt-6">
+                {loadingRecommendations ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <div className="animate-pulse">Analyzing your to-dos...</div>
+                  </div>
+                ) : aiRecommendations.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground text-sm">
+                    {todos.filter(t => !t.completed).length === 0
+                      ? "All done! Add some to-dos to get started."
+                      : "AI recommendations will appear here"}
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {aiRecommendations.map((rec, index) => {
+                      const todo = todos.find(t => t.id === rec.id);
+                      if (!todo) return null;
+                      const typeConfig = TODO_TYPE_CONFIG[todo.type];
+                      return (
+                        <div
+                          key={rec.id}
+                          className={`p-4 rounded-lg border-2 transition-all hover:shadow-md ${typeConfig.bgLight} ${typeConfig.bgDark} ${typeConfig.borderLight} ${typeConfig.borderDark}`}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-600 dark:bg-purple-500 text-white flex items-center justify-center font-bold text-sm">
+                              {index + 1}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-start gap-2 flex-wrap mb-2">
+                                <Checkbox
+                                  checked={todo.completed}
+                                  onCheckedChange={() => toggleTodo(todo.id)}
+                                  className="mt-0.5"
+                                />
+                                <span
+                                  className="font-medium break-words cursor-pointer hover:underline flex-1"
+                                  onClick={() => openSummaryDialog(todo)}
+                                >
+                                  {todo.text}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2 mb-2 flex-wrap">
+                                <Badge
+                                  variant="outline"
+                                  className={`text-xs border ${typeConfig.borderLight} ${typeConfig.borderDark} ${typeConfig.textLight} ${typeConfig.textDark}`}
+                                >
+                                  {todo.type}
+                                </Badge>
+                                <Badge
+                                  variant={todo.priority === "P0" ? "destructive" : "outline"}
+                                  className={`text-xs ${
+                                    todo.priority === "P1" ? "border-orange-500 text-orange-500" : ""
+                                  }`}
+                                >
+                                  {todo.priority}
+                                </Badge>
+                                {todo.dueDate && (
+                                  <Badge variant="outline" className="text-xs gap-1">
+                                    <CalendarIcon className="h-3 w-3" />
+                                    {format(new Date(todo.dueDate), "MMM d")}
+                                  </Badge>
+                                )}
+                                {todo.isEOD && (
+                                  <Badge variant="default" className="text-xs bg-red-600">
+                                    EOD
+                                  </Badge>
+                                )}
+                              </div>
+                              <p className="text-sm text-muted-foreground italic">
+                                💡 {rec.reason}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2">
                 <Card className="shadow-lg">
