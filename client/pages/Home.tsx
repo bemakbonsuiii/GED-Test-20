@@ -164,9 +164,9 @@ const Home = () => {
   const canBeParent = (parentType: TodoType, childType: TodoType): boolean => {
     const allowedRelationships: Record<TodoType, TodoType[]> = {
       Meeting: ["Deliverable", "Task", "Quick Win"],
-      Deliverable: ["Task", "Quick Win"],
-      Task: ["Quick Win"],
-      "Quick Win": [],
+      Deliverable: ["Deliverable", "Task", "Quick Win"],
+      Task: ["Task", "Quick Win"],
+      "Quick Win": ["Quick Win"],
     };
     return allowedRelationships[parentType]?.includes(childType) || false;
   };
@@ -174,9 +174,9 @@ const Home = () => {
   const getAllowedChildTypes = (parentType: TodoType): TodoType[] => {
     const allowedRelationships: Record<TodoType, TodoType[]> = {
       Meeting: ["Deliverable", "Task", "Quick Win"],
-      Deliverable: ["Task", "Quick Win"],
-      Task: ["Quick Win"],
-      "Quick Win": [],
+      Deliverable: ["Deliverable", "Task", "Quick Win"],
+      Task: ["Task", "Quick Win"],
+      "Quick Win": ["Quick Win"],
     };
     return allowedRelationships[parentType] || [];
   };
