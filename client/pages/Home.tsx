@@ -17,8 +17,6 @@ import {
 import {
   Trash2,
   Plus,
-  Tag,
-  X,
   Target,
   CheckCircle2,
   Zap,
@@ -37,7 +35,6 @@ interface Todo {
   text: string;
   completed: boolean;
   createdAt: number;
-  tags: string[];
   type: TodoType;
   dueDate?: number;
   project?: string;
@@ -46,19 +43,6 @@ interface Todo {
 
 type FilterType = "all" | "active" | "completed";
 type ViewMode = "list" | "timeline";
-
-const TAG_COLORS = [
-  "bg-blue-500",
-  "bg-green-500",
-  "bg-purple-500",
-  "bg-pink-500",
-  "bg-yellow-500",
-  "bg-orange-500",
-  "bg-red-500",
-  "bg-indigo-500",
-  "bg-teal-500",
-  "bg-cyan-500",
-];
 
 const TODO_TYPE_CONFIG: Record<
   TodoType,
@@ -76,12 +60,9 @@ const Home = () => {
   const [workspace, setWorkspace] = useState<Workspace>("personal");
   const [viewMode, setViewMode] = useState<ViewMode>("list");
   const [filter, setFilter] = useState<FilterType>("all");
-  const [selectedTagFilter, setSelectedTagFilter] = useState<string | null>(null);
   const [selectedTypeFilter, setSelectedTypeFilter] = useState<TodoType | null>(null);
   const [selectedProjectFilter, setSelectedProjectFilter] = useState<string | null>(null);
-  const [tagInput, setTagInput] = useState("");
   const [projectInput, setProjectInput] = useState("");
-  const [editingTodoId, setEditingTodoId] = useState<string | null>(null);
   const [editingProject, setEditingProject] = useState<string | null>(null);
 
   useEffect(() => {
@@ -91,7 +72,6 @@ const Home = () => {
         const parsed = JSON.parse(saved);
         const migrated = parsed.map((todo: any) => ({
           ...todo,
-          tags: todo.tags || [],
           type: todo.isMeeting ? "Meeting" : (todo.type || "Task"),
           workspace: todo.workspace || "personal",
         }));
@@ -142,7 +122,6 @@ const Home = () => {
       text: trimmed,
       completed: false,
       createdAt: Date.now(),
-      tags: [],
       type: "Task",
       workspace,
     };
