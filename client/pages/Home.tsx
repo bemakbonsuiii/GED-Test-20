@@ -838,6 +838,29 @@ const Home = () => {
   };
 
   const updateTodoProject = (id: string, project: string) => {
+    const todo = todos.find(t => t.id === id);
+    if (!todo) return;
+
+    // Check if this is a new project that doesn't exist yet
+    if (project && project.trim()) {
+      const existingProject = projects.find(
+        p => p.name === project.trim() && p.workspace === todo.workspace
+      );
+
+      if (!existingProject) {
+        // This is a new project - open project creation dialog
+        const updatedTodo = { ...todo, project: project.trim() };
+        setPendingTodoData(updatedTodo);
+        setNewProjectName(project.trim());
+        setNewProjectWorkspace(todo.workspace);
+        setNewProjectDescription("");
+        setIsCreateProjectDialogOpen(true);
+        setProjectInput("");
+        setEditingProject(null);
+        return;
+      }
+    }
+
     setTodos(
       todos.map((todo) =>
         todo.id === id ? { ...todo, project: project || undefined } : todo
