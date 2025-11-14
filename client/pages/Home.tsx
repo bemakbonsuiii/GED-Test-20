@@ -223,7 +223,11 @@ const Home = () => {
   };
 
   const clearCompleted = () => {
-    setTodos(todos.filter((todo) => todo.workspace !== workspace || !todo.completed));
+    if (workspace === "everything") {
+      setTodos(todos.filter((todo) => !todo.completed));
+    } else {
+      setTodos(todos.filter((todo) => todo.workspace !== workspace || !todo.completed));
+    }
   };
 
   const getDueDateLabel = (dueDate?: number): string => {
