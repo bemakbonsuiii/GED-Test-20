@@ -463,6 +463,24 @@ const Home = () => {
   const saveEditedTodo = () => {
     if (!editingTodo) return;
 
+    // Check if this is a new project that doesn't exist yet
+    if (editingTodo.project && editingTodo.project.trim()) {
+      const existingProject = projects.find(
+        p => p.name === editingTodo.project!.trim() && p.workspace === editingTodo.workspace
+      );
+
+      if (!existingProject) {
+        // This is a new project - open project creation dialog
+        setPendingTodoData(editingTodo);
+        setNewProjectName(editingTodo.project.trim());
+        setNewProjectWorkspace(editingTodo.workspace);
+        setNewProjectDescription("");
+        setIsCreateProjectDialogOpen(true);
+        setIsEditDialogOpen(false);
+        return;
+      }
+    }
+
     setTodos(todos.map((todo) =>
       todo.id === editingTodo.id ? editingTodo : todo
     ));
