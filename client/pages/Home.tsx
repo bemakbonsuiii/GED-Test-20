@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -729,6 +730,33 @@ const Home = () => {
                     Leave empty for "No Project"
                   </p>
                 )}
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Priority</label>
+                <Select value={newTodoPriority} onValueChange={(value: Priority) => setNewTodoPriority(value)}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="P0">P0 - Critical</SelectItem>
+                    <SelectItem value="P1">P1 - High</SelectItem>
+                    <SelectItem value="P2">P2 - Normal</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex items-center justify-between space-x-2">
+                <div className="space-y-0.5">
+                  <label className="text-sm font-medium">Needs to be done today</label>
+                  <p className="text-xs text-muted-foreground">
+                    Task will be marked as EOD (End of Day)
+                  </p>
+                </div>
+                <Switch
+                  checked={newTodoIsEOD}
+                  onCheckedChange={setNewTodoIsEOD}
+                />
               </div>
             </div>
             <DialogFooter>
