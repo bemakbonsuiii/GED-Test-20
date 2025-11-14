@@ -67,14 +67,16 @@ SUGGESTIONS: ["todo-id-1", "todo-id-2"]
 
 Be concise but friendly. Address the user's specific question.`;
 
-    const userPrompt = `Current todos:
+    const eodItems = incompleteTodos.filter(t => t.isEOD);
+
+    const userPrompt = `${eodItems.length > 0 ? `⚠️ URGENT EOD ITEMS (must complete today): ${eodItems.length}\n` : ''}Current todos:
 ${JSON.stringify(incompleteTodos.slice(0, 50).map(t => ({
   id: t.id,
   text: t.text,
   type: t.type,
   priority: t.priority,
   dueDate: t.dueDate,
-  isEOD: t.isEOD,
+  isEOD: t.isEOD ? "⚠️ EOD - URGENT" : false,
   isPriority: t.isPriority,
   project: t.project
 })), null, 2)}
