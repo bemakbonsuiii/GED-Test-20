@@ -621,6 +621,88 @@ const Home = () => {
     return allWorkspaceTodos.filter((todo) => todo.type === type).length;
   };
 
+  const SortablePriorityItem = ({ todo }: { todo: Todo }) => {
+    const {
+      attributes,
+      listeners,
+      setNodeRef,
+      transform,
+      transition,
+    } = useSortable({ id: todo.id });
+
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+    };
+
+    const typeConfig = TODO_TYPE_CONFIG[todo.type];
+
+    return (
+      <div
+        ref={setNodeRef}
+        style={style}
+        className={`p-3 rounded-lg border-2 transition-all ${typeConfig.bgLight} ${typeConfig.bgDark} ${typeConfig.borderLight} ${typeConfig.borderDark} hover:shadow-md`}
+      >
+        <div className="flex items-start gap-2">
+          <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing mt-1">
+            <GripVertical className="h-4 w-4 text-muted-foreground" />
+          </div>
+          <Checkbox
+            checked={todo.completed}
+            onCheckedChange={() => toggleTodo(todo.id)}
+            className="mt-1"
+          />
+          <div className="flex-1 min-w-0">
+            <div className="flex items-start gap-2 flex-wrap">
+              <span
+                className={`font-medium break-words cursor-pointer hover:underline flex-1 ${todo.completed ? "line-through text-muted-foreground" : ""}`}
+                onClick={() => openSummaryDialog(todo)}
+              >
+                {todo.text}
+              </span>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6"
+                onClick={() => togglePriority(todo.id)}
+                title="Remove from priorities"
+              >
+                <StarOff className="h-4 w-4 text-yellow-500" />
+              </Button>
+            </div>
+            <div className="flex items-center gap-2 mt-1 flex-wrap">
+              <Badge
+                variant="outline"
+                className={`text-xs border ${typeConfig.borderLight} ${typeConfig.borderDark} ${typeConfig.textLight} ${typeConfig.textDark}`}
+              >
+                {todo.type}
+              </Badge>
+              <Badge
+                variant={todo.priority === "P0" ? "destructive" : "outline"}
+                className={`text-xs ${
+                  todo.priority === "P1" ? "border-orange-500 text-orange-500" : ""
+                }`}
+              >
+                {todo.priority}
+              </Badge>
+              {todo.dueDate && (
+                <Badge variant="outline" className="text-xs gap-1">
+                  <CalendarIcon className="h-3 w-3" />
+                  {format(new Date(todo.dueDate), "MMM d")}
+                </Badge>
+              )}
+              {todo.isEOD && (
+                <Badge variant="default" className="text-xs bg-red-600">
+                  EOD
+                </Badge>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const renderTodoItem = (todo: Todo) => {
     const TypeIcon = TODO_TYPE_CONFIG[todo.type].icon;
     const typeConfig = TODO_TYPE_CONFIG[todo.type];
