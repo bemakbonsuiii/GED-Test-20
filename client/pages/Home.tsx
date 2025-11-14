@@ -883,13 +883,16 @@ const Home = () => {
                         <PopoverContent
                           className="w-auto p-0"
                           align="start"
+                          onOpenAutoFocus={(e) => e.preventDefault()}
                         >
-                          <Calendar
-                            mode="single"
-                            selected={newTodoDueDate}
-                            onSelect={setNewTodoDueDate}
-                            initialFocus
-                          />
+                          <div onClick={(e) => e.stopPropagation()}>
+                            <Calendar
+                              mode="single"
+                              selected={newTodoDueDate}
+                              onSelect={setNewTodoDueDate}
+                              initialFocus
+                            />
+                          </div>
                         </PopoverContent>
                       </Popover>
                       {newTodoDueDate && (
