@@ -439,6 +439,11 @@ const Home = () => {
                     Has Parent
                   </Badge>
                 )}
+                {selectedTypeFilter && getChildren(todo.id).length > 0 && (
+                  <Badge variant="secondary" className="text-xs">
+                    {getChildren(todo.id).length} Child{getChildren(todo.id).length !== 1 ? 'ren' : ''}
+                  </Badge>
+                )}
                 <Badge
                   variant={todo.priority === "P0" ? "destructive" : "outline"}
                   className={`text-xs ${
