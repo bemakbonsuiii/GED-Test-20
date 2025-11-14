@@ -209,6 +209,8 @@ const Home = () => {
           agenda: todo.agenda,
           meetingTime: todo.meetingTime,
           dueTime: todo.dueTime,
+          isPriority: todo.isPriority || false,
+          priorityOrder: todo.priorityOrder,
         }));
         setTodos(migrated);
       } catch (e) {
