@@ -58,7 +58,6 @@ interface Todo {
 }
 
 type FilterType = "all" | "active" | "completed";
-type ViewMode = "list" | "timeline";
 
 const TODO_TYPE_CONFIG: Record<
   TodoType,
@@ -74,7 +73,6 @@ const Home = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [workspace, setWorkspace] = useState<Workspace>("personal");
-  const [viewMode, setViewMode] = useState<ViewMode>("list");
   const [filter, setFilter] = useState<FilterType>("all");
   const [selectedTypeFilter, setSelectedTypeFilter] = useState<TodoType | null>(null);
   const [selectedProjectFilter, setSelectedProjectFilter] = useState<string | null>(null);
@@ -459,30 +457,9 @@ const Home = () => {
               <div className="lg:col-span-2">
                 <Card className="shadow-lg">
                   <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <CardTitle>My Tasks</CardTitle>
-                      <div className="flex gap-2">
-                        <Button
-                          variant={viewMode === "list" ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => setViewMode("list")}
-                        >
-                          List
-                        </Button>
-                        <Button
-                          variant={viewMode === "timeline" ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => setViewMode("timeline")}
-                          disabled={meetingTodos.length === 0}
-                        >
-                          Timeline
-                        </Button>
-                      </div>
-                    </div>
+                    <CardTitle>My Tasks</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-6">
-                    {viewMode === "list" ? (
-                      <>
                         <form onSubmit={addTodo} className="flex gap-2">
                           <Input
                             type="text"
@@ -547,80 +524,6 @@ const Home = () => {
                             filteredTodos.map(renderTodoItem)
                           )}
                         </div>
-                      </>
-                    ) : (
-                      <div className="space-y-4">
-                        <h3 className="font-semibold text-lg">Upcoming Meetings</h3>
-                        {meetingTodos.length === 0 ? (
-                          <div className="text-center py-12 text-slate-500 dark:text-slate-400">
-                            No upcoming meetings scheduled
-                          </div>
-                        ) : (
-                          <div className="space-y-3">
-                            {meetingTodos.map((meeting) => (
-                              <div
-                                key={meeting.id}
-                                className="flex items-start gap-4 p-4 rounded-lg border bg-background"
-                              >
-                                <div className="flex flex-col items-center justify-center min-w-[60px] p-2 rounded bg-primary/10">
-                                  <div className="text-xs font-medium text-primary">
-                                    {format(new Date(meeting.dueDate!), "MMM")}
-                                  </div>
-                                  <div className="text-2xl font-bold text-primary">
-                                    {format(new Date(meeting.dueDate!), "d")}
-                                  </div>
-                                  <div className="text-xs text-muted-foreground">
-                                    {format(new Date(meeting.dueDate!), "EEE")}
-                                  </div>
-                                </div>
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-2 mb-1">
-                                    <Users className="h-4 w-4 text-primary" />
-                                    <span className="font-medium">{meeting.text}</span>
-                                  </div>
-                                  <div className="flex items-center gap-2 mb-1 flex-wrap">
-                                    <Badge
-                                      variant={meeting.priority === "P0" ? "destructive" : "outline"}
-                                      className={`text-xs ${
-                                        meeting.priority === "P1" ? "border-orange-500 text-orange-500" : ""
-                                      }`}
-                                    >
-                                      {meeting.priority}
-                                    </Badge>
-                                    {meeting.isEOD && (
-                                      <Badge variant="default" className="text-xs bg-red-600">
-                                        EOD
-                                      </Badge>
-                                    )}
-                                    {meeting.project && (
-                                      <Badge variant="outline" className="text-xs gap-1">
-                                        <Briefcase className="h-3 w-3" />
-                                        {meeting.project}
-                                      </Badge>
-                                    )}
-                                  </div>
-                                  {meeting.meetingTime && (
-                                    <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
-                                      <Clock className="h-3 w-3" />
-                                      <span>{meeting.meetingTime}</span>
-                                    </div>
-                                  )}
-                                  {meeting.agenda && (
-                                    <div className="text-sm text-muted-foreground mt-1">
-                                      <span className="font-medium">Agenda:</span> {meeting.agenda}
-                                    </div>
-                                  )}
-                                </div>
-                                <Checkbox
-                                  checked={meeting.completed}
-                                  onCheckedChange={() => toggleTodo(meeting.id)}
-                                />
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    )}
                   </CardContent>
                 </Card>
               </div>
