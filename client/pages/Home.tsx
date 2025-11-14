@@ -1535,6 +1535,225 @@ const Home = () => {
             )}
           </DialogContent>
         </Dialog>
+
+        {/* Edit To-Do Dialog */}
+        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Edit To-Do</DialogTitle>
+              <DialogDescription>
+                Update details and view relationships
+              </DialogDescription>
+            </DialogHeader>
+
+            {editingTodo && (
+              <div className="space-y-6 py-4">
+                {/* Hierarchy Visualization */}
+                <div className="space-y-3 p-4 bg-accent/30 rounded-lg border">
+                  <h3 className="text-sm font-semibold">Hierarchy</h3>
+
+                  {/* Show parent if exists */}
+                  {editingTodo.parentId && (() => {
+                    const parent = todos.find(t => t.id === editingTodo.parentId);
+                    return parent ? (
+                      <div className="space-y-1">
+                        <p className="text-xs text-muted-foreground">Parent:</p>
+                        <div className="flex items-center gap-2 p-2 bg-background rounded border">
+                          <Badge variant="outline" className="text-xs">{parent.type}</Badge>
+                          <span className="text-sm flex-1 break-words">{parent.text}</span>
+                        </div>
+                      </div>
+                    ) : null;
+                  })()}
+
+                  {/* Current todo */}
+                  <div className="space-y-1">
+                    <p className="text-xs text-muted-foreground">Current:</p>
+                    <div className="flex items-center gap-2 p-2 bg-primary/10 rounded border border-primary">
+                      <Badge variant="default" className="text-xs">{editingTodo.type}</Badge>
+                      <span className="text-sm flex-1 break-words font-medium">{editingTodo.text}</span>
+                    </div>
+                  </div>
+
+                  {/* Show children if exist */}
+                  {getChildren(editingTodo.id).length > 0 && (
+                    <div className="space-y-1">
+                      <p className="text-xs text-muted-foreground">Children ({getChildren(editingTodo.id).length}):</p>
+                      <div className="space-y-1 ml-4 border-l-2 border-muted pl-3">
+                        {getChildren(editingTodo.id).map((child) => (
+                          <div key={child.id} className="flex items-center gap-2 p-2 bg-background rounded border text-xs">
+                            <Badge variant="outline" className="text-[10px]">{child.type}</Badge>
+                            <span className="flex-1 break-words">{child.text}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Edit Fields */}
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Description</label>
+                    <Input
+                      value={editingTodo.text}
+                      onChange={(e) => setEditingTodo({ ...editingTodo, text: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Type</label>
+                    <Select
+                      value={editingTodo.type}
+                      onValueChange={(value: TodoType) => setEditingTodo({ ...editingTodo, type: value })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {(Object.keys(TODO_TYPE_CONFIG) as TodoType[]).map((type) => (
+                          <SelectItem key={type} value={type}>{type}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Priority</label>
+                    <Select
+                      value={editingTodo.priority}
+                      onValueChange={(value: Priority) => setEditingTodo({ ...editingTodo, priority: value })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="P0">P0 - Critical</SelectItem>
+                        <SelectItem value="P1">P1 - High</SelectItem>
+                        <SelectItem value="P2">P2 - Medium</SelectItem>
+                        <SelectItem value="P3">P3 - Low</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Project</label>
+                    <Input
+                      value={editingTodo.project || ""}
+                      onChange={(e) => setEditingTodo({ ...editingTodo, project: e.target.value || undefined })}
+                      placeholder="Enter project name (optional)"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Due Date</label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-full justify-start text-left font-normal"
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {editingTodo.dueDate ? (
+                            format(new Date(editingTodo.dueDate), "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={editingTodo.dueDate ? new Date(editingTodo.dueDate) : undefined}
+                          onSelect={(date) => setEditingTodo({ ...editingTodo, dueDate: date?.getTime() })}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+
+                  {editingTodo.dueDate && editingTodo.type !== "Meeting" && (
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Due Time (Optional)</label>
+                      <Input
+                        type="time"
+                        value={editingTodo.dueTime || ""}
+                        onChange={(e) => setEditingTodo({ ...editingTodo, dueTime: e.target.value || undefined })}
+                      />
+                    </div>
+                  )}
+
+                  {editingTodo.type === "Meeting" && (
+                    <>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Meeting Time</label>
+                        <Input
+                          type="time"
+                          value={editingTodo.meetingTime || ""}
+                          onChange={(e) => setEditingTodo({ ...editingTodo, meetingTime: e.target.value || undefined })}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Agenda</label>
+                        <Textarea
+                          value={editingTodo.agenda || ""}
+                          onChange={(e) => setEditingTodo({ ...editingTodo, agenda: e.target.value || undefined })}
+                          rows={3}
+                        />
+                      </div>
+                    </>
+                  )}
+
+                  <div className="flex items-center justify-between space-x-2">
+                    <div className="space-y-0.5">
+                      <label className="text-sm font-medium">End of Day</label>
+                      <p className="text-xs text-muted-foreground">
+                        Must be done today
+                      </p>
+                    </div>
+                    <Switch
+                      checked={editingTodo.isEOD}
+                      onCheckedChange={(checked) => setEditingTodo({ ...editingTodo, isEOD: checked })}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Notes</label>
+                    <Textarea
+                      value={editingTodo.notes || ""}
+                      onChange={(e) => setEditingTodo({ ...editingTodo, notes: e.target.value || undefined })}
+                      rows={3}
+                      placeholder="Add notes (optional)"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Links</label>
+                    <Textarea
+                      value={editingTodo.links || ""}
+                      onChange={(e) => setEditingTodo({ ...editingTodo, links: e.target.value || undefined })}
+                      rows={2}
+                      placeholder="Add URLs, one per line (optional)"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIsEditDialogOpen(false);
+                  setEditingTodo(null);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button onClick={saveEditedTodo}>Save Changes</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
