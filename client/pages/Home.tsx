@@ -434,6 +434,11 @@ const Home = () => {
                 {todo.text}
               </span>
               <div className="flex items-center gap-1.5">
+                {selectedTypeFilter && todo.parentId && (
+                  <Badge variant="secondary" className="text-xs">
+                    Has Parent
+                  </Badge>
+                )}
                 <Badge
                   variant={todo.priority === "P0" ? "destructive" : "outline"}
                   className={`text-xs ${
