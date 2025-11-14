@@ -445,16 +445,6 @@ const Home = () => {
                   Project
                 </Button>
               )}
-
-              <Button
-                variant={todo.isMeeting ? "default" : "outline"}
-                size="sm"
-                className="h-6 px-2 text-xs"
-                onClick={() => toggleMeeting(todo.id)}
-              >
-                <Users className="h-3 w-3 mr-1" />
-                Meeting
-              </Button>
             </div>
           </div>
           <Button
