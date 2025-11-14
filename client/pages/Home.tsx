@@ -961,17 +961,23 @@ const Home = () => {
             <DialogHeader>
               <DialogTitle>
                 {dialogStep === "type"
-                  ? "Select To-Do Type"
+                  ? creatingChildForId ? "Select Child To-Do Type" : "Select To-Do Type"
                   : dialogStep === "workspace"
                   ? "Select Workspace"
-                  : "Create New To-Do"}
+                  : creatingChildForId ? "Create Child To-Do" : "Create New To-Do"}
               </DialogTitle>
               <DialogDescription>
                 {dialogStep === "type"
-                  ? `What type of to-do is "${newTodoText}"?`
+                  ? newTodoText
+                    ? `What type of to-do is "${newTodoText}"?`
+                    : "Select the type for this to-do"
                   : dialogStep === "workspace"
-                  ? `Where does "${newTodoText}" belong?`
-                  : `Add details for "${newTodoText}"`
+                  ? newTodoText
+                    ? `Where does "${newTodoText}" belong?`
+                    : "Select where this to-do belongs"
+                  : newTodoText
+                    ? `Add details for "${newTodoText}"`
+                    : "Add details for this to-do"
                 }
               </DialogDescription>
             </DialogHeader>
