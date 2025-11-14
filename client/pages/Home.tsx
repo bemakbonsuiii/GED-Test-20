@@ -1668,6 +1668,32 @@ const Home = () => {
                   </div>
                 </div>
 
+                {/* Meeting Agenda and Notes - Below details for meetings */}
+                {viewingTodo.type === "Meeting" && (viewingTodo.agenda || viewingTodo.notes) && (
+                  <div className="space-y-3 p-4 bg-orange-50 dark:bg-orange-950/20 rounded-lg border border-orange-200 dark:border-orange-900">
+                    <h4 className="text-sm font-semibold text-orange-900 dark:text-orange-100">Meeting Details</h4>
+                    {viewingTodo.agenda && (
+                      <div>
+                        <p className="text-sm font-medium mb-2">Agenda</p>
+                        <ul className="space-y-1.5 text-sm text-muted-foreground">
+                          {viewingTodo.agenda.split('\n').filter(item => item.trim()).map((item, idx) => (
+                            <li key={idx} className="flex gap-2">
+                              <span className="text-orange-500 dark:text-orange-400 flex-shrink-0">•</span>
+                              <span className="flex-1">{item.trim()}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    {viewingTodo.notes && (
+                      <div>
+                        <p className="text-sm font-medium mb-2">Notes</p>
+                        <p className="text-sm text-muted-foreground whitespace-pre-wrap">{viewingTodo.notes}</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {/* Notes and Links for non-meeting types */}
                 {viewingTodo.type !== "Meeting" && (viewingTodo.notes || viewingTodo.links) && (
                   <div className="space-y-3">
