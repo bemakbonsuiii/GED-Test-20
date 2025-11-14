@@ -271,8 +271,21 @@ const Home = () => {
 
   // Auto-minimize empty widgets
   useEffect(() => {
-    const meetings = workspaceTodos.filter((todo) => todo.type === "Meeting" && !todo.completed);
-    const deadlines = workspaceTodos.filter(t => !t.completed && t.dueDate && t.type !== "Meeting");
+    const filteredTodos = (workspace === "everything"
+      ? todos
+      : todos.filter((todo) => todo.workspace === workspace)
+    ).filter((todo) => {
+      if (selectedProjectPage && todo.project !== selectedProjectPage) {
+        return false;
+      }
+      if (selectedTypeFilter) {
+        return true;
+      }
+      return !todo.parentId;
+    });
+
+    const meetings = filteredTodos.filter((todo) => todo.type === "Meeting" && !todo.completed);
+    const deadlines = filteredTodos.filter(t => !t.completed && t.dueDate && t.type !== "Meeting");
 
     if (meetings.length === 0) {
       setIsMeetingsExpanded(false);
@@ -280,7 +293,7 @@ const Home = () => {
     if (deadlines.length === 0) {
       setIsDeadlinesExpanded(false);
     }
-  }, [workspaceTodos]);
+  }, [todos, workspace, selectedProjectPage, selectedTypeFilter]);
 
 
   useEffect(() => {
