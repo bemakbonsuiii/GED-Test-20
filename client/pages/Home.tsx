@@ -319,16 +319,29 @@ const Home = () => {
     setNewProjectDescription("");
     setIsCreateProjectDialogOpen(false);
 
-    // If there's a pending todo waiting for this project, create it now
+    // If there's a pending todo waiting for this project
     if (pendingTodoData) {
-      const newTodo: Todo = {
+      const updatedTodo: Todo = {
         ...pendingTodoData as Todo,
         project: project.name,
       };
-      setTodos([newTodo, ...todos]);
+
+      // Check if this is an edit (todo already exists) or a new todo
+      const existingTodoIndex = todos.findIndex(t => t.id === updatedTodo.id);
+
+      if (existingTodoIndex !== -1) {
+        // Update existing todo
+        setTodos(todos.map((todo) =>
+          todo.id === updatedTodo.id ? updatedTodo : todo
+        ));
+      } else {
+        // Create new todo
+        setTodos([updatedTodo, ...todos]);
+        setIsCreateDialogOpen(false);
+        resetTodoForm();
+      }
+
       setPendingTodoData(null);
-      setIsCreateDialogOpen(false);
-      resetTodoForm();
     }
   };
 
