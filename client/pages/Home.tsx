@@ -467,6 +467,35 @@ const Home = () => {
                 )}
               </div>
             )}
+
+            {(todo.notes || todo.links) && (
+              <div className="text-sm space-y-2 pt-2 border-t mt-2">
+                {todo.notes && (
+                  <div className="text-muted-foreground">
+                    <span className="font-medium">Notes:</span>
+                    <p className="mt-1 whitespace-pre-wrap">{todo.notes}</p>
+                  </div>
+                )}
+                {todo.links && (
+                  <div className="text-muted-foreground">
+                    <span className="font-medium">Links:</span>
+                    <div className="mt-1 space-y-1">
+                      {todo.links.split('\n').filter(link => link.trim()).map((link, idx) => (
+                        <a
+                          key={idx}
+                          href={link.trim()}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block text-blue-500 hover:text-blue-600 underline truncate"
+                        >
+                          {link.trim()}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
           <Button
             variant="ghost"
