@@ -1797,6 +1797,22 @@ const Home = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-6">
+                        {selectedProjectPage && (
+                          <div className="flex items-center gap-2 p-3 bg-accent/50 rounded-lg border">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setSelectedProjectPage(null)}
+                              className="gap-2"
+                            >
+                              ← Back to All {workspace !== "everything" ? workspace.charAt(0).toUpperCase() + workspace.slice(1) : ""} To-Dos
+                            </Button>
+                            <div className="flex-1"></div>
+                            <span className="text-sm text-muted-foreground capitalize">
+                              {workspace !== "everything" ? workspace : ""} / {selectedProjectPage}
+                            </span>
+                          </div>
+                        )}
                         <div className="flex gap-2 flex-wrap">
                           <Button
                             variant={filter === "all" ? "default" : "outline"}
