@@ -1337,7 +1337,7 @@ const Home = () => {
                 <CardContent>
                   {(() => {
                     const upcomingDeadlines = todos
-                      .filter(t => !t.completed && t.dueDate)
+                      .filter(t => !t.completed && t.dueDate && t.type !== "Meeting")
                       .sort((a, b) => {
                         const dateA = new Date(a.dueDate!);
                         const dateB = new Date(b.dueDate!);
@@ -1354,7 +1354,7 @@ const Home = () => {
                     }
 
                     return (
-                      <div className="space-y-3">
+                      <div className="flex gap-3 overflow-x-auto pb-2">
                         {upcomingDeadlines.map((todo) => {
                           const typeConfig = TODO_TYPE_CONFIG[todo.type];
                           const daysUntil = Math.ceil((new Date(todo.dueDate!).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
@@ -1364,7 +1364,7 @@ const Home = () => {
                           return (
                             <div
                               key={todo.id}
-                              className={`flex items-center gap-3 p-3 rounded-lg border-2 transition-colors hover:shadow-md ${typeConfig.bgLight} ${typeConfig.bgDark} ${typeConfig.borderLight} ${typeConfig.borderDark}`}
+                              className={`flex-shrink-0 flex items-center gap-3 p-3 rounded-lg border-2 transition-colors min-w-[300px] ${typeConfig.bgLight} ${typeConfig.bgDark} ${typeConfig.borderLight} ${typeConfig.borderDark} hover:shadow-md`}
                             >
                               <Checkbox
                                 checked={todo.completed}
