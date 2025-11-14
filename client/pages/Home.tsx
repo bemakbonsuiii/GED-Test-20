@@ -609,7 +609,7 @@ const Home = () => {
               </div>
             )}
 
-            {(todo.parentId || getChildren(todo.id).length > 0) && (
+            {(todo.parentId || getChildren(todo.id).length > 0) && !selectedTypeFilter && (
               <div className="text-sm space-y-2 pt-2 border-t mt-2">
                 {todo.parentId && (() => {
                   const parent = todos.find(t => t.id === todo.parentId);
