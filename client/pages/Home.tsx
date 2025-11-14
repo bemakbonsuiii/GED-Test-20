@@ -650,7 +650,7 @@ const Home = () => {
             )}
 
             {!todo.parentId && linkingTodoId !== todo.id && (
-              <div className="pt-2 mt-2 border-t">
+              <div className="pt-2 mt-2 border-t flex gap-2">
                 <Button
                   variant="outline"
                   size="sm"
@@ -659,6 +659,16 @@ const Home = () => {
                 >
                   Link to Parent
                 </Button>
+                {getAllowedChildTypes(todo.type).length > 0 && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-6 px-2 text-xs"
+                    onClick={() => startCreatingChild(todo.id)}
+                  >
+                    + Create Child
+                  </Button>
+                )}
               </div>
             )}
 
