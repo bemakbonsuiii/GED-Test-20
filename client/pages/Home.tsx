@@ -1462,6 +1462,106 @@ const Home = () => {
               </Card>
             )}
 
+            {/* Expandable Ask Todd */}
+            {isToddExpanded && (
+              <Card className="mb-6 shadow-lg border-2 border-purple-200 dark:border-purple-800 animate-in fade-in slide-in-from-top-2 duration-200">
+                <CardHeader className="pb-3 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/30 dark:to-blue-950/30">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <Sparkles className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                        Ask Todd
+                      </CardTitle>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Your AI productivity assistant
+                      </p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={suggestPrioritization}
+                      disabled={toddLoading}
+                      className="text-xs"
+                    >
+                      <Sparkles className="h-3 w-3 mr-1" />
+                      Suggest
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-4">
+                  <div className="space-y-4">
+                    {/* Chat messages */}
+                    <div className="max-h-64 overflow-y-auto space-y-3">
+                      {toddMessages.length === 0 ? (
+                        <div className="text-center py-4 text-muted-foreground text-sm">
+                          Ask Todd to suggest priorities or recommend which to-dos to focus on!
+                        </div>
+                      ) : (
+                        toddMessages.map((msg, idx) => (
+                          <div key={idx} className={`${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
+                            <div
+                              className={`inline-block rounded-lg p-3 max-w-[85%] ${
+                                msg.role === 'user'
+                                  ? 'bg-blue-600 text-white'
+                                  : 'bg-accent text-foreground'
+                              }`}
+                            >
+                              <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                              {msg.suggestions && msg.suggestions.length > 0 && (
+                                <div className="mt-2 pt-2 border-t border-white/20 space-y-1">
+                                  <p className="text-xs font-medium">Suggested to-dos:</p>
+                                  {msg.suggestions.map((todoId) => {
+                                    const todo = todos.find(t => t.id === todoId);
+                                    if (!todo) return null;
+                                    return (
+                                      <div key={todoId} className="flex items-center gap-2">
+                                        <Button
+                                          size="sm"
+                                          variant="secondary"
+                                          className="h-6 text-xs flex-1 justify-start"
+                                          onClick={() => addTodoToPriorities(todoId)}
+                                          disabled={todo.isPriority}
+                                        >
+                                          {todo.isPriority ? '✓ ' : '+ '}{todo.text}
+                                        </Button>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        ))
+                      )}
+                      {toddLoading && (
+                        <div className="text-left">
+                          <div className="inline-block rounded-lg p-3 bg-accent">
+                            <div className="animate-pulse text-sm">Todd is thinking...</div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Input */}
+                    <form onSubmit={(e) => { e.preventDefault(); askTodd(); }} className="flex gap-2">
+                      <Input
+                        type="text"
+                        placeholder="Ask Todd about priorities..."
+                        value={toddInput}
+                        onChange={(e) => setToddInput(e.target.value)}
+                        className="flex-1"
+                        disabled={toddLoading}
+                        autoFocus
+                      />
+                      <Button type="submit" size="icon" disabled={toddLoading || !toddInput.trim()}>
+                        <Send className="h-4 w-4" />
+                      </Button>
+                    </form>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
             {/* Upcoming Meetings and Deadlines */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
               <Card>
