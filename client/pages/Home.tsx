@@ -880,12 +880,13 @@ const Home = () => {
                             )}
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
+                        <PopoverContent className="w-auto p-0" align="start" onOpenAutoFocus={(e) => e.preventDefault()}>
                           <Calendar
                             mode="single"
                             selected={newTodoDueDate}
                             onSelect={(date) => {
                               console.log('Date selected:', date);
+                              console.log('Current newTodoDueDate:', newTodoDueDate);
                               setNewTodoDueDate(date);
                             }}
                             initialFocus
