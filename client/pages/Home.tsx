@@ -606,6 +606,105 @@ const Home = () => {
             </div>
           </TabsContent>
         </Tabs>
+
+        <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create New Task</DialogTitle>
+              <DialogDescription>
+                Add details for "{newTodoText}"
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Due Date</label>
+                <div className="flex gap-2">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start text-left font-normal"
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {newTodoDueDate ? (
+                          format(newTodoDueDate, "PPP")
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0">
+                      <Calendar
+                        mode="single"
+                        selected={newTodoDueDate}
+                        onSelect={setNewTodoDueDate}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  {newTodoDueDate && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setNewTodoDueDate(undefined)}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+                {!newTodoDueDate && (
+                  <p className="text-xs text-muted-foreground">
+                    Leave empty for "No due date"
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Project</label>
+                {allProjects.length > 0 ? (
+                  <Select value={newTodoProject} onValueChange={setNewTodoProject}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a project or leave empty" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">No Project</SelectItem>
+                      {allProjects.map((project) => (
+                        <SelectItem key={project} value={project}>
+                          {project}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <Input
+                    placeholder="Enter project name or leave empty"
+                    value={newTodoProject}
+                    onChange={(e) => setNewTodoProject(e.target.value)}
+                  />
+                )}
+                {!newTodoProject && (
+                  <p className="text-xs text-muted-foreground">
+                    Leave empty for "No Project"
+                  </p>
+                )}
+              </div>
+            </div>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIsCreateDialogOpen(false);
+                  setNewTodoText("");
+                  setNewTodoDueDate(undefined);
+                  setNewTodoProject("");
+                }}
+              >
+                Cancel
+              </Button>
+              <Button onClick={createTodo}>Create Task</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
