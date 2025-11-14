@@ -3258,8 +3258,14 @@ const Home = () => {
             setNewProjectName("");
             setNewProjectDescription("");
             if (pendingTodoData) {
+              const wasEditing = todos.some(t => t.id === pendingTodoData.id);
+              if (wasEditing) {
+                setEditingTodo(pendingTodoData as Todo);
+                setIsEditDialogOpen(true);
+              } else {
+                setIsCreateDialogOpen(true);
+              }
               setPendingTodoData(null);
-              setIsCreateDialogOpen(true);
             }
           }
         }}>
