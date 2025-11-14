@@ -297,14 +297,34 @@ const Home = () => {
     return Array.from(projectSet).sort();
   };
 
-  const getWorkspaceProjects = (targetWorkspace: WorkspaceType): string[] => {
-    const projectSet = new Set<string>();
-    todos
-      .filter((todo) => todo.workspace === targetWorkspace)
-      .forEach((todo) => {
-        if (todo.project) projectSet.add(todo.project);
-      });
-    return Array.from(projectSet).sort();
+  const getWorkspaceProjects = (targetWorkspace: WorkspaceType): Project[] => {
+    return projects
+      .filter((project) => project.workspace === targetWorkspace)
+      .sort((a, b) => a.name.localeCompare(b.name));
+  };
+
+  const createProject = () => {
+    if (!newProjectName.trim()) return;
+
+    const project: Project = {
+      id: Date.now().toString(),
+      name: newProjectName.trim(),
+      description: newProjectDescription.trim(),
+      workspace: newProjectWorkspace,
+      createdAt: Date.now(),
+    };
+
+    setProjects([...projects, project]);
+    setNewProjectName("");
+    setNewProjectDescription("");
+    setIsCreateProjectDialogOpen(false);
+  };
+
+  const openCreateProjectDialog = (targetWorkspace: WorkspaceType) => {
+    setNewProjectWorkspace(targetWorkspace);
+    setNewProjectName("");
+    setNewProjectDescription("");
+    setIsCreateProjectDialogOpen(true);
   };
 
   const addTodo = (e: React.FormEvent) => {
