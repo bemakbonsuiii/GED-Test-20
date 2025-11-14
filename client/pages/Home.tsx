@@ -599,6 +599,17 @@ const Home = () => {
                                       </Badge>
                                     )}
                                   </div>
+                                  {meeting.meetingTime && (
+                                    <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
+                                      <Clock className="h-3 w-3" />
+                                      <span>{meeting.meetingTime}</span>
+                                    </div>
+                                  )}
+                                  {meeting.agenda && (
+                                    <div className="text-sm text-muted-foreground mt-1">
+                                      <span className="font-medium">Agenda:</span> {meeting.agenda}
+                                    </div>
+                                  )}
                                 </div>
                                 <Checkbox
                                   checked={meeting.completed}
