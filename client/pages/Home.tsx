@@ -363,7 +363,7 @@ const Home = () => {
           <div className="flex-1 space-y-2">
             <div className="flex items-center gap-2 flex-wrap">
               <span
-                className={`flex-1 ${
+                className={`flex-1 break-words ${
                   todo.completed
                     ? "line-through text-muted-foreground"
                     : "text-foreground"
@@ -536,7 +536,7 @@ const Home = () => {
                           href={link.trim()}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="block text-blue-500 hover:text-blue-600 underline truncate"
+                          className="block text-blue-500 hover:text-blue-600 underline break-all"
                         >
                           {link.trim()}
                         </a>
@@ -581,7 +581,7 @@ const Home = () => {
                           />
                           <div className="flex-1 min-w-0">
                             <div className="flex items-start gap-2 flex-wrap">
-                              <span className={`text-sm ${child.completed ? "line-through text-muted-foreground" : ""}`}>
+                              <span className={`text-sm break-words ${child.completed ? "line-through text-muted-foreground" : ""}`}>
                                 {child.text}
                               </span>
                               <Badge variant="outline" className="text-xs">
