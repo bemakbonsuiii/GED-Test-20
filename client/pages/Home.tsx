@@ -404,6 +404,22 @@ const Home = () => {
                 </Button>
               )}
             </div>
+
+            {todo.type === "Meeting" && (todo.meetingTime || todo.agenda) && (
+              <div className="text-sm space-y-1 pt-1 border-t">
+                {todo.meetingTime && (
+                  <div className="flex items-center gap-1 text-muted-foreground">
+                    <Clock className="h-3 w-3" />
+                    <span>{todo.meetingTime}</span>
+                  </div>
+                )}
+                {todo.agenda && (
+                  <div className="text-muted-foreground">
+                    <span className="font-medium">Agenda:</span> {todo.agenda}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
           <Button
             variant="ghost"
