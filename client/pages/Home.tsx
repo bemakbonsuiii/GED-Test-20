@@ -1045,6 +1045,26 @@ const Home = () => {
                     />
                   </div>
 
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Notes</label>
+                    <Textarea
+                      placeholder="Add any notes about this to-do (optional)"
+                      value={newTodoNotes}
+                      onChange={(e) => setNewTodoNotes(e.target.value)}
+                      rows={3}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Links</label>
+                    <Textarea
+                      placeholder="Add URLs to related artifacts, one per line (optional)"
+                      value={newTodoLinks}
+                      onChange={(e) => setNewTodoLinks(e.target.value)}
+                      rows={2}
+                    />
+                  </div>
+
                   {newTodoType === "Meeting" && (
                     <div className="space-y-2">
                       <label className="text-sm font-medium">Agenda</label>
