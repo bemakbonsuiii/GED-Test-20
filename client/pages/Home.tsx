@@ -74,6 +74,7 @@ interface Todo {
   completed: boolean;
   createdAt: number;
   type: TodoType;
+  startDate?: number;
   dueDate?: number;
   dueTime?: string;
   project?: string;
