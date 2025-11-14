@@ -280,13 +280,8 @@ const Home = () => {
   };
 
   const getAllowedChildTypes = (parentType: TodoType): TodoType[] => {
-    const allowedRelationships: Record<TodoType, TodoType[]> = {
-      Meeting: ["Deliverable", "Task", "Quick Win"],
-      Deliverable: ["Deliverable", "Task", "Quick Win"],
-      Task: ["Task", "Quick Win"],
-      "Quick Win": ["Quick Win"],
-    };
-    return allowedRelationships[parentType] || [];
+    // Allow any type to be a child of any type
+    return ["Task", "Deliverable", "Quick Win", "Meeting"];
   };
 
   const startCreatingChild = (parentId: string) => {
