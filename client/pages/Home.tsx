@@ -475,6 +475,56 @@ const Home = () => {
     });
   };
 
+  const clearPriorities = () => {
+    setTodos(prevTodos =>
+      prevTodos.map(t => ({
+        ...t,
+        isPriority: false,
+        priorityOrder: undefined
+      }))
+    );
+  };
+
+  const suggestPrioritization = async () => {
+    const suggestionPrompt = "Based on my current to-dos, what should I prioritize today? Please suggest specific items I should add to my priority list.";
+    setToddInput("");
+    setToddMessages(prev => [...prev, { role: 'user', content: suggestionPrompt }]);
+    setToddLoading(true);
+
+    try {
+      const response = await fetch('/api/todd-assistant', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: suggestionPrompt,
+          todos: todos,
+          priorityTodos: todos.filter(t => t.isPriority).sort((a, b) => (a.priorityOrder || 0) - (b.priorityOrder || 0))
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get Todd response');
+      }
+
+      const data = await response.json();
+      setToddMessages(prev => [...prev, {
+        role: 'assistant',
+        content: data.response,
+        suggestions: data.suggestions
+      }]);
+    } catch (error: any) {
+      console.error('Error talking to Todd:', error);
+      setToddMessages(prev => [...prev, {
+        role: 'assistant',
+        content: 'Sorry, I encountered an error. Please try again.'
+      }]);
+    } finally {
+      setToddLoading(false);
+    }
+  };
+
   const createTodo = () => {
     let dueDateTime = newTodoDueDate ? newTodoDueDate.getTime() : undefined;
 
