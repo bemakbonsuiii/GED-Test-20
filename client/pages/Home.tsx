@@ -883,16 +883,19 @@ const Home = () => {
                         <PopoverContent
                           className="w-auto p-0"
                           align="start"
-                          onOpenAutoFocus={(e) => e.preventDefault()}
+                          onInteractOutside={(e) => {
+                            const target = e.target as HTMLElement;
+                            if (target.closest('[role="dialog"]')) {
+                              e.preventDefault();
+                            }
+                          }}
                         >
-                          <div onClick={(e) => e.stopPropagation()}>
-                            <Calendar
-                              mode="single"
-                              selected={newTodoDueDate}
-                              onSelect={setNewTodoDueDate}
-                              initialFocus
-                            />
-                          </div>
+                          <Calendar
+                            mode="single"
+                            selected={newTodoDueDate}
+                            onSelect={setNewTodoDueDate}
+                            initialFocus
+                          />
                         </PopoverContent>
                       </Popover>
                       {newTodoDueDate && (
