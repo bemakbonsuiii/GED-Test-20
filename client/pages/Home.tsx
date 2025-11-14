@@ -738,7 +738,7 @@ const Home = () => {
                         className="w-full justify-start h-auto py-4"
                         onClick={() => {
                           setNewTodoType(type);
-                          setDialogStep("details");
+                          setDialogStep(workspace === "everything" ? "workspace" : "details");
                         }}
                       >
                         <Icon className="h-5 w-5 mr-3" />
