@@ -663,19 +663,29 @@ const Home = () => {
               <div className="space-y-2">
                 <label className="text-sm font-medium">Project</label>
                 {allProjects.length > 0 ? (
-                  <Select value={newTodoProject} onValueChange={setNewTodoProject}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a project or leave empty" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="">No Project</SelectItem>
-                      {allProjects.map((project) => (
-                        <SelectItem key={project} value={project}>
-                          {project}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <>
+                    <Select value={newTodoProject} onValueChange={setNewTodoProject}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select or create a project" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">No Project</SelectItem>
+                        {allProjects.map((project) => (
+                          <SelectItem key={project} value={project}>
+                            {project}
+                          </SelectItem>
+                        ))}
+                        <SelectItem value="__new__">+ Create New Project</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    {newTodoProject === "__new__" && (
+                      <Input
+                        placeholder="Enter new project name"
+                        onChange={(e) => setNewTodoProject(e.target.value)}
+                        autoFocus
+                      />
+                    )}
+                  </>
                 ) : (
                   <Input
                     placeholder="Enter project name or leave empty"
