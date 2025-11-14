@@ -171,6 +171,32 @@ const Home = () => {
     return allowedRelationships[parentType]?.includes(childType) || false;
   };
 
+  const getAllowedChildTypes = (parentType: TodoType): TodoType[] => {
+    const allowedRelationships: Record<TodoType, TodoType[]> = {
+      Meeting: ["Deliverable", "Task", "Quick Win"],
+      Deliverable: ["Task", "Quick Win"],
+      Task: ["Quick Win"],
+      "Quick Win": [],
+    };
+    return allowedRelationships[parentType] || [];
+  };
+
+  const startCreatingChild = (parentId: string) => {
+    const parent = todos.find(t => t.id === parentId);
+    if (!parent) return;
+
+    const allowedTypes = getAllowedChildTypes(parent.type);
+    if (allowedTypes.length === 0) return;
+
+    setCreatingChildForId(parentId);
+    setNewTodoParentId(parentId);
+    setNewTodoWorkspace(parent.workspace);
+    setNewTodoText("");
+    setNewTodoType(allowedTypes[0]); // Default to first allowed type
+    setDialogStep("type");
+    setIsCreateDialogOpen(true);
+  };
+
   const getEligibleParents = (childType: TodoType, childWorkspace: WorkspaceType): Todo[] => {
     return todos.filter((todo) => {
       return (
