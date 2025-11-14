@@ -445,8 +445,6 @@ const Home = () => {
                                 ? "No active tasks. Great job!"
                                 : filter === "completed" && workspaceTodos.length > 0
                                 ? "No completed tasks yet."
-                                : selectedTagFilter
-                                ? `No tasks with tag "${selectedTagFilter}"`
                                 : selectedTypeFilter
                                 ? `No ${selectedTypeFilter} tasks`
                                 : selectedProjectFilter
@@ -494,17 +492,6 @@ const Home = () => {
                                       {meeting.project}
                                     </div>
                                   )}
-                                  <div className="flex gap-1.5 mt-2">
-                                    {meeting.tags.map((tag) => (
-                                      <Badge
-                                        key={tag}
-                                        variant="secondary"
-                                        className="text-xs"
-                                      >
-                                        {tag}
-                                      </Badge>
-                                    ))}
-                                  </div>
                                 </div>
                                 <Checkbox
                                   checked={meeting.completed}
@@ -585,43 +572,6 @@ const Home = () => {
                               className="justify-start"
                             >
                               {project}
-                            </Button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {allTags.length > 0 && (
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2 text-sm font-medium">
-                          <Tag className="h-4 w-4" />
-                          Tags
-                        </div>
-                        <div className="flex flex-col gap-1.5">
-                          <Button
-                            variant={
-                              selectedTagFilter === null ? "default" : "outline"
-                            }
-                            size="sm"
-                            onClick={() => setSelectedTagFilter(null)}
-                            className="justify-start"
-                          >
-                            All Tags
-                          </Button>
-                          {allTags.map((tag) => (
-                            <Button
-                              key={tag}
-                              variant={
-                                selectedTagFilter === tag ? "default" : "outline"
-                              }
-                              size="sm"
-                              onClick={() => setSelectedTagFilter(tag)}
-                              className="justify-start gap-1.5"
-                            >
-                              <span
-                                className={`h-2 w-2 rounded-full ${getTagColor(tag)}`}
-                              />
-                              {tag}
                             </Button>
                           ))}
                         </div>
