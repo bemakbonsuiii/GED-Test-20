@@ -1050,6 +1050,90 @@ Return ONLY the todo IDs, no explanation needed.`;
     });
   };
 
+  // Score calculations for circular indicators
+  const getWorkLeftForDayScore = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999);
+
+    // Get todos for the current workspace
+    const relevantTodos = workspace === "everything"
+      ? todos
+      : todos.filter(t => t.workspace === workspace);
+
+    // Filter by selected project if on a project page
+    const filteredByProject = selectedProjectPage
+      ? relevantTodos.filter(t => t.project === selectedProjectPage)
+      : relevantTodos;
+
+    // Tasks due today (including EOD)
+    const tasksForToday = filteredByProject.filter(t => {
+      if (t.completed) return false;
+      if (t.isEOD) return true;
+      if (t.dueDate) {
+        const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+        return dueTime >= today.getTime() && dueTime <= todayEnd.getTime();
+      }
+      return false;
+    });
+
+    // Meetings for today
+    const meetingsToday = filteredByProject.filter(t => {
+      if (t.completed || t.type !== "Meeting") return false;
+      if (t.dueDate) {
+        const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+        return dueTime >= today.getTime() && dueTime <= todayEnd.getTime();
+      }
+      return false;
+    });
+
+    const totalDailyWork = tasksForToday.length + meetingsToday.length;
+
+    // If no work for today, return 0
+    if (totalDailyWork === 0) return 0;
+
+    // Calculate work left as percentage of total daily work
+    // Assuming each task/meeting is equal weight
+    const workLeft = totalDailyWork;
+    const score = Math.min(100, Math.round((workLeft / Math.max(totalDailyWork, 1)) * 100));
+
+    return score;
+  };
+
+  const getWorkLeftScore = () => {
+    const now = Date.now();
+
+    // Get todos for the current workspace
+    const relevantTodos = workspace === "everything"
+      ? todos
+      : todos.filter(t => t.workspace === workspace);
+
+    // Filter by selected project if on a project page
+    const filteredByProject = selectedProjectPage
+      ? relevantTodos.filter(t => t.project === selectedProjectPage)
+      : relevantTodos;
+
+    // All incomplete tasks (excluding those with future start dates)
+    const actionableTasks = filteredByProject.filter(t => {
+      if (t.completed) return false;
+      // Exclude tasks with future start dates
+      if (t.startDate && t.startDate > now) return false;
+      return true;
+    });
+
+    // All incomplete tasks
+    const allIncompleteTasks = filteredByProject.filter(t => !t.completed);
+
+    // If no incomplete tasks, return 0
+    if (allIncompleteTasks.length === 0) return 0;
+
+    // Calculate percentage of actionable work
+    const score = Math.min(100, Math.round((actionableTasks.length / Math.max(allIncompleteTasks.length, 1)) * 100));
+
+    return score;
+  };
+
   // Workspace-specific metrics
   const getWorkspaceMetrics = (targetWorkspace: WorkspaceType) => {
     const wsTodos = todos.filter(t => t.workspace === targetWorkspace);
