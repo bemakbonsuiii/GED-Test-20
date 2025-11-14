@@ -2058,6 +2058,124 @@ Return ONLY the todo IDs, no explanation needed.`;
               </Card>
             </div>
 
+            {/* Metrics Widget - Only on Homepage */}
+            {workspace === "everything" && (
+              <Card className="mb-6 shadow-lg border-2 border-blue-200 dark:border-blue-800">
+                <CardHeader className="cursor-pointer hover:bg-accent/50 transition-colors" onClick={() => setIsMetricsExpanded(!isMetricsExpanded)}>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Target className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                    Metrics & Progress
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="ml-auto h-6 w-6 p-0"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsMetricsExpanded(!isMetricsExpanded);
+                      }}
+                    >
+                      {isMetricsExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                    </Button>
+                  </CardTitle>
+                </CardHeader>
+                {isMetricsExpanded && (
+                  <CardContent className="space-y-6 pt-4">
+                    {/* Daily Tasks Metric */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <CalendarIcon className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+                          <span className="text-sm font-medium">Today's Tasks</span>
+                        </div>
+                        <span className="text-sm text-muted-foreground">
+                          {getDailyTasksMetrics().completed} / {getDailyTasksMetrics().completed + getDailyTasksMetrics().total} completed
+                        </span>
+                      </div>
+                      <div className="relative h-4 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                        <div
+                          className="absolute top-0 left-0 h-full bg-gradient-to-r from-orange-500 to-orange-600 transition-all duration-500"
+                          style={{ width: `${getDailyTasksMetrics().percentage}%` }}
+                        />
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Tasks due today or marked as EOD • {getDailyTasksMetrics().percentage}% complete
+                      </p>
+                    </div>
+
+                    {/* Actionable Tasks Metric */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Zap className="h-4 w-4 text-green-600 dark:text-green-400" />
+                          <span className="text-sm font-medium">Actionable Tasks</span>
+                        </div>
+                        <span className="text-sm text-muted-foreground">
+                          {getActionableTasksMetrics().actionable} / {getActionableTasksMetrics().total}
+                        </span>
+                      </div>
+                      <div className="relative h-4 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                        <div
+                          className="absolute top-0 left-0 h-full bg-gradient-to-r from-green-500 to-green-600 transition-all duration-500"
+                          style={{ width: `${getActionableTasksMetrics().percentage}%` }}
+                        />
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Tasks ready to start now • {getActionableTasksMetrics().percentage}% of all tasks
+                      </p>
+                    </div>
+
+                    {/* Projects Progress */}
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2">
+                        <Briefcase className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                        <span className="text-sm font-medium">Projects by Workspace</span>
+                      </div>
+                      {getProjectsMetrics().map(wsMetric => (
+                        <div key={wsMetric.workspace} className="space-y-2 p-3 bg-accent/30 rounded-lg">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium capitalize">{wsMetric.workspace}</span>
+                            <span className="text-xs text-muted-foreground">
+                              {wsMetric.totalCompleted} / {wsMetric.totalTodos} tasks
+                            </span>
+                          </div>
+                          {wsMetric.totalTodos > 0 ? (
+                            <>
+                              <div className="relative h-3 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                                <div
+                                  className="absolute top-0 left-0 h-full bg-gradient-to-r from-purple-500 to-purple-600 transition-all duration-500"
+                                  style={{ width: `${wsMetric.overall}%` }}
+                                />
+                              </div>
+                              {wsMetric.projects.length > 0 && (
+                                <div className="space-y-1 mt-2">
+                                  {wsMetric.projects.map(project => (
+                                    <div key={project.name} className="flex items-center justify-between text-xs">
+                                      <span className="text-muted-foreground truncate flex-1">{project.name}</span>
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-muted-foreground">{project.completed}/{project.total}</span>
+                                        <div className="w-16 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                                          <div
+                                            className="h-full bg-purple-500"
+                                            style={{ width: `${project.percentage}%` }}
+                                          />
+                                        </div>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </>
+                          ) : (
+                            <p className="text-xs text-muted-foreground">No projects in this workspace</p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                )}
+              </Card>
+            )}
+
             {/* Priorities Widget */}
             <Card className="mb-6 shadow-lg border-2 border-yellow-200 dark:border-yellow-800">
                 <CardHeader className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/30 dark:to-orange-950/30">
