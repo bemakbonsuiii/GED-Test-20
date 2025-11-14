@@ -537,12 +537,27 @@ const Home = () => {
                                     <Users className="h-4 w-4 text-primary" />
                                     <span className="font-medium">{meeting.text}</span>
                                   </div>
-                                  {meeting.project && (
-                                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                                      <Briefcase className="h-3 w-3" />
-                                      {meeting.project}
-                                    </div>
-                                  )}
+                                  <div className="flex items-center gap-2 mb-1 flex-wrap">
+                                    <Badge
+                                      variant={meeting.priority === "P0" ? "destructive" : "outline"}
+                                      className={`text-xs ${
+                                        meeting.priority === "P1" ? "border-orange-500 text-orange-500" : ""
+                                      }`}
+                                    >
+                                      {meeting.priority}
+                                    </Badge>
+                                    {meeting.isEOD && (
+                                      <Badge variant="default" className="text-xs bg-red-600">
+                                        EOD
+                                      </Badge>
+                                    )}
+                                    {meeting.project && (
+                                      <Badge variant="outline" className="text-xs gap-1">
+                                        <Briefcase className="h-3 w-3" />
+                                        {meeting.project}
+                                      </Badge>
+                                    )}
+                                  </div>
                                 </div>
                                 <Checkbox
                                   checked={meeting.completed}
