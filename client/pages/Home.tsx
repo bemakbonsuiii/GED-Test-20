@@ -137,7 +137,14 @@ const Home = () => {
   const workspaceTodos = (workspace === "everything"
     ? todos
     : todos.filter((todo) => todo.workspace === workspace)
-  ).filter((todo) => !todo.parentId);
+  ).filter((todo) => {
+    // If filtering by type, show child todos of that type as standalone items
+    if (selectedTypeFilter) {
+      return true; // Don't filter out children when type filter is active
+    }
+    // Otherwise, only show parent todos (children appear nested under parents)
+    return !todo.parentId;
+  });
 
   const getAllProjects = (): string[] => {
     const projectSet = new Set<string>();
