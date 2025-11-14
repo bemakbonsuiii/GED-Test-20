@@ -256,6 +256,19 @@ const Home = () => {
                 {todo.text}
               </span>
               <div className="flex items-center gap-1.5">
+                <Badge
+                  variant={todo.priority === "P0" ? "destructive" : "outline"}
+                  className={`text-xs ${
+                    todo.priority === "P1" ? "border-orange-500 text-orange-500" : ""
+                  }`}
+                >
+                  {todo.priority}
+                </Badge>
+                {todo.isEOD && (
+                  <Badge variant="default" className="gap-1 text-xs bg-red-600">
+                    EOD
+                  </Badge>
+                )}
                 {todo.project && (
                   <Badge variant="outline" className="gap-1 text-xs">
                     <Briefcase className="h-3 w-3" />
