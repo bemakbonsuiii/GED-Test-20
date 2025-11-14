@@ -833,21 +833,23 @@ const Home = () => {
                     {allProjects.length > 0 && !isCreatingNewProject ? (
                       <>
                         <Select
-                          value={newTodoProject}
-                          onValueChange={(value) => {
-                            if (value === "__new__") {
-                              setIsCreatingNewProject(true);
-                              setNewTodoProject("");
-                            } else {
-                              setNewTodoProject(value);
-                            }
-                          }}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select or create a project" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="">No Project</SelectItem>
+                      value={newTodoProject || "__none__"}
+                      onValueChange={(value) => {
+                        if (value === "__new__") {
+                          setIsCreatingNewProject(true);
+                          setNewTodoProject("");
+                        } else if (value === "__none__") {
+                          setNewTodoProject("");
+                        } else {
+                          setNewTodoProject(value);
+                        }
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select or create a project" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="__none__">No Project</SelectItem>
                             {allProjects.map((project) => (
                               <SelectItem key={project} value={project}>
                                 {project}
