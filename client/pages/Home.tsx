@@ -982,10 +982,12 @@ const Home = () => {
                   </div>
                 ) : (
                   <div className="flex gap-3 overflow-x-auto pb-2">
-                    {meetingTodos.map((meeting) => (
+                    {meetingTodos.map((meeting) => {
+                      const meetingConfig = TODO_TYPE_CONFIG["Meeting"];
+                      return (
                       <div
                         key={meeting.id}
-                        className="flex-shrink-0 flex items-center gap-3 p-3 rounded-lg border bg-background hover:bg-accent/50 transition-colors min-w-[300px]"
+                        className={`flex-shrink-0 flex items-center gap-3 p-3 rounded-lg border-2 transition-colors min-w-[300px] ${meetingConfig.bgLight} ${meetingConfig.bgDark} ${meetingConfig.borderLight} ${meetingConfig.borderDark} hover:shadow-md`}
                       >
                         <Checkbox
                           checked={meeting.completed}
@@ -1032,7 +1034,8 @@ const Home = () => {
                           </div>
                         </div>
                       </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </CardContent>
