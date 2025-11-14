@@ -637,7 +637,10 @@ const Home = () => {
                             />
                             <div className="flex-1 min-w-0">
                               <div className="flex items-start gap-2 flex-wrap">
-                                <span className={`text-sm break-words ${child.completed ? "line-through text-muted-foreground" : ""}`}>
+                                <span
+                                  className={`text-sm break-words cursor-pointer hover:underline ${child.completed ? "line-through text-muted-foreground" : ""}`}
+                                  onClick={() => openEditDialog(child)}
+                                >
                                   {child.text}
                                 </span>
                                 <Badge variant="outline" className="text-xs">
