@@ -1824,7 +1824,7 @@ const Home = () => {
                     {(() => {
                       const deadlineCount = workspaceTodos.filter(t => !t.completed && t.dueDate && t.type !== "Meeting").length;
                       return deadlineCount > 0 ? (
-                        <Badge variant="secondary" className="ml-auto">
+                        <Badge variant="secondary">
                           {deadlineCount}
                         </Badge>
                       ) : null;
