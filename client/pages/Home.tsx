@@ -174,6 +174,7 @@ const Home = () => {
   const [newTodoText, setNewTodoText] = useState("");
   const [newTodoType, setNewTodoType] = useState<TodoType>("Task");
   const [newTodoWorkspace, setNewTodoWorkspace] = useState<WorkspaceType>("personal");
+  const [newTodoStartDate, setNewTodoStartDate] = useState<Date | undefined>(undefined);
   const [newTodoDueDate, setNewTodoDueDate] = useState<Date | undefined>(undefined);
   const [newTodoProject, setNewTodoProject] = useState("");
   const [isCreatingNewProject, setIsCreatingNewProject] = useState(false);
