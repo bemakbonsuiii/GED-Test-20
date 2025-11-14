@@ -780,7 +780,7 @@ const Home = () => {
                   <div className="space-y-2">
                     <label className="text-sm font-medium">Due Date</label>
                     <div className="flex gap-2">
-                      <Popover>
+                      <Popover open={isDatePopoverOpen} onOpenChange={setIsDatePopoverOpen}>
                         <PopoverTrigger asChild>
                           <Button
                             variant="outline"
@@ -798,7 +798,10 @@ const Home = () => {
                           <Calendar
                             mode="single"
                             selected={newTodoDueDate}
-                            onSelect={setNewTodoDueDate}
+                            onSelect={(date) => {
+                              setNewTodoDueDate(date);
+                              setIsDatePopoverOpen(false);
+                            }}
                             initialFocus
                           />
                         </PopoverContent>
