@@ -39,7 +39,7 @@ import {
 import { format, isPast, isToday, isTomorrow, differenceInDays } from "date-fns";
 
 type TodoType = "Task" | "Deliverable" | "Quick Win" | "Meeting";
-type Workspace = "personal" | "work";
+type Workspace = "personal" | "work" | "creative" | "everything";
 type Priority = "P0" | "P1" | "P2";
 
 interface Todo {
@@ -98,7 +98,9 @@ const Home = () => {
         const migrated = parsed.map((todo: any) => ({
           ...todo,
           type: todo.isMeeting ? "Meeting" : (todo.type || "Task"),
-          workspace: todo.workspace || "personal",
+          workspace: (todo.workspace === "personal" || todo.workspace === "work" || todo.workspace === "creative")
+            ? todo.workspace
+            : "personal",
           priority: todo.priority || "P2",
           isEOD: todo.isEOD || false,
           agenda: todo.agenda,
@@ -115,7 +117,9 @@ const Home = () => {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
 
-  const workspaceTodos = todos.filter((todo) => todo.workspace === workspace);
+  const workspaceTodos = workspace === "everything"
+    ? todos
+    : todos.filter((todo) => todo.workspace === workspace);
 
   const getAllProjects = (): string[] => {
     const projectSet = new Set<string>();
@@ -136,6 +140,11 @@ const Home = () => {
     setIsCreateDialogOpen(true);
   };
 
+  const getActualWorkspace = (): "personal" | "work" | "creative" => {
+    if (workspace === "everything") return "personal";
+    return workspace as "personal" | "work" | "creative";
+  };
+
   const createTodo = () => {
     let dueDateTime = newTodoDueDate ? newTodoDueDate.getTime() : undefined;
 
@@ -152,7 +161,7 @@ const Home = () => {
       completed: false,
       createdAt: Date.now(),
       type: newTodoType,
-      workspace,
+      workspace: getActualWorkspace(),
       dueDate: dueDateTime,
       project: newTodoProject || undefined,
       priority: newTodoPriority,
@@ -453,8 +462,10 @@ const Home = () => {
         <Tabs value={workspace} onValueChange={(v) => setWorkspace(v as Workspace)}>
           <div className="flex justify-center mb-6">
             <TabsList>
+              <TabsTrigger value="everything">Everything</TabsTrigger>
               <TabsTrigger value="personal">Personal</TabsTrigger>
               <TabsTrigger value="work">Work</TabsTrigger>
+              <TabsTrigger value="creative">Creative</TabsTrigger>
             </TabsList>
           </div>
 
