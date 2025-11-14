@@ -242,6 +242,21 @@ const Home = () => {
     setLinkingTodoId(null);
   };
 
+  const openEditDialog = (todo: Todo) => {
+    setEditingTodo(todo);
+    setIsEditDialogOpen(true);
+  };
+
+  const saveEditedTodo = () => {
+    if (!editingTodo) return;
+
+    setTodos(todos.map((todo) =>
+      todo.id === editingTodo.id ? editingTodo : todo
+    ));
+    setIsEditDialogOpen(false);
+    setEditingTodo(null);
+  };
+
   const createTodo = () => {
     let dueDateTime = newTodoDueDate ? newTodoDueDate.getTime() : undefined;
 
