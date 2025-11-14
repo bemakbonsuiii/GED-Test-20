@@ -234,6 +234,7 @@ const Home = () => {
       meetingTime: newTodoType === "Meeting" ? newTodoMeetingTime : undefined,
       notes: newTodoNotes || undefined,
       links: newTodoLinks || undefined,
+      parentId: newTodoParentId,
     };
 
     setTodos([newTodo, ...todos]);
