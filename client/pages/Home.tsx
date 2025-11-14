@@ -93,7 +93,6 @@ const Home = () => {
   const [newTodoAgenda, setNewTodoAgenda] = useState("");
   const [newTodoMeetingTime, setNewTodoMeetingTime] = useState("");
   const [newTodoDueTime, setNewTodoDueTime] = useState("");
-  const [isDatePopoverOpen, setIsDatePopoverOpen] = useState(false);
   const [editingTodoId, setEditingTodoId] = useState<string | null>(null);
 
   useEffect(() => {
