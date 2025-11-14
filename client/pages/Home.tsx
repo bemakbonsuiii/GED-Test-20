@@ -867,7 +867,7 @@ const Home = () => {
                   <div className="space-y-2">
                     <label className="text-sm font-medium">Due Date</label>
                     <div className="flex gap-2">
-                      <Popover>
+                      <Popover open={datePopoverOpen} onOpenChange={setDatePopoverOpen}>
                         <PopoverTrigger asChild>
                           <Button
                             variant="outline"
@@ -881,14 +881,17 @@ const Home = () => {
                             )}
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start" onOpenAutoFocus={(e) => e.preventDefault()}>
+                        <PopoverContent className="w-auto p-0" align="start">
                           <Calendar
                             mode="single"
                             selected={newTodoDueDate}
                             onSelect={(date) => {
                               console.log('Date selected:', date);
                               console.log('Current newTodoDueDate:', newTodoDueDate);
-                              setNewTodoDueDate(date);
+                              if (date) {
+                                setNewTodoDueDate(date);
+                                setDatePopoverOpen(false);
+                              }
                             }}
                             initialFocus
                           />
