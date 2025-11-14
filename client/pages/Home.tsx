@@ -265,6 +265,16 @@ const Home = () => {
     return Array.from(projectSet).sort();
   };
 
+  const getWorkspaceProjects = (targetWorkspace: WorkspaceType): string[] => {
+    const projectSet = new Set<string>();
+    todos
+      .filter((todo) => todo.workspace === targetWorkspace)
+      .forEach((todo) => {
+        if (todo.project) projectSet.add(todo.project);
+      });
+    return Array.from(projectSet).sort();
+  };
+
   const addTodo = (e: React.FormEvent) => {
     e.preventDefault();
     const trimmed = inputValue.trim();
@@ -946,30 +956,40 @@ const Home = () => {
               </Popover>
 
               {editingProject === todo.id ? (
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    updateTodoProject(todo.id, projectInput);
-                  }}
-                  className="flex gap-1"
-                >
-                  <Input
-                    type="text"
-                    placeholder="Project name..."
-                    value={projectInput}
-                    onChange={(e) => setProjectInput(e.target.value)}
-                    className="h-6 text-xs w-32"
-                    autoFocus
-                    onBlur={() => {
-                      if (!projectInput.trim()) {
-                        setEditingProject(null);
-                      }
+                <div className="relative">
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      updateTodoProject(todo.id, projectInput);
                     }}
-                  />
-                  <Button type="submit" size="sm" className="h-6 px-2 text-xs">
-                    Set
-                  </Button>
-                </form>
+                    className="flex gap-1"
+                  >
+                    <Input
+                      type="text"
+                      placeholder="Project name..."
+                      value={projectInput}
+                      onChange={(e) => setProjectInput(e.target.value)}
+                      className="h-6 text-xs w-32"
+                      autoFocus
+                      onBlur={(e) => {
+                        setTimeout(() => {
+                          if (!projectInput.trim()) {
+                            setEditingProject(null);
+                          }
+                        }, 200);
+                      }}
+                      list={`workspace-projects-${todo.workspace}`}
+                    />
+                    <datalist id={`workspace-projects-${todo.workspace}`}>
+                      {getWorkspaceProjects(todo.workspace).map((proj) => (
+                        <option key={proj} value={proj} />
+                      ))}
+                    </datalist>
+                    <Button type="submit" size="sm" className="h-6 px-2 text-xs">
+                      Set
+                    </Button>
+                  </form>
+                </div>
               ) : (
                 <Button
                   variant="outline"
