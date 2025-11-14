@@ -675,159 +675,256 @@ const Home = () => {
         </Tabs>
 
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-          <DialogContent>
+          <DialogContent className="max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>Create New Task</DialogTitle>
+              <DialogTitle>
+                {dialogStep === "type" ? "Select To-Do Type" : "Create New To-Do"}
+              </DialogTitle>
               <DialogDescription>
-                Add details for "{newTodoText}"
+                {dialogStep === "type"
+                  ? `What type of to-do is "${newTodoText}"?`
+                  : `Add details for "${newTodoText}"`
+                }
               </DialogDescription>
             </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Due Date</label>
-                <div className="flex gap-2">
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="w-full justify-start text-left font-normal"
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {newTodoDueDate ? (
-                          format(newTodoDueDate, "PPP")
-                        ) : (
-                          <span>Pick a date</span>
-                        )}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                      <Calendar
-                        mode="single"
-                        selected={newTodoDueDate}
-                        onSelect={setNewTodoDueDate}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  {newTodoDueDate && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setNewTodoDueDate(undefined)}
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  )}
-                </div>
-                {!newTodoDueDate && (
-                  <p className="text-xs text-muted-foreground">
-                    Leave empty for "No due date"
-                  </p>
-                )}
-              </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Project</label>
-                {allProjects.length > 0 && !isCreatingNewProject ? (
-                  <>
-                    <Select
-                      value={newTodoProject}
-                      onValueChange={(value) => {
-                        if (value === "__new__") {
-                          setIsCreatingNewProject(true);
-                          setNewTodoProject("");
-                        } else {
-                          setNewTodoProject(value);
-                        }
-                      }}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select or create a project" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="">No Project</SelectItem>
-                        {allProjects.map((project) => (
-                          <SelectItem key={project} value={project}>
-                            {project}
-                          </SelectItem>
-                        ))}
-                        <SelectItem value="__new__">+ Create New Project</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </>
-                ) : (
-                  <div className="space-y-2">
-                    <Input
-                      placeholder="Enter project name or leave empty"
-                      value={newTodoProject}
-                      onChange={(e) => setNewTodoProject(e.target.value)}
-                      autoFocus={isCreatingNewProject}
-                    />
-                    {allProjects.length > 0 && isCreatingNewProject && (
+            {dialogStep === "type" ? (
+              <>
+                <div className="space-y-3 py-4">
+                  {(Object.keys(TODO_TYPE_CONFIG) as TodoType[]).map((type) => {
+                    const Icon = TODO_TYPE_CONFIG[type].icon;
+                    return (
                       <Button
-                        variant="ghost"
-                        size="sm"
+                        key={type}
+                        variant={newTodoType === type ? "default" : "outline"}
+                        className="w-full justify-start h-auto py-4"
                         onClick={() => {
-                          setIsCreatingNewProject(false);
-                          setNewTodoProject("");
+                          setNewTodoType(type);
+                          setDialogStep("details");
                         }}
                       >
-                        ← Back to select
+                        <Icon className="h-5 w-5 mr-3" />
+                        <div className="text-left">
+                          <div className="font-semibold">{type}</div>
+                          <div className="text-xs text-muted-foreground">
+                            {type === "Task" && "Standard work item"}
+                            {type === "Deliverable" && "Project outcome or milestone"}
+                            {type === "Quick Win" && "Easy task with immediate impact"}
+                            {type === "Meeting" && "Scheduled discussion or event"}
+                          </div>
+                        </div>
                       </Button>
+                    );
+                  })}
+                </div>
+                <DialogFooter>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setIsCreateDialogOpen(false);
+                      setDialogStep("type");
+                      setNewTodoText("");
+                      setNewTodoType("Task");
+                      setNewTodoDueDate(undefined);
+                      setNewTodoProject("");
+                      setIsCreatingNewProject(false);
+                      setNewTodoPriority("P2");
+                      setNewTodoIsEOD(false);
+                      setNewTodoAgenda("");
+                      setNewTodoMeetingTime("");
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </DialogFooter>
+              </>
+            ) : (
+              <>
+                <div className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Due Date</label>
+                    <div className="flex gap-2">
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            className="w-full justify-start text-left font-normal"
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {newTodoDueDate ? (
+                              format(newTodoDueDate, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0">
+                          <Calendar
+                            mode="single"
+                            selected={newTodoDueDate}
+                            onSelect={setNewTodoDueDate}
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      {newTodoDueDate && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => setNewTodoDueDate(undefined)}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                    {!newTodoDueDate && (
+                      <p className="text-xs text-muted-foreground">
+                        Leave empty for "No due date"
+                      </p>
                     )}
                   </div>
-                )}
-                {!newTodoProject && !isCreatingNewProject && (
-                  <p className="text-xs text-muted-foreground">
-                    Leave empty for "No Project"
-                  </p>
-                )}
-              </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Priority</label>
-                <Select value={newTodoPriority} onValueChange={(value: Priority) => setNewTodoPriority(value)}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="P0">P0 - Critical</SelectItem>
-                    <SelectItem value="P1">P1 - High</SelectItem>
-                    <SelectItem value="P2">P2 - Normal</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+                  {newTodoType === "Meeting" && (
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Time</label>
+                      <Input
+                        type="time"
+                        value={newTodoMeetingTime}
+                        onChange={(e) => setNewTodoMeetingTime(e.target.value)}
+                      />
+                      {!newTodoMeetingTime && (
+                        <p className="text-xs text-muted-foreground">
+                          Optional: Set meeting time
+                        </p>
+                      )}
+                    </div>
+                  )}
 
-              <div className="flex items-center justify-between space-x-2">
-                <div className="space-y-0.5">
-                  <label className="text-sm font-medium">Needs to be done today</label>
-                  <p className="text-xs text-muted-foreground">
-                    Task will be marked as EOD (End of Day)
-                  </p>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Project</label>
+                    {allProjects.length > 0 && !isCreatingNewProject ? (
+                      <>
+                        <Select
+                          value={newTodoProject}
+                          onValueChange={(value) => {
+                            if (value === "__new__") {
+                              setIsCreatingNewProject(true);
+                              setNewTodoProject("");
+                            } else {
+                              setNewTodoProject(value);
+                            }
+                          }}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select or create a project" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="">No Project</SelectItem>
+                            {allProjects.map((project) => (
+                              <SelectItem key={project} value={project}>
+                                {project}
+                              </SelectItem>
+                            ))}
+                            <SelectItem value="__new__">+ Create New Project</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </>
+                    ) : (
+                      <div className="space-y-2">
+                        <Input
+                          placeholder="Enter project name or leave empty"
+                          value={newTodoProject}
+                          onChange={(e) => setNewTodoProject(e.target.value)}
+                          autoFocus={isCreatingNewProject}
+                        />
+                        {allProjects.length > 0 && isCreatingNewProject && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setIsCreatingNewProject(false);
+                              setNewTodoProject("");
+                            }}
+                          >
+                            ← Back to select
+                          </Button>
+                        )}
+                      </div>
+                    )}
+                    {!newTodoProject && !isCreatingNewProject && (
+                      <p className="text-xs text-muted-foreground">
+                        Leave empty for "No Project"
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Priority</label>
+                    <Select value={newTodoPriority} onValueChange={(value: Priority) => setNewTodoPriority(value)}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="P0">P0 - Critical</SelectItem>
+                        <SelectItem value="P1">P1 - High</SelectItem>
+                        <SelectItem value="P2">P2 - Normal</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="flex items-center justify-between space-x-2">
+                    <div className="space-y-0.5">
+                      <label className="text-sm font-medium">Needs to be done today</label>
+                      <p className="text-xs text-muted-foreground">
+                        To-do will be marked as EOD (End of Day)
+                      </p>
+                    </div>
+                    <Switch
+                      checked={newTodoIsEOD}
+                      onCheckedChange={setNewTodoIsEOD}
+                    />
+                  </div>
+
+                  {newTodoType === "Meeting" && (
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Agenda</label>
+                      <Input
+                        placeholder="Enter meeting agenda (optional)"
+                        value={newTodoAgenda}
+                        onChange={(e) => setNewTodoAgenda(e.target.value)}
+                      />
+                    </div>
+                  )}
                 </div>
-                <Switch
-                  checked={newTodoIsEOD}
-                  onCheckedChange={setNewTodoIsEOD}
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setIsCreateDialogOpen(false);
-                  setNewTodoText("");
-                  setNewTodoDueDate(undefined);
-                  setNewTodoProject("");
-                  setIsCreatingNewProject(false);
-                  setNewTodoPriority("P2");
-                  setNewTodoIsEOD(false);
-                }}
-              >
-                Cancel
-              </Button>
-              <Button onClick={createTodo}>Create Task</Button>
-            </DialogFooter>
+                <DialogFooter>
+                  <Button
+                    variant="ghost"
+                    onClick={() => setDialogStep("type")}
+                  >
+                    Back
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setIsCreateDialogOpen(false);
+                      setDialogStep("type");
+                      setNewTodoText("");
+                      setNewTodoType("Task");
+                      setNewTodoDueDate(undefined);
+                      setNewTodoProject("");
+                      setIsCreatingNewProject(false);
+                      setNewTodoPriority("P2");
+                      setNewTodoIsEOD(false);
+                      setNewTodoAgenda("");
+                      setNewTodoMeetingTime("");
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button onClick={createTodo}>Create To-Do</Button>
+                </DialogFooter>
+              </>
+            )}
           </DialogContent>
         </Dialog>
       </div>
