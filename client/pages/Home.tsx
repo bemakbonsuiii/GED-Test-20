@@ -38,6 +38,11 @@ import {
   Edit,
   Moon,
   Sun,
+  Star,
+  StarOff,
+  GripVertical,
+  Sparkles,
+  Send,
 } from "lucide-react";
 import { format, isPast, isToday, isTomorrow, differenceInDays } from "date-fns";
 
@@ -63,6 +68,8 @@ interface Todo {
   notes?: string;
   links?: string;
   parentId?: string;
+  isPriority?: boolean;
+  priorityOrder?: number;
 }
 
 type FilterType = "all" | "active" | "completed";
