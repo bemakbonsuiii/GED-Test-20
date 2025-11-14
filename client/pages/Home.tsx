@@ -1322,107 +1322,138 @@ const Home = () => {
               </CardContent>
             </Card>
 
-            {/* AI Recommended Priorities */}
-            <Card className="shadow-lg border-2 border-purple-200 dark:border-purple-800">
-              <CardHeader className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/30 dark:to-blue-950/30">
-                <CardTitle className="flex items-center gap-2">
-                  <Zap className="h-5 w-5 text-purple-600 dark:text-purple-400" />
-                  AI Recommended Priorities
-                </CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  Based on your tasks, deadlines, and priorities
-                </p>
-              </CardHeader>
-              <CardContent className="pt-6">
-                {loadingRecommendations ? (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <div className="animate-pulse">Analyzing your to-dos...</div>
-                  </div>
-                ) : recommendationsError ? (
-                  <div className="text-center py-8 text-orange-600 dark:text-orange-400 text-sm">
-                    <p className="mb-2">⚠️ {recommendationsError}</p>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => fetchAIRecommendations()}
-                    >
-                      Retry
-                    </Button>
-                  </div>
-                ) : aiRecommendations.length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground text-sm">
-                    {todos.filter(t => !t.completed).length === 0
-                      ? "All done! Add some to-dos to get started."
-                      : "AI recommendations will appear here"}
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {aiRecommendations.map((rec, index) => {
-                      const todo = todos.find(t => t.id === rec.id);
-                      if (!todo) return null;
-                      const typeConfig = TODO_TYPE_CONFIG[todo.type];
+            {/* Priorities and Todd Assistant */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+              {/* Priorities Widget */}
+              <Card className="shadow-lg border-2 border-yellow-200 dark:border-yellow-800">
+                <CardHeader className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/30 dark:to-orange-950/30">
+                  <CardTitle className="flex items-center gap-2">
+                    <Star className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+                    Priorities
+                  </CardTitle>
+                  <p className="text-sm text-muted-foreground">
+                    Drag to reorder your priority items
+                  </p>
+                </CardHeader>
+                <CardContent className="pt-6">
+                  {(() => {
+                    const priorityTodos = todos
+                      .filter(t => t.isPriority && !t.completed)
+                      .sort((a, b) => (a.priorityOrder || 0) - (b.priorityOrder || 0));
+
+                    if (priorityTodos.length === 0) {
                       return (
-                        <div
-                          key={rec.id}
-                          className={`p-4 rounded-lg border-2 transition-all hover:shadow-md ${typeConfig.bgLight} ${typeConfig.bgDark} ${typeConfig.borderLight} ${typeConfig.borderDark}`}
-                        >
-                          <div className="flex items-start gap-3">
-                            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-600 dark:bg-purple-500 text-white flex items-center justify-center font-bold text-sm">
-                              {index + 1}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-start gap-2 flex-wrap mb-2">
-                                <Checkbox
-                                  checked={todo.completed}
-                                  onCheckedChange={() => toggleTodo(todo.id)}
-                                  className="mt-0.5"
-                                />
-                                <span
-                                  className="font-medium break-words cursor-pointer hover:underline flex-1"
-                                  onClick={() => openSummaryDialog(todo)}
-                                >
-                                  {todo.text}
-                                </span>
-                              </div>
-                              <div className="flex items-center gap-2 mb-2 flex-wrap">
-                                <Badge
-                                  variant="outline"
-                                  className={`text-xs border ${typeConfig.borderLight} ${typeConfig.borderDark} ${typeConfig.textLight} ${typeConfig.textDark}`}
-                                >
-                                  {todo.type}
-                                </Badge>
-                                <Badge
-                                  variant={todo.priority === "P0" ? "destructive" : "outline"}
-                                  className={`text-xs ${
-                                    todo.priority === "P1" ? "border-orange-500 text-orange-500" : ""
-                                  }`}
-                                >
-                                  {todo.priority}
-                                </Badge>
-                                {todo.dueDate && (
-                                  <Badge variant="outline" className="text-xs gap-1">
-                                    <CalendarIcon className="h-3 w-3" />
-                                    {format(new Date(todo.dueDate), "MMM d")}
-                                  </Badge>
-                                )}
-                                {todo.isEOD && (
-                                  <Badge variant="default" className="text-xs bg-red-600">
-                                    EOD
-                                  </Badge>
-                                )}
-                              </div>
-                              <p className="text-sm text-muted-foreground italic">
-                                💡 {rec.reason}
-                              </p>
-                            </div>
-                          </div>
+                        <div className="text-center py-8 text-muted-foreground text-sm">
+                          No priority items yet. Star a to-do to add it here!
                         </div>
                       );
-                    })}
+                    }
+
+                    return (
+                      <DndContext
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragEnd={handleDragEnd}
+                      >
+                        <SortableContext
+                          items={priorityTodos.map(t => t.id)}
+                          strategy={verticalListSortingStrategy}
+                        >
+                          <div className="space-y-3">
+                            {priorityTodos.map((todo) => (
+                              <SortablePriorityItem key={todo.id} todo={todo} />
+                            ))}
+                          </div>
+                        </SortableContext>
+                      </DndContext>
+                    );
+                  })()}
+                </CardContent>
+              </Card>
+
+              {/* Todd AI Assistant */}
+              <Card className="shadow-lg border-2 border-purple-200 dark:border-purple-800">
+                <CardHeader className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/30 dark:to-blue-950/30">
+                  <CardTitle className="flex items-center gap-2">
+                    <Sparkles className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                    Ask Todd
+                  </CardTitle>
+                  <p className="text-sm text-muted-foreground">
+                    Your AI productivity assistant
+                  </p>
+                </CardHeader>
+                <CardContent className="pt-4">
+                  <div className="space-y-4">
+                    {/* Chat messages */}
+                    <div className="max-h-64 overflow-y-auto space-y-3">
+                      {toddMessages.length === 0 ? (
+                        <div className="text-center py-4 text-muted-foreground text-sm">
+                          Ask Todd to suggest priorities or recommend which to-dos to focus on!
+                        </div>
+                      ) : (
+                        toddMessages.map((msg, idx) => (
+                          <div key={idx} className={`${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
+                            <div
+                              className={`inline-block rounded-lg p-3 max-w-[85%] ${
+                                msg.role === 'user'
+                                  ? 'bg-blue-600 text-white'
+                                  : 'bg-accent text-foreground'
+                              }`}
+                            >
+                              <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                              {msg.suggestions && msg.suggestions.length > 0 && (
+                                <div className="mt-2 pt-2 border-t border-white/20 space-y-1">
+                                  <p className="text-xs font-medium">Suggested to-dos:</p>
+                                  {msg.suggestions.map((todoId) => {
+                                    const todo = todos.find(t => t.id === todoId);
+                                    if (!todo) return null;
+                                    return (
+                                      <div key={todoId} className="flex items-center gap-2">
+                                        <Button
+                                          size="sm"
+                                          variant="secondary"
+                                          className="h-6 text-xs flex-1 justify-start"
+                                          onClick={() => addTodoToPriorities(todoId)}
+                                          disabled={todo.isPriority}
+                                        >
+                                          {todo.isPriority ? '✓ ' : '+ '}{todo.text}
+                                        </Button>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        ))
+                      )}
+                      {toddLoading && (
+                        <div className="text-left">
+                          <div className="inline-block rounded-lg p-3 bg-accent">
+                            <div className="animate-pulse text-sm">Todd is thinking...</div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Input */}
+                    <form onSubmit={(e) => { e.preventDefault(); askTodd(); }} className="flex gap-2">
+                      <Input
+                        type="text"
+                        placeholder="Ask Todd about priorities..."
+                        value={toddInput}
+                        onChange={(e) => setToddInput(e.target.value)}
+                        className="flex-1"
+                        disabled={toddLoading}
+                      />
+                      <Button type="submit" size="icon" disabled={toddLoading || !toddInput.trim()}>
+                        <Send className="h-4 w-4" />
+                      </Button>
+                    </form>
                   </div>
-                )}
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2">
