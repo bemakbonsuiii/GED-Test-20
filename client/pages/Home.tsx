@@ -1890,7 +1890,7 @@ const Home = () => {
                       </div>
                     </div>
 
-                    {allProjects.length > 0 && (
+                    {allProjects.length > 0 && !selectedProjectPage && (
                       <div className="space-y-2">
                         <div className="flex items-center gap-2 text-sm font-medium">
                           <Briefcase className="h-4 w-4" />
