@@ -25,6 +25,7 @@ import {
 import {
   Trash2,
   Plus,
+  X,
   Target,
   CheckCircle2,
   Zap,
