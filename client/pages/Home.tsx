@@ -1836,7 +1836,9 @@ const Home = () => {
                           >
                             All Projects
                           </Button>
-                          {allProjects.map((project) => (
+                          {allProjects.map((project) => {
+                            const projectWorkspace = todos.find(t => t.project === project)?.workspace;
+                            return (
                             <Button
                               key={project}
                               variant={
@@ -1846,9 +1848,15 @@ const Home = () => {
                               onClick={() => setSelectedProjectFilter(project)}
                               className="justify-start"
                             >
-                              {project}
+                              <span className="flex-1 text-left">{project}</span>
+                              {workspace === "everything" && projectWorkspace && (
+                                <Badge variant="secondary" className="ml-2 text-[10px] capitalize">
+                                  {projectWorkspace}
+                                </Badge>
+                              )}
                             </Button>
-                          ))}
+                            );
+                          })}
                         </div>
                       </div>
                     )}
