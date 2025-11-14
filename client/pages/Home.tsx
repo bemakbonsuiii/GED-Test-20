@@ -102,6 +102,7 @@ const Home = () => {
   const [newTodoLinks, setNewTodoLinks] = useState("");
   const [newTodoParentId, setNewTodoParentId] = useState<string | undefined>(undefined);
   const [linkingTodoId, setLinkingTodoId] = useState<string | null>(null);
+  const [creatingChildForId, setCreatingChildForId] = useState<string | null>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem("todos");
