@@ -52,6 +52,8 @@ interface Todo {
   workspace: Workspace;
   priority: Priority;
   isEOD: boolean;
+  agenda?: string;
+  meetingTime?: string;
 }
 
 type FilterType = "all" | "active" | "completed";
@@ -78,12 +80,16 @@ const Home = () => {
   const [projectInput, setProjectInput] = useState("");
   const [editingProject, setEditingProject] = useState<string | null>(null);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [dialogStep, setDialogStep] = useState<"type" | "details">("type");
   const [newTodoText, setNewTodoText] = useState("");
+  const [newTodoType, setNewTodoType] = useState<TodoType>("Task");
   const [newTodoDueDate, setNewTodoDueDate] = useState<Date | undefined>(undefined);
   const [newTodoProject, setNewTodoProject] = useState("");
   const [isCreatingNewProject, setIsCreatingNewProject] = useState(false);
   const [newTodoPriority, setNewTodoPriority] = useState<Priority>("P2");
   const [newTodoIsEOD, setNewTodoIsEOD] = useState(false);
+  const [newTodoAgenda, setNewTodoAgenda] = useState("");
+  const [newTodoMeetingTime, setNewTodoMeetingTime] = useState("");
 
   useEffect(() => {
     const saved = localStorage.getItem("todos");
@@ -96,6 +102,8 @@ const Home = () => {
           workspace: todo.workspace || "personal",
           priority: todo.priority || "P2",
           isEOD: todo.isEOD || false,
+          agenda: todo.agenda,
+          meetingTime: todo.meetingTime,
         }));
         setTodos(migrated);
       } catch (e) {
@@ -125,31 +133,47 @@ const Home = () => {
 
     setNewTodoText(trimmed);
     setInputValue("");
+    setDialogStep("type");
     setIsCreateDialogOpen(true);
   };
 
   const createTodo = () => {
+    let dueDateTime = newTodoDueDate ? newTodoDueDate.getTime() : undefined;
+
+    if (newTodoType === "Meeting" && newTodoDueDate && newTodoMeetingTime) {
+      const [hours, minutes] = newTodoMeetingTime.split(":");
+      const dateWithTime = new Date(newTodoDueDate);
+      dateWithTime.setHours(parseInt(hours), parseInt(minutes));
+      dueDateTime = dateWithTime.getTime();
+    }
+
     const newTodo: Todo = {
       id: Date.now().toString(),
       text: newTodoText,
       completed: false,
       createdAt: Date.now(),
-      type: "Task",
+      type: newTodoType,
       workspace,
-      dueDate: newTodoDueDate ? newTodoDueDate.getTime() : undefined,
+      dueDate: dueDateTime,
       project: newTodoProject || undefined,
       priority: newTodoPriority,
       isEOD: newTodoIsEOD,
+      agenda: newTodoType === "Meeting" ? newTodoAgenda : undefined,
+      meetingTime: newTodoType === "Meeting" ? newTodoMeetingTime : undefined,
     };
 
     setTodos([newTodo, ...todos]);
     setIsCreateDialogOpen(false);
+    setDialogStep("type");
     setNewTodoText("");
+    setNewTodoType("Task");
     setNewTodoDueDate(undefined);
     setNewTodoProject("");
     setIsCreatingNewProject(false);
     setNewTodoPriority("P2");
     setNewTodoIsEOD(false);
+    setNewTodoAgenda("");
+    setNewTodoMeetingTime("");
   };
 
   const toggleTodo = (id: string) => {
