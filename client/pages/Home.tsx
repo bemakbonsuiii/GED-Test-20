@@ -73,7 +73,7 @@ const TODO_TYPE_CONFIG: Record<
 const Home = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [inputValue, setInputValue] = useState("");
-  const [workspace, setWorkspace] = useState<Workspace>("personal");
+  const [workspace, setWorkspace] = useState<Workspace>("everything");
   const [filter, setFilter] = useState<FilterType>("all");
   const [selectedTypeFilter, setSelectedTypeFilter] = useState<TodoType | null>(null);
   const [selectedProjectFilter, setSelectedProjectFilter] = useState<string | null>(null);
