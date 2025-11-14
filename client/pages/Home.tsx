@@ -1016,9 +1016,13 @@ const Home = () => {
                         variant={newTodoType === type ? "default" : "outline"}
                         className="w-full justify-start h-auto py-4"
                         onClick={() => {
+                          if (creatingChildForId && !newTodoText.trim()) {
+                            return; // Don't proceed without text when creating a child
+                          }
                           setNewTodoType(type);
                           setDialogStep(workspace === "everything" && !creatingChildForId ? "workspace" : "details");
                         }}
+                        disabled={creatingChildForId && !newTodoText.trim()}
                       >
                         <Icon className="h-5 w-5 mr-3" />
                         <div className="text-left">
