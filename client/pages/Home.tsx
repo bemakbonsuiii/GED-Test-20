@@ -687,7 +687,10 @@ const Home = () => {
                                       className="mt-0.5 h-3 w-3"
                                     />
                                     <div className="flex-1 min-w-0">
-                                      <span className={`break-words ${grandchild.completed ? "line-through text-muted-foreground" : ""}`}>
+                                      <span
+                                        className={`break-words cursor-pointer hover:underline ${grandchild.completed ? "line-through text-muted-foreground" : ""}`}
+                                        onClick={() => openEditDialog(grandchild)}
+                                      >
                                         {grandchild.text}
                                       </span>
                                       <Badge variant="outline" className="text-[10px] ml-1 px-1 py-0">
