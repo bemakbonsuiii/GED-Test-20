@@ -1134,6 +1134,7 @@ const Home = () => {
                         </Button>
                         {(Object.keys(TODO_TYPE_CONFIG) as TodoType[]).map((type) => {
                           const Icon = TODO_TYPE_CONFIG[type].icon;
+                          const typeConfig = TODO_TYPE_CONFIG[type];
                           return (
                             <Button
                               key={type}
@@ -1142,9 +1143,9 @@ const Home = () => {
                               }
                               size="sm"
                               onClick={() => setSelectedTypeFilter(type)}
-                              className="justify-start gap-1.5"
+                              className={`justify-start gap-1.5 ${selectedTypeFilter !== type ? `border-2 ${typeConfig.borderLight} ${typeConfig.borderDark}` : ''}`}
                             >
-                              <Icon className="h-3.5 w-3.5" />
+                              <Icon className={`h-3.5 w-3.5 ${selectedTypeFilter !== type ? `${typeConfig.textLight} ${typeConfig.textDark}` : ''}`} />
                               {type} ({typeCount(type)})
                             </Button>
                           );
