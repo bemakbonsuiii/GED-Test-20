@@ -1723,10 +1723,8 @@ const Home = () => {
               </Card>
             </div>
 
-            {/* Priorities and Todd Assistant */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-              {/* Priorities Widget */}
-              <Card className="shadow-lg border-2 border-yellow-200 dark:border-yellow-800">
+            {/* Priorities Widget */}
+            <Card className="mb-6 shadow-lg border-2 border-yellow-200 dark:border-yellow-800">
                 <CardHeader className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/30 dark:to-orange-950/30">
                   <div className="flex items-start justify-between">
                     <div>
@@ -1796,8 +1794,7 @@ const Home = () => {
                     );
                   })()}
                 </CardContent>
-              </Card>
-            </div>
+            </Card>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2">
