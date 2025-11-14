@@ -35,6 +35,7 @@ import {
   Briefcase,
   Clock,
   Users,
+  Edit,
 } from "lucide-react";
 import { format, isPast, isToday, isTomorrow, differenceInDays } from "date-fns";
 
@@ -835,14 +836,26 @@ const Home = () => {
               </div>
             )}
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => deleteTodo(todo.id)}
-            className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8"
-          >
-            <Trash2 className="h-4 w-4 text-destructive" />
-          </Button>
+          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => openEditDialog(todo)}
+              className="h-8 w-8"
+              title="Edit todo"
+            >
+              <Edit className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => deleteTodo(todo.id)}
+              className="h-8 w-8"
+              title="Delete todo"
+            >
+              <Trash2 className="h-4 w-4 text-destructive" />
+            </Button>
+          </div>
         </div>
       </div>
     );
