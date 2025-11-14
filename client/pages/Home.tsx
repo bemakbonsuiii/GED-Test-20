@@ -525,6 +525,64 @@ const Home = () => {
     }
   };
 
+  const autoPrioritize = async () => {
+    setToddLoading(true);
+
+    try {
+      const autoPrioritizePrompt = "Analyze all my to-dos and automatically select the top 5 most important items I should focus on today. Prioritize EOD items, urgent deadlines, and high-priority tasks. Return ONLY the todo IDs, no explanation needed.";
+
+      const response = await fetch('/api/todd-assistant', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: autoPrioritizePrompt,
+          todos: todos,
+          priorityTodos: todos.filter(t => t.isPriority).sort((a, b) => (a.priorityOrder || 0) - (b.priorityOrder || 0))
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to auto-prioritize');
+      }
+
+      const data = await response.json();
+
+      // Clear existing priorities first
+      setTodos(prevTodos =>
+        prevTodos.map(t => ({
+          ...t,
+          isPriority: false,
+          priorityOrder: undefined
+        }))
+      );
+
+      // Add suggested todos to priorities
+      if (data.suggestions && data.suggestions.length > 0) {
+        const topSuggestions = data.suggestions.slice(0, 5);
+        setTodos(prevTodos =>
+          prevTodos.map(t => {
+            const suggestionIndex = topSuggestions.indexOf(t.id);
+            if (suggestionIndex !== -1) {
+              return {
+                ...t,
+                isPriority: true,
+                priorityOrder: suggestionIndex
+              };
+            }
+            return t;
+          })
+        );
+      }
+    } catch (error: any) {
+      console.error('Error auto-prioritizing:', error);
+      alert('Failed to auto-prioritize. Please try again.');
+    } finally {
+      setToddLoading(false);
+    }
+  };
+
   const createTodo = () => {
     let dueDateTime = newTodoDueDate ? newTodoDueDate.getTime() : undefined;
 
