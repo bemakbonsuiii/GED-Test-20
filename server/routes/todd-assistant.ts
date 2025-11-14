@@ -127,7 +127,14 @@ Be concise but friendly. Address the user's specific question.`;
     );
     const childTodos = incompleteTodos.filter(t => t.parentId);
 
-    const userPrompt = `${overdueItems.length > 0 ? `🚨 OVERDUE ITEMS (CRITICAL - PAST DUE): ${overdueItems.length}\n` : ''}${eodItems.length > 0 ? `⚠️ URGENT EOD ITEMS (must complete today): ${eodItems.length}\n` : ''}${futureStartItems.length > 0 ? `⏳ FUTURE START ITEMS (cannot start yet): ${futureStartItems.length}\n` : ''}${todosWithChildren.length > 0 ? `🔗 PARENT ITEMS (blocked by children): ${todosWithChildren.length}\n` : ''}${childTodos.length > 0 ? `👶 CHILD ITEMS (blockers for parents): ${childTodos.length}\n` : ''}
+    const userPrompt = `${overdueItems.length > 0 ? `🚨 OVERDUE ITEMS (CRITICAL - PAST DUE): ${overdueItems.length}\n` : ''}${upcomingMeetingsWithIncompletePrep.length > 0 ? `🔴 URGENT: ${upcomingMeetingsWithIncompletePrep.length} MEETING(S) TODAY/TOMORROW WITH INCOMPLETE PREP TASKS (${meetingPrepTasks.length} tasks)\n` : ''}${eodItems.length > 0 ? `⚠️ URGENT EOD ITEMS (must complete today): ${eodItems.length}\n` : ''}${futureStartItems.length > 0 ? `⏳ FUTURE START ITEMS (cannot start yet): ${futureStartItems.length}\n` : ''}${todosWithChildren.length > 0 ? `🔗 PARENT ITEMS (blocked by children): ${todosWithChildren.length}\n` : ''}${childTodos.length > 0 ? `👶 CHILD ITEMS (blockers for parents): ${childTodos.length}\n` : ''}
+${upcomingMeetingsWithIncompletePrep.length > 0 ? `\nUPCOMING MEETINGS WITH INCOMPLETE PREP:\n${upcomingMeetingsWithIncompletePrep.map(m => {
+  const dueTime = typeof m.dueDate === 'string' ? new Date(m.dueDate).getTime() : m.dueDate!;
+  const dueDate = new Date(dueTime);
+  const isToday = dueDate.toDateString() === new Date().toDateString();
+  const incompletePrepTasks = todos.filter(t => t.parentId === m.id && !t.completed);
+  return `  📅 ${isToday ? 'TODAY' : 'TOMORROW'}: "${m.text}" - ${incompletePrepTasks.length} prep task(s) not done: ${incompletePrepTasks.map(t => `"${t.text}"`).join(', ')}`;
+}).join('\n')}\n` : ''}
 Current todos:
 ${JSON.stringify(incompleteTodos.slice(0, 50).map(t => {
   const canStart = !t.startDate || t.startDate <= now;
