@@ -340,6 +340,7 @@ const Home = () => {
                   >
                     <Clock className="h-3 w-3" />
                     {getDueDateLabel(todo.dueDate)}
+                    {todo.type !== "Meeting" && todo.dueTime && ` ${todo.dueTime}`}
                   </Badge>
                 )}
                 <Select
