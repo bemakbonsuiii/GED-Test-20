@@ -1399,6 +1399,17 @@ const Home = () => {
                     />
                   </div>
 
+                  {creatingChildForId && (
+                    <div className="space-y-2 p-3 bg-accent/50 rounded-md border">
+                      <div className="text-sm">
+                        <span className="font-medium">Creating child for:</span> {todos.find(t => t.id === creatingChildForId)?.text}
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Due date, project, and priority are inherited from parent. You can change them below.
+                      </p>
+                    </div>
+                  )}
+
                   <div className="space-y-2">
                     <label className="text-sm font-medium">Parent To-Do (Optional)</label>
                     {creatingChildForId ? (
