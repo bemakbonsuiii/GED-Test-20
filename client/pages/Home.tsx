@@ -36,6 +36,8 @@ import {
   Clock,
   Users,
   Edit,
+  Moon,
+  Sun,
 } from "lucide-react";
 import { format, isPast, isToday, isTomorrow, differenceInDays } from "date-fns";
 
@@ -67,16 +69,62 @@ type FilterType = "all" | "active" | "completed";
 
 const TODO_TYPE_CONFIG: Record<
   TodoType,
-  { icon: React.ComponentType<{ className?: string }>; color: string }
+  {
+    icon: React.ComponentType<{ className?: string }>;
+    color: string;
+    bgLight: string;
+    bgDark: string;
+    borderLight: string;
+    borderDark: string;
+    textLight: string;
+    textDark: string;
+  }
 > = {
-  Task: { icon: CheckCircle2, color: "bg-blue-500" },
-  Deliverable: { icon: Target, color: "bg-purple-500" },
-  "Quick Win": { icon: Zap, color: "bg-green-500" },
-  Meeting: { icon: Users, color: "bg-orange-500" },
+  Task: {
+    icon: CheckCircle2,
+    color: "bg-blue-500",
+    bgLight: "bg-blue-50",
+    bgDark: "dark:bg-blue-950/30",
+    borderLight: "border-blue-200",
+    borderDark: "dark:border-blue-800",
+    textLight: "text-blue-700",
+    textDark: "dark:text-blue-300"
+  },
+  Deliverable: {
+    icon: Target,
+    color: "bg-purple-500",
+    bgLight: "bg-purple-50",
+    bgDark: "dark:bg-purple-950/30",
+    borderLight: "border-purple-200",
+    borderDark: "dark:border-purple-800",
+    textLight: "text-purple-700",
+    textDark: "dark:text-purple-300"
+  },
+  "Quick Win": {
+    icon: Zap,
+    color: "bg-green-500",
+    bgLight: "bg-green-50",
+    bgDark: "dark:bg-green-950/30",
+    borderLight: "border-green-200",
+    borderDark: "dark:border-green-800",
+    textLight: "text-green-700",
+    textDark: "dark:text-green-300"
+  },
+  Meeting: {
+    icon: Users,
+    color: "bg-orange-500",
+    bgLight: "bg-orange-50",
+    bgDark: "dark:bg-orange-950/30",
+    borderLight: "border-orange-200",
+    borderDark: "dark:border-orange-800",
+    textLight: "text-orange-700",
+    textDark: "dark:text-orange-300"
+  },
 };
 
 const Home = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [darkMode, setDarkMode] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [workspace, setWorkspace] = useState<Workspace>("everything");
   const [filter, setFilter] = useState<FilterType>("all");
@@ -131,11 +179,29 @@ const Home = () => {
         console.error("Failed to parse todos from localStorage");
       }
     }
+
+    const savedDarkMode = localStorage.getItem("darkMode");
+    if (savedDarkMode) {
+      const isDark = savedDarkMode === "true";
+      setDarkMode(isDark);
+      if (isDark) {
+        document.documentElement.classList.add("dark");
+      }
+    }
   }, []);
 
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
+
+  useEffect(() => {
+    localStorage.setItem("darkMode", darkMode.toString());
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [darkMode]);
 
   const workspaceTodos = (workspace === "everything"
     ? todos
