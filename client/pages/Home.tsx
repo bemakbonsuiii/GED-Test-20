@@ -130,6 +130,7 @@ const Home = () => {
   const [recommendationsError, setRecommendationsError] = useState<string | null>(null);
   const fetchTimeoutRef = useRef<NodeJS.Timeout>();
   const [inputValue, setInputValue] = useState("");
+  const [isAddTodoExpanded, setIsAddTodoExpanded] = useState(false);
   const [workspace, setWorkspace] = useState<Workspace>("everything");
   const [filter, setFilter] = useState<FilterType>("all");
   const [selectedTypeFilter, setSelectedTypeFilter] = useState<TodoType | null>(null);
@@ -1021,6 +1022,15 @@ const Home = () => {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-8 relative">
           <Button
+            variant="default"
+            size="icon"
+            onClick={() => setIsAddTodoExpanded(!isAddTodoExpanded)}
+            className="absolute left-0 top-0 rounded-full shadow-lg bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+            title={isAddTodoExpanded ? "Close" : "Add new to-do"}
+          >
+            {isAddTodoExpanded ? <X className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
+          </Button>
+          <Button
             variant="outline"
             size="icon"
             onClick={() => setDarkMode(!darkMode)}
@@ -1048,29 +1058,35 @@ const Home = () => {
           </div>
 
           <TabsContent value={workspace}>
-            {/* Add New To-Do */}
-            <Card className="mb-6 shadow-lg border-2 border-blue-200 dark:border-blue-800">
-              <CardHeader className="pb-3 bg-gradient-to-r from-blue-50 to-slate-50 dark:from-blue-950/30 dark:to-slate-950/30">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Plus className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                  Add New To-Do
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-4">
-                <form onSubmit={addTodo} className="flex gap-2">
-                  <Input
-                    type="text"
-                    placeholder="Add a new to-do..."
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    className="flex-1"
-                  />
-                  <Button type="submit" size="icon">
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
+            {/* Expandable Add New To-Do */}
+            {isAddTodoExpanded && (
+              <Card className="mb-6 shadow-lg border-2 border-blue-200 dark:border-blue-800 animate-in fade-in slide-in-from-top-2 duration-200">
+                <CardHeader className="pb-3 bg-gradient-to-r from-blue-50 to-slate-50 dark:from-blue-950/30 dark:to-slate-950/30">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Plus className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                    Add New To-Do
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-4">
+                  <form onSubmit={(e) => {
+                    addTodo(e);
+                    setIsAddTodoExpanded(false);
+                  }} className="flex gap-2">
+                    <Input
+                      type="text"
+                      placeholder="Add a new to-do..."
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                      className="flex-1"
+                      autoFocus
+                    />
+                    <Button type="submit" size="icon">
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+            )}
 
             <Card className="mb-6">
               <CardHeader className="pb-3">
