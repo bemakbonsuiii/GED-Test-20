@@ -185,6 +185,8 @@ const Home = () => {
       isEOD: newTodoIsEOD,
       agenda: newTodoType === "Meeting" ? newTodoAgenda : undefined,
       meetingTime: newTodoType === "Meeting" ? newTodoMeetingTime : undefined,
+      notes: newTodoNotes || undefined,
+      links: newTodoLinks || undefined,
     };
 
     setTodos([newTodo, ...todos]);
