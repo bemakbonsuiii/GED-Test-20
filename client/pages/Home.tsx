@@ -649,16 +649,18 @@ const Home = () => {
               </div>
             )}
 
-            {!todo.parentId && linkingTodoId !== todo.id && (
+            {linkingTodoId !== todo.id && (
               <div className="pt-2 mt-2 border-t flex gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-6 px-2 text-xs"
-                  onClick={() => setLinkingTodoId(todo.id)}
-                >
-                  Link to Parent
-                </Button>
+                {!todo.parentId && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-6 px-2 text-xs"
+                    onClick={() => setLinkingTodoId(todo.id)}
+                  >
+                    Link to Parent
+                  </Button>
+                )}
                 {getAllowedChildTypes(todo.type).length > 0 && (
                   <Button
                     variant="outline"
