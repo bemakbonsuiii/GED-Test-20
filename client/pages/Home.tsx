@@ -286,12 +286,6 @@ const Home = () => {
                 {todo.text}
               </span>
               <div className="flex items-center gap-1.5">
-                {todo.isMeeting && (
-                  <Badge variant="secondary" className="gap-1 text-xs">
-                    <Users className="h-3 w-3" />
-                    Meeting
-                  </Badge>
-                )}
                 {todo.project && (
                   <Badge variant="outline" className="gap-1 text-xs">
                     <Briefcase className="h-3 w-3" />
