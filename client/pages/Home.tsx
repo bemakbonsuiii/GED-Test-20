@@ -131,9 +131,10 @@ const Home = () => {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
 
-  const workspaceTodos = workspace === "everything"
+  const workspaceTodos = (workspace === "everything"
     ? todos
-    : todos.filter((todo) => todo.workspace === workspace);
+    : todos.filter((todo) => todo.workspace === workspace)
+  ).filter((todo) => !todo.parentId);
 
   const getAllProjects = (): string[] => {
     const projectSet = new Set<string>();
