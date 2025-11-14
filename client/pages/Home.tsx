@@ -697,13 +697,52 @@ const Home = () => {
       dueDateTime = dateWithTime.getTime();
     }
 
+    const todoWorkspace = getActualWorkspace();
+
+    // Check if this is a new project that doesn't exist yet
+    if (newTodoProject && newTodoProject.trim()) {
+      const existingProject = projects.find(
+        p => p.name === newTodoProject.trim() && p.workspace === todoWorkspace
+      );
+
+      if (!existingProject) {
+        // This is a new project - open project creation dialog
+        const newTodo: Todo = {
+          id: Date.now().toString(),
+          text: newTodoText,
+          completed: false,
+          createdAt: Date.now(),
+          type: newTodoType,
+          workspace: todoWorkspace,
+          startDate: newTodoType !== "Meeting" ? startDateTime : undefined,
+          dueDate: dueDateTime,
+          dueTime: newTodoType !== "Meeting" ? (newTodoDueTime || undefined) : undefined,
+          project: undefined, // Will be set after project creation
+          priority: newTodoPriority,
+          isEOD: newTodoIsEOD,
+          agenda: newTodoType === "Meeting" ? newTodoAgenda : undefined,
+          meetingTime: newTodoType === "Meeting" ? newTodoMeetingTime : undefined,
+          notes: newTodoNotes || undefined,
+          links: newTodoLinks || undefined,
+          parentId: newTodoParentId,
+        };
+
+        setPendingTodoData(newTodo);
+        setNewProjectName(newTodoProject.trim());
+        setNewProjectWorkspace(todoWorkspace);
+        setNewProjectDescription("");
+        setIsCreateProjectDialogOpen(true);
+        return;
+      }
+    }
+
     const newTodo: Todo = {
       id: Date.now().toString(),
       text: newTodoText,
       completed: false,
       createdAt: Date.now(),
       type: newTodoType,
-      workspace: getActualWorkspace(),
+      workspace: todoWorkspace,
       startDate: newTodoType !== "Meeting" ? startDateTime : undefined,
       dueDate: dueDateTime,
       dueTime: newTodoType !== "Meeting" ? (newTodoDueTime || undefined) : undefined,
@@ -719,24 +758,7 @@ const Home = () => {
 
     setTodos([newTodo, ...todos]);
     setIsCreateDialogOpen(false);
-    setDialogStep("type");
-    setNewTodoText("");
-    setNewTodoType("Task");
-    setNewTodoWorkspace("personal");
-    setNewTodoStartDate(undefined);
-    setNewTodoDueDate(undefined);
-    setNewTodoProject("");
-    setIsCreatingNewProject(false);
-    setNewTodoPriority("P2");
-    setNewTodoIsEOD(false);
-    setNewTodoAgenda("");
-    setNewTodoMeetingTime("");
-    setNewTodoDueTime("");
-    setDueDatePopoverOpen(false);
-    setNewTodoNotes("");
-    setNewTodoLinks("");
-    setNewTodoParentId(undefined);
-    setCreatingChildForId(null);
+    resetTodoForm();
   };
 
   const toggleTodo = (id: string) => {
@@ -1611,7 +1633,7 @@ const Home = () => {
                                           onClick={() => addTodoToPriorities(todoId)}
                                           disabled={todo.isPriority}
                                         >
-                                          {todo.isPriority ? '��� ' : '+ '}{todo.text}
+                                          {todo.isPriority ? '✓ ' : '+ '}{todo.text}
                                         </Button>
                                       </div>
                                     );
