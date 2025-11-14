@@ -1849,20 +1849,27 @@ const Home = () => {
 
                     {viewingTodo.parentId && (() => {
                       const parent = todos.find(t => t.id === viewingTodo.parentId);
-                      return parent ? (
+                      if (!parent) return null;
+                      const parentConfig = TODO_TYPE_CONFIG[parent.type];
+                      return (
                         <div className="space-y-1">
                           <p className="text-xs text-muted-foreground">Parent:</p>
                           <div
-                            className="flex items-center gap-2 p-2 bg-background rounded border cursor-pointer hover:bg-accent/50 transition-colors"
+                            className={`flex items-center gap-2 p-2 rounded border-2 cursor-pointer hover:shadow-md transition-colors ${parentConfig.bgLight} ${parentConfig.bgDark} ${parentConfig.borderLight} ${parentConfig.borderDark}`}
                             onClick={() => {
                               setViewingTodo(parent);
                             }}
                           >
-                            <Badge variant="outline" className="text-xs">{parent.type}</Badge>
+                            <Badge
+                              variant="outline"
+                              className={`text-xs border ${parentConfig.borderLight} ${parentConfig.borderDark} ${parentConfig.textLight} ${parentConfig.textDark}`}
+                            >
+                              {parent.type}
+                            </Badge>
                             <span className="text-sm flex-1 break-words">{parent.text}</span>
                           </div>
                         </div>
-                      ) : null;
+                      );
                     })()}
 
                     {getChildren(viewingTodo.id).length > 0 && (
@@ -1953,21 +1960,28 @@ const Home = () => {
                   {/* Show parent if exists */}
                   {editingTodo.parentId && (() => {
                     const parent = todos.find(t => t.id === editingTodo.parentId);
-                    return parent ? (
+                    if (!parent) return null;
+                    const parentConfig = TODO_TYPE_CONFIG[parent.type];
+                    return (
                       <div className="space-y-1">
                         <p className="text-xs text-muted-foreground">Parent:</p>
                         <div
-                          className="flex items-center gap-2 p-2 bg-background rounded border cursor-pointer hover:bg-accent/50 transition-colors"
+                          className={`flex items-center gap-2 p-2 rounded border-2 cursor-pointer hover:shadow-md transition-colors ${parentConfig.bgLight} ${parentConfig.bgDark} ${parentConfig.borderLight} ${parentConfig.borderDark}`}
                           onClick={() => {
                             setEditingTodo(parent);
                           }}
                         >
-                          <Badge variant="outline" className="text-xs">{parent.type}</Badge>
+                          <Badge
+                            variant="outline"
+                            className={`text-xs border ${parentConfig.borderLight} ${parentConfig.borderDark} ${parentConfig.textLight} ${parentConfig.textDark}`}
+                          >
+                            {parent.type}
+                          </Badge>
                           <span className="text-sm flex-1 break-words">{parent.text}</span>
                           <span className="text-xs text-muted-foreground">Click to edit</span>
                         </div>
                       </div>
-                    ) : null;
+                    );
                   })()}
 
                   {/* Current todo */}
