@@ -254,6 +254,7 @@ const Home = () => {
     setDueDatePopoverOpen(false);
     setNewTodoNotes("");
     setNewTodoLinks("");
+    setNewTodoParentId(undefined);
   };
 
   const toggleTodo = (id: string) => {
