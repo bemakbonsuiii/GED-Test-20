@@ -469,7 +469,7 @@ const Home = () => {
                         <form onSubmit={addTodo} className="flex gap-2">
                           <Input
                             type="text"
-                            placeholder="Add a new task..."
+                            placeholder="Add a new to-do..."
                             value={inputValue}
                             onChange={(e) => setInputValue(e.target.value)}
                             className="flex-1"
