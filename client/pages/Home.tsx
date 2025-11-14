@@ -1869,18 +1869,26 @@ const Home = () => {
                       <div className="space-y-1">
                         <p className="text-xs text-muted-foreground">Children ({getChildren(viewingTodo.id).length}):</p>
                         <div className="space-y-1 ml-4 border-l-2 border-muted pl-3">
-                          {getChildren(viewingTodo.id).map((child) => (
+                          {getChildren(viewingTodo.id).map((child) => {
+                            const childConfig = TODO_TYPE_CONFIG[child.type];
+                            return (
                             <div
                               key={child.id}
-                              className="flex items-center gap-2 p-2 bg-background rounded border text-xs cursor-pointer hover:bg-accent/50 transition-colors"
+                              className={`flex items-center gap-2 p-2 rounded border-2 text-xs cursor-pointer hover:shadow-md transition-colors ${childConfig.bgLight} ${childConfig.bgDark} ${childConfig.borderLight} ${childConfig.borderDark}`}
                               onClick={() => {
                                 setViewingTodo(child);
                               }}
                             >
-                              <Badge variant="outline" className="text-[10px]">{child.type}</Badge>
+                              <Badge
+                                variant="outline"
+                                className={`text-[10px] border ${childConfig.borderLight} ${childConfig.borderDark} ${childConfig.textLight} ${childConfig.textDark}`}
+                              >
+                                {child.type}
+                              </Badge>
                               <span className="flex-1 break-words">{child.text}</span>
                             </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       </div>
                     )}
