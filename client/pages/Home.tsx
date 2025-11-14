@@ -230,30 +230,6 @@ const Home = () => {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
 
-  useEffect(() => {
-    // Debounce AI recommendations refresh to avoid rate limits
-    if (fetchTimeoutRef.current) {
-      clearTimeout(fetchTimeoutRef.current);
-    }
-
-    const incompleteTodosCount = todos.filter(t => !t.completed).length;
-    if (incompleteTodosCount === 0) {
-      setAiRecommendations([]);
-      setRecommendationsError(null);
-      return;
-    }
-
-    // Wait 2 seconds after last change before fetching
-    fetchTimeoutRef.current = setTimeout(() => {
-      fetchAIRecommendations();
-    }, 2000);
-
-    return () => {
-      if (fetchTimeoutRef.current) {
-        clearTimeout(fetchTimeoutRef.current);
-      }
-    };
-  }, [todos.length, todos.filter(t => !t.completed).length]);
 
   useEffect(() => {
     localStorage.setItem("darkMode", darkMode.toString());
