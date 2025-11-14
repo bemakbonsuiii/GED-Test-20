@@ -8,6 +8,14 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -64,6 +72,10 @@ const Home = () => {
   const [selectedProjectFilter, setSelectedProjectFilter] = useState<string | null>(null);
   const [projectInput, setProjectInput] = useState("");
   const [editingProject, setEditingProject] = useState<string | null>(null);
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [newTodoText, setNewTodoText] = useState("");
+  const [newTodoDueDate, setNewTodoDueDate] = useState<Date | undefined>(undefined);
+  const [newTodoProject, setNewTodoProject] = useState("");
 
   useEffect(() => {
     const saved = localStorage.getItem("todos");
@@ -101,17 +113,28 @@ const Home = () => {
     const trimmed = inputValue.trim();
     if (!trimmed) return;
 
+    setNewTodoText(trimmed);
+    setInputValue("");
+    setIsCreateDialogOpen(true);
+  };
+
+  const createTodo = () => {
     const newTodo: Todo = {
       id: Date.now().toString(),
-      text: trimmed,
+      text: newTodoText,
       completed: false,
       createdAt: Date.now(),
       type: "Task",
       workspace,
+      dueDate: newTodoDueDate ? newTodoDueDate.getTime() : undefined,
+      project: newTodoProject || undefined,
     };
 
     setTodos([newTodo, ...todos]);
-    setInputValue("");
+    setIsCreateDialogOpen(false);
+    setNewTodoText("");
+    setNewTodoDueDate(undefined);
+    setNewTodoProject("");
   };
 
   const toggleTodo = (id: string) => {
