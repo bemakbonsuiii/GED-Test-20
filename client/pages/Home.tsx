@@ -125,6 +125,8 @@ const TODO_TYPE_CONFIG: Record<
 const Home = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [darkMode, setDarkMode] = useState(false);
+  const [aiRecommendations, setAiRecommendations] = useState<Array<{ id: string; reason: string }>>([]);
+  const [loadingRecommendations, setLoadingRecommendations] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [workspace, setWorkspace] = useState<Workspace>("everything");
   const [filter, setFilter] = useState<FilterType>("all");
@@ -192,6 +194,7 @@ const Home = () => {
 
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
+    fetchAIRecommendations();
   }, [todos]);
 
   useEffect(() => {
@@ -336,6 +339,37 @@ const Home = () => {
     ));
     setIsEditDialogOpen(false);
     setEditingTodo(null);
+  };
+
+  const fetchAIRecommendations = async () => {
+    const incompleteTodos = todos.filter(t => !t.completed);
+    if (incompleteTodos.length === 0) {
+      setAiRecommendations([]);
+      return;
+    }
+
+    setLoadingRecommendations(true);
+    try {
+      const response = await fetch('/api/ai-prioritize', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ todos }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get AI recommendations');
+      }
+
+      const data = await response.json();
+      setAiRecommendations(data.recommendations || []);
+    } catch (error) {
+      console.error('Error fetching AI recommendations:', error);
+      setAiRecommendations([]);
+    } finally {
+      setLoadingRecommendations(false);
+    }
   };
 
   const createTodo = () => {
