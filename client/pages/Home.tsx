@@ -731,9 +731,11 @@ const Home = () => {
                   <div className="text-muted-foreground">
                     <span className="font-medium">Children ({getChildren(todo.id).length}):</span>
                     <div className="mt-2 ml-4 space-y-3 border-l-2 border-muted pl-3">
-                      {getChildren(todo.id).map((child) => (
+                      {getChildren(todo.id).map((child) => {
+                        const childConfig = TODO_TYPE_CONFIG[child.type];
+                        return (
                         <div key={child.id} className="space-y-2">
-                          <div className="flex items-start gap-2">
+                          <div className={`flex items-start gap-2 p-2 rounded-md border-2 ${childConfig.bgLight} ${childConfig.bgDark} ${childConfig.borderLight} ${childConfig.borderDark}`}>
                             <Checkbox
                               checked={child.completed}
                               onCheckedChange={() => toggleTodo(child.id)}
@@ -747,7 +749,10 @@ const Home = () => {
                                 >
                                   {child.text}
                                 </span>
-                                <Badge variant="outline" className="text-xs">
+                                <Badge
+                                  variant="outline"
+                                  className={`text-xs border-2 ${childConfig.borderLight} ${childConfig.borderDark} ${childConfig.bgLight} ${childConfig.bgDark} ${childConfig.textLight} ${childConfig.textDark}`}
+                                >
                                   {child.type}
                                 </Badge>
                               </div>
@@ -782,9 +787,11 @@ const Home = () => {
                           {getChildren(child.id).length > 0 && (
                             <div className="ml-6 space-y-2 border-l-2 border-muted/50 pl-3">
                               <span className="text-xs font-medium">Sub-items ({getChildren(child.id).length}):</span>
-                              {getChildren(child.id).map((grandchild) => (
+                              {getChildren(child.id).map((grandchild) => {
+                                const grandchildConfig = TODO_TYPE_CONFIG[grandchild.type];
+                                return (
                                 <div key={grandchild.id} className="space-y-1">
-                                  <div className="flex items-start gap-2 text-xs">
+                                  <div className={`flex items-start gap-2 text-xs p-2 rounded-md border-2 ${grandchildConfig.bgLight} ${grandchildConfig.bgDark} ${grandchildConfig.borderLight} ${grandchildConfig.borderDark}`}>
                                     <Checkbox
                                       checked={grandchild.completed}
                                       onCheckedChange={() => toggleTodo(grandchild.id)}
@@ -797,7 +804,10 @@ const Home = () => {
                                       >
                                         {grandchild.text}
                                       </span>
-                                      <Badge variant="outline" className="text-[10px] ml-1 px-1 py-0">
+                                      <Badge
+                                        variant="outline"
+                                        className={`text-[10px] ml-1 px-1 py-0 border ${grandchildConfig.borderLight} ${grandchildConfig.borderDark} ${grandchildConfig.textLight} ${grandchildConfig.textDark}`}
+                                      >
                                         {grandchild.type}
                                       </Badge>
                                     </div>
@@ -831,7 +841,8 @@ const Home = () => {
                                     </div>
                                   )}
                                 </div>
-                              ))}
+                                );
+                              })}
                             </div>
                           )}
 
@@ -849,7 +860,8 @@ const Home = () => {
                             </div>
                           )}
                         </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 )}
