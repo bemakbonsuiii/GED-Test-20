@@ -65,6 +65,7 @@ import {
 } from "lucide-react";
 import { format, isPast, isToday, isTomorrow, differenceInDays } from "date-fns";
 import { MetricsWidget } from "../components/MetricsWidget";
+import { CircularScore } from "../components/CircularScore";
 
 type TodoType = "Task" | "Deliverable" | "Quick Win" | "Meeting";
 type WorkspaceType = "personal" | "work" | "creative";
