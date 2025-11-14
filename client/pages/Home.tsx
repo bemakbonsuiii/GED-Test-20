@@ -1,4 +1,21 @@
 import React, { useState, useEffect, useRef } from "react";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -132,12 +149,19 @@ const TODO_TYPE_CONFIG: Record<
 const Home = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [darkMode, setDarkMode] = useState(false);
-  const [aiRecommendations, setAiRecommendations] = useState<Array<{ id: string; reason: string }>>([]);
-  const [loadingRecommendations, setLoadingRecommendations] = useState(false);
-  const [recommendationsError, setRecommendationsError] = useState<string | null>(null);
+  const [toddMessages, setToddMessages] = useState<Array<{ role: 'user' | 'assistant'; content: string; suggestions?: string[] }>>([]);
+  const [toddInput, setToddInput] = useState("");
+  const [toddLoading, setToddLoading] = useState(false);
   const fetchTimeoutRef = useRef<NodeJS.Timeout>();
   const [inputValue, setInputValue] = useState("");
   const [isAddTodoExpanded, setIsAddTodoExpanded] = useState(false);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
   const [workspace, setWorkspace] = useState<Workspace>("everything");
   const [filter, setFilter] = useState<FilterType>("all");
   const [selectedTypeFilter, setSelectedTypeFilter] = useState<TodoType | null>(null);
