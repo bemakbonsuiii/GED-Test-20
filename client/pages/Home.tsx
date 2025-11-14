@@ -405,8 +405,12 @@ const Home = () => {
   const completedCount = workspaceTodos.filter((todo) => todo.completed).length;
   const allProjects = getAllProjects();
 
-  const typeCount = (type: TodoType) =>
-    workspaceTodos.filter((todo) => todo.type === type).length;
+  const typeCount = (type: TodoType) => {
+    const allWorkspaceTodos = workspace === "everything"
+      ? todos
+      : todos.filter((todo) => todo.workspace === workspace);
+    return allWorkspaceTodos.filter((todo) => todo.type === type).length;
+  };
 
   const renderTodoItem = (todo: Todo) => {
     const TypeIcon = TODO_TYPE_CONFIG[todo.type].icon;
@@ -1019,7 +1023,7 @@ const Home = () => {
                           onClick={() => setSelectedTypeFilter(null)}
                           className="justify-start"
                         >
-                          All Types
+                          Nested View
                         </Button>
                         {(Object.keys(TODO_TYPE_CONFIG) as TodoType[]).map((type) => {
                           const Icon = TODO_TYPE_CONFIG[type].icon;
