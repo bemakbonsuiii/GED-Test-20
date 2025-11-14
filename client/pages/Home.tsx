@@ -735,7 +735,7 @@ const Home = () => {
                     <ul className="mt-1 ml-4 space-y-0.5">
                       {todo.agenda.split('\n').filter(item => item.trim()).map((item, idx) => (
                         <li key={idx} className="flex gap-2">
-                          <span className="text-orange-500 dark:text-orange-400 flex-shrink-0">•</span>
+                          <span className="text-orange-500 dark:text-orange-400 flex-shrink-0">���</span>
                           <span className="flex-1">{item.trim()}</span>
                         </li>
                       ))}
@@ -1136,6 +1136,17 @@ const Home = () => {
                 {loadingRecommendations ? (
                   <div className="text-center py-8 text-muted-foreground">
                     <div className="animate-pulse">Analyzing your to-dos...</div>
+                  </div>
+                ) : recommendationsError ? (
+                  <div className="text-center py-8 text-orange-600 dark:text-orange-400 text-sm">
+                    <p className="mb-2">⚠️ {recommendationsError}</p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => fetchAIRecommendations()}
+                    >
+                      Retry
+                    </Button>
                   </div>
                 ) : aiRecommendations.length === 0 ? (
                   <div className="text-center py-8 text-muted-foreground text-sm">
