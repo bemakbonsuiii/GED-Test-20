@@ -145,6 +145,10 @@ ${JSON.stringify(incompleteTodos.slice(0, 50).map(t => {
   // Check if overdue
   const isOverdue = t.dueDate && (typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate) < now;
 
+  // Check if this is a meeting prep task (child of upcoming meeting)
+  const isMeetingPrep = parentInfo && parentInfo.type === "Meeting" && parentInfo.dueDate &&
+    upcomingMeetingsWithIncompletePrep.some(m => m.id === parentInfo.id);
+
   return {
     id: t.id,
     text: t.text,
@@ -155,6 +159,7 @@ ${JSON.stringify(incompleteTodos.slice(0, 50).map(t => {
     dueDate: t.dueDate,
     isOverdue: isOverdue ? "🚨 OVERDUE - CRITICAL PRIORITY" : false,
     isEOD: t.isEOD ? "⚠️ EOD - URGENT" : false,
+    isMeetingPrep: isMeetingPrep ? `🔴 MEETING PREP - CRITICAL (for "${parentInfo?.text}")` : false,
     isPriority: t.isPriority,
     project: t.project,
     hasChildren: hasChildren ? "🔗 BLOCKED - has incomplete children" : false,
