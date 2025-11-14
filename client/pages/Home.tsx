@@ -312,6 +312,11 @@ const Home = () => {
                     EOD
                   </Badge>
                 )}
+                {workspace === "everything" && (
+                  <Badge variant="secondary" className="text-xs capitalize">
+                    {todo.workspace}
+                  </Badge>
+                )}
                 {todo.project && (
                   <Badge variant="outline" className="gap-1 text-xs">
                     <Briefcase className="h-3 w-3" />
