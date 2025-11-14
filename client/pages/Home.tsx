@@ -213,6 +213,7 @@ const Home = () => {
           dueTime: todo.dueTime,
           isPriority: todo.isPriority || false,
           priorityOrder: todo.priorityOrder,
+          startDate: todo.startDate,
         }));
         setTodos(migrated);
       } catch (e) {
