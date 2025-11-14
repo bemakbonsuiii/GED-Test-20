@@ -1730,7 +1730,7 @@ const Home = () => {
                     <Users className="h-5 w-5" />
                     Upcoming Meetings
                     {meetingTodos.length > 0 && (
-                      <Badge variant="secondary" className="ml-auto">
+                      <Badge variant="secondary">
                         {meetingTodos.length}
                       </Badge>
                     )}
