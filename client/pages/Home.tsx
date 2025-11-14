@@ -256,6 +256,11 @@ const Home = () => {
     setIsEditDialogOpen(true);
   };
 
+  const openSummaryDialog = (todo: Todo) => {
+    setViewingTodo(todo);
+    setIsSummaryDialogOpen(true);
+  };
+
   const saveEditedTodo = () => {
     if (!editingTodo) return;
 
