@@ -297,6 +297,15 @@ const Home = () => {
     }
   }, [todos, workspace, selectedProjectPage, selectedTypeFilter]);
 
+  // Auto-update metrics every minute to keep daily tasks current
+  const [metricsUpdateTrigger, setMetricsUpdateTrigger] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMetricsUpdateTrigger(prev => prev + 1);
+    }, 60000); // Update every minute
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("darkMode", darkMode.toString());
