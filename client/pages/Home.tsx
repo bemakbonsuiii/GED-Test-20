@@ -94,6 +94,7 @@ const Home = () => {
   const [newTodoMeetingTime, setNewTodoMeetingTime] = useState("");
   const [newTodoDueTime, setNewTodoDueTime] = useState("");
   const [editingTodoId, setEditingTodoId] = useState<string | null>(null);
+  const [datePopoverOpen, setDatePopoverOpen] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem("todos");
