@@ -159,6 +159,50 @@ const Home = () => {
     return workspace as WorkspaceType;
   };
 
+  const canBeParent = (parentType: TodoType, childType: TodoType): boolean => {
+    const allowedRelationships: Record<TodoType, TodoType[]> = {
+      Meeting: ["Deliverable", "Task", "Quick Win"],
+      Deliverable: ["Task", "Quick Win"],
+      Task: ["Quick Win"],
+      "Quick Win": [],
+    };
+    return allowedRelationships[parentType]?.includes(childType) || false;
+  };
+
+  const getEligibleParents = (childType: TodoType, childWorkspace: WorkspaceType): Todo[] => {
+    return todos.filter((todo) => {
+      return (
+        !todo.completed &&
+        todo.workspace === childWorkspace &&
+        canBeParent(todo.type, childType)
+      );
+    });
+  };
+
+  const getChildren = (parentId: string): Todo[] => {
+    return todos.filter((todo) => todo.parentId === parentId);
+  };
+
+  const unlinkTodo = (todoId: string) => {
+    setTodos(todos.map((todo) =>
+      todo.id === todoId ? { ...todo, parentId: undefined } : todo
+    ));
+  };
+
+  const linkTodoToParent = (childId: string, parentId: string) => {
+    const child = todos.find((t) => t.id === childId);
+    const parent = todos.find((t) => t.id === parentId);
+
+    if (!child || !parent) return;
+    if (child.workspace !== parent.workspace) return;
+    if (!canBeParent(parent.type, child.type)) return;
+
+    setTodos(todos.map((todo) =>
+      todo.id === childId ? { ...todo, parentId } : todo
+    ));
+    setLinkingTodoId(null);
+  };
+
   const createTodo = () => {
     let dueDateTime = newTodoDueDate ? newTodoDueDate.getTime() : undefined;
 
