@@ -244,8 +244,14 @@ const Home = () => {
   });
 
   const meetingTodos = workspaceTodos
-    .filter((todo) => todo.type === "Meeting" && todo.dueDate && !todo.completed)
-    .sort((a, b) => (a.dueDate || 0) - (b.dueDate || 0));
+    .filter((todo) => todo.type === "Meeting" && !todo.completed)
+    .sort((a, b) => {
+      // Sort meetings with dates first, then by date, then undated meetings
+      if (!a.dueDate && !b.dueDate) return 0;
+      if (!a.dueDate) return 1;
+      if (!b.dueDate) return -1;
+      return a.dueDate - b.dueDate;
+    });
 
   const activeCount = workspaceTodos.filter((todo) => !todo.completed).length;
   const completedCount = workspaceTodos.filter((todo) => todo.completed).length;
