@@ -57,6 +57,8 @@ interface Todo {
   isEOD: boolean;
   agenda?: string;
   meetingTime?: string;
+  notes?: string;
+  links?: string;
 }
 
 type FilterType = "all" | "active" | "completed";
@@ -95,6 +97,8 @@ const Home = () => {
   const [newTodoDueTime, setNewTodoDueTime] = useState("");
   const [editingTodoId, setEditingTodoId] = useState<string | null>(null);
   const [dueDatePopoverOpen, setDueDatePopoverOpen] = useState(false);
+  const [newTodoNotes, setNewTodoNotes] = useState("");
+  const [newTodoLinks, setNewTodoLinks] = useState("");
 
   useEffect(() => {
     const saved = localStorage.getItem("todos");
