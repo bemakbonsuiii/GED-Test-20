@@ -554,12 +554,12 @@ const Home = () => {
                   return parent ? (
                     <div className="text-muted-foreground">
                       <span className="font-medium">Parent:</span>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="text-xs bg-accent px-2 py-0.5 rounded">[{parent.type}] {parent.text}</span>
+                      <div className="flex items-start gap-2 mt-1">
+                        <span className="text-xs bg-accent px-2 py-0.5 rounded break-words flex-1">[{parent.type}] {parent.text}</span>
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-5 px-2 text-xs"
+                          className="h-5 px-2 text-xs flex-shrink-0"
                           onClick={() => unlinkTodo(todo.id)}
                         >
                           Unlink
