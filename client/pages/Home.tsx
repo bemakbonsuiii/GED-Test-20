@@ -1856,15 +1856,26 @@ Return ONLY the todo IDs, no explanation needed.`;
               {isToddExpanded ? <X className="h-5 w-5" /> : <Sparkles className="h-5 w-5" />}
             </Button>
           </div>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => setDarkMode(!darkMode)}
-            className="absolute right-0 top-0"
-            title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
-          >
-            {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-          </Button>
+          <div className="absolute right-0 top-0 flex items-start gap-4">
+            <CircularScore
+              label="Work Left Today"
+              score={getWorkLeftForDayScore()}
+              color="#f97316"
+            />
+            <CircularScore
+              label="Work Left"
+              score={getWorkLeftScore()}
+              color="#3b82f6"
+            />
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setDarkMode(!darkMode)}
+              title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+            >
+              {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </Button>
+          </div>
           <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">
             To-Do List
           </h1>
