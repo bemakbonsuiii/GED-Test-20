@@ -966,7 +966,19 @@ const Home = () => {
             {dialogStep === "type" ? (
               <>
                 <div className="space-y-3 py-4">
-                  {(Object.keys(TODO_TYPE_CONFIG) as TodoType[]).map((type) => {
+                  {creatingChildForId && (
+                    <p className="text-sm text-muted-foreground pb-2">
+                      Creating a child for: <strong>{todos.find(t => t.id === creatingChildForId)?.text}</strong>
+                    </p>
+                  )}
+                  {(Object.keys(TODO_TYPE_CONFIG) as TodoType[])
+                    .filter((type) => {
+                      if (!creatingChildForId) return true;
+                      const parent = todos.find(t => t.id === creatingChildForId);
+                      if (!parent) return true;
+                      return getAllowedChildTypes(parent.type).includes(type);
+                    })
+                    .map((type) => {
                     const Icon = TODO_TYPE_CONFIG[type].icon;
                     return (
                       <Button
@@ -975,7 +987,7 @@ const Home = () => {
                         className="w-full justify-start h-auto py-4"
                         onClick={() => {
                           setNewTodoType(type);
-                          setDialogStep(workspace === "everything" ? "workspace" : "details");
+                          setDialogStep(workspace === "everything" && !creatingChildForId ? "workspace" : "details");
                         }}
                       >
                         <Icon className="h-5 w-5 mr-3" />
