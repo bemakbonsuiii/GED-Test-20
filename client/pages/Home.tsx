@@ -172,6 +172,7 @@ const Home = () => {
   const [isMeetingsExpanded, setIsMeetingsExpanded] = useState(true);
   const [isDeadlinesExpanded, setIsDeadlinesExpanded] = useState(true);
   const [isFiltersExpanded, setIsFiltersExpanded] = useState(true);
+  const [isTasksExpanded, setIsTasksExpanded] = useState(true);
   const [newProjectName, setNewProjectName] = useState("");
   const [newProjectDescription, setNewProjectDescription] = useState("");
   const [newProjectWorkspace, setNewProjectWorkspace] = useState<WorkspaceType>("personal");
@@ -2050,7 +2051,7 @@ Return ONLY the todo IDs, no explanation needed.`;
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2">
                 <Card className="shadow-lg">
-                  <CardHeader>
+                  <CardHeader className="cursor-pointer hover:bg-accent/50 transition-colors" onClick={() => setIsTasksExpanded(!isTasksExpanded)}>
                     <CardTitle className="flex items-center gap-2">
                       {selectedProjectPage ? (
                         <>
@@ -2063,8 +2064,23 @@ Return ONLY the todo IDs, no explanation needed.`;
                       ) : (
                         "My Tasks"
                       )}
+                      <Badge variant="secondary" className="ml-auto">
+                        {workspaceTodos.length}
+                      </Badge>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="ml-2 h-6 w-6 p-0"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsTasksExpanded(!isTasksExpanded);
+                        }}
+                      >
+                        {isTasksExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                      </Button>
                     </CardTitle>
                   </CardHeader>
+                  {isTasksExpanded && (
                   <CardContent className="space-y-6">
                         {selectedProjectPage && (() => {
                           const currentProject = projects.find(p => p.name === selectedProjectPage);
@@ -2146,6 +2162,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                           )}
                         </div>
                   </CardContent>
+                  )}
                 </Card>
               </div>
 
