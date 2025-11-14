@@ -695,7 +695,17 @@ const Home = () => {
         : todos.filter((todo) => todo.workspace === workspace);
 
       const workspaceLabel = workspace === "everything" ? "all workspaces" : `the ${workspace} workspace`;
-      const autoPrioritizePrompt = `Analyze all my to-dos in ${workspaceLabel} and automatically select the top 5 most important items I should focus on today. Prioritize EOD items, urgent deadlines, and high-priority tasks. Return ONLY the todo IDs, no explanation needed.`;
+      const autoPrioritizePrompt = `Analyze all my to-dos in ${workspaceLabel} and automatically select the top 5 most important items I should focus on today.
+
+PRIORITY ORDER (STRICT):
+1. OVERDUE items MUST be prioritized FIRST above everything else
+2. Items with EOD (End of Day) flag
+3. Items due today
+4. High priority (P0) items
+5. Items due soon
+6. Everything else
+
+Return ONLY the todo IDs, no explanation needed.`;
 
       const response = await fetch('/api/todd-assistant', {
         method: 'POST',
