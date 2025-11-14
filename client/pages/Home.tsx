@@ -1419,7 +1419,7 @@ const Home = () => {
                 <CardHeader className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/30 dark:to-orange-950/30">
                   <CardTitle className="flex items-center gap-2">
                     <Star className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
-                    Priorities
+                    Today's Priorities
                   </CardTitle>
                   <p className="text-sm text-muted-foreground">
                     Drag to reorder your priority items
