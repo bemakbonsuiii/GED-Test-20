@@ -1588,6 +1588,198 @@ const Home = () => {
           </DialogContent>
         </Dialog>
 
+        {/* Summary To-Do Dialog */}
+        <Dialog open={isSummaryDialogOpen} onOpenChange={setIsSummaryDialogOpen}>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>To-Do Summary</DialogTitle>
+            </DialogHeader>
+
+            {viewingTodo && (
+              <div className="space-y-4 py-4">
+                {/* Main Info */}
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3">
+                    <Checkbox
+                      checked={viewingTodo.completed}
+                      onCheckedChange={() => {
+                        toggleTodo(viewingTodo.id);
+                        const updatedTodo = todos.find(t => t.id === viewingTodo.id);
+                        if (updatedTodo) {
+                          setViewingTodo(updatedTodo);
+                        }
+                      }}
+                      className="mt-1"
+                    />
+                    <div className="flex-1">
+                      <h3 className={`text-lg font-medium break-words ${viewingTodo.completed ? "line-through text-muted-foreground" : ""}`}>
+                        {viewingTodo.text}
+                      </h3>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        <Badge variant="outline">{viewingTodo.type}</Badge>
+                        <Badge variant={viewingTodo.priority === "P0" ? "destructive" : "default"}>
+                          {viewingTodo.priority}
+                        </Badge>
+                        {viewingTodo.isEOD && (
+                          <Badge variant="default" className="bg-red-600">EOD</Badge>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Details Grid */}
+                <div className="grid grid-cols-2 gap-4 p-4 bg-accent/30 rounded-lg">
+                  {viewingTodo.dueDate && (
+                    <div>
+                      <p className="text-xs text-muted-foreground font-medium mb-1">Due Date</p>
+                      <p className="text-sm">{format(new Date(viewingTodo.dueDate), "PPP")}</p>
+                    </div>
+                  )}
+                  {viewingTodo.dueTime && (
+                    <div>
+                      <p className="text-xs text-muted-foreground font-medium mb-1">Due Time</p>
+                      <p className="text-sm">{viewingTodo.dueTime}</p>
+                    </div>
+                  )}
+                  {viewingTodo.type === "Meeting" && viewingTodo.meetingTime && (
+                    <div>
+                      <p className="text-xs text-muted-foreground font-medium mb-1">Meeting Time</p>
+                      <p className="text-sm">{viewingTodo.meetingTime}</p>
+                    </div>
+                  )}
+                  {viewingTodo.project && (
+                    <div>
+                      <p className="text-xs text-muted-foreground font-medium mb-1">Project</p>
+                      <p className="text-sm">{viewingTodo.project}</p>
+                    </div>
+                  )}
+                  <div>
+                    <p className="text-xs text-muted-foreground font-medium mb-1">Workspace</p>
+                    <p className="text-sm capitalize">{viewingTodo.workspace}</p>
+                  </div>
+                </div>
+
+                {/* Notes and Links */}
+                {(viewingTodo.notes || viewingTodo.links || (viewingTodo.type === "Meeting" && viewingTodo.agenda)) && (
+                  <div className="space-y-3">
+                    {viewingTodo.type === "Meeting" && viewingTodo.agenda && (
+                      <div>
+                        <p className="text-sm font-medium mb-2">Agenda</p>
+                        <p className="text-sm text-muted-foreground whitespace-pre-wrap">{viewingTodo.agenda}</p>
+                      </div>
+                    )}
+                    {viewingTodo.notes && (
+                      <div>
+                        <p className="text-sm font-medium mb-2">Notes</p>
+                        <p className="text-sm text-muted-foreground whitespace-pre-wrap">{viewingTodo.notes}</p>
+                      </div>
+                    )}
+                    {viewingTodo.links && (
+                      <div>
+                        <p className="text-sm font-medium mb-2">Links</p>
+                        <div className="space-y-1">
+                          {viewingTodo.links.split('\n').filter(link => link.trim()).map((link, idx) => (
+                            <a
+                              key={idx}
+                              href={link.trim()}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="block text-sm text-blue-500 hover:text-blue-600 underline break-all"
+                            >
+                              {link.trim()}
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Hierarchy */}
+                {(viewingTodo.parentId || getChildren(viewingTodo.id).length > 0) && (
+                  <div className="space-y-3 p-4 bg-accent/30 rounded-lg border">
+                    <h4 className="text-sm font-semibold">Hierarchy</h4>
+
+                    {viewingTodo.parentId && (() => {
+                      const parent = todos.find(t => t.id === viewingTodo.parentId);
+                      return parent ? (
+                        <div className="space-y-1">
+                          <p className="text-xs text-muted-foreground">Parent:</p>
+                          <div
+                            className="flex items-center gap-2 p-2 bg-background rounded border cursor-pointer hover:bg-accent/50 transition-colors"
+                            onClick={() => {
+                              setViewingTodo(parent);
+                            }}
+                          >
+                            <Badge variant="outline" className="text-xs">{parent.type}</Badge>
+                            <span className="text-sm flex-1 break-words">{parent.text}</span>
+                          </div>
+                        </div>
+                      ) : null;
+                    })()}
+
+                    {getChildren(viewingTodo.id).length > 0 && (
+                      <div className="space-y-1">
+                        <p className="text-xs text-muted-foreground">Children ({getChildren(viewingTodo.id).length}):</p>
+                        <div className="space-y-1 ml-4 border-l-2 border-muted pl-3">
+                          {getChildren(viewingTodo.id).map((child) => (
+                            <div
+                              key={child.id}
+                              className="flex items-center gap-2 p-2 bg-background rounded border text-xs cursor-pointer hover:bg-accent/50 transition-colors"
+                              onClick={() => {
+                                setViewingTodo(child);
+                              }}
+                            >
+                              <Badge variant="outline" className="text-[10px]">{child.type}</Badge>
+                              <span className="flex-1 break-words">{child.text}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+
+            <DialogFooter className="gap-2">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIsSummaryDialogOpen(false);
+                  setViewingTodo(null);
+                }}
+              >
+                Close
+              </Button>
+              {viewingTodo && !viewingTodo.completed && (
+                <Button
+                  onClick={() => {
+                    toggleTodo(viewingTodo.id);
+                    setIsSummaryDialogOpen(false);
+                    setViewingTodo(null);
+                  }}
+                >
+                  Mark as Complete
+                </Button>
+              )}
+              {viewingTodo && (
+                <Button
+                  variant="default"
+                  onClick={() => {
+                    setIsSummaryDialogOpen(false);
+                    openEditDialog(viewingTodo);
+                    setViewingTodo(null);
+                  }}
+                >
+                  Edit
+                </Button>
+              )}
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
         {/* Edit To-Do Dialog */}
         <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
