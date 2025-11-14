@@ -3129,6 +3129,59 @@ const Home = () => {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        {/* Create Project Dialog */}
+        <Dialog open={isCreateProjectDialogOpen} onOpenChange={setIsCreateProjectDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create New Project</DialogTitle>
+              <DialogDescription>
+                Define a new project in your {newProjectWorkspace} workspace
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Project Name</label>
+                <Input
+                  value={newProjectName}
+                  onChange={(e) => setNewProjectName(e.target.value)}
+                  placeholder="Enter project name"
+                  autoFocus
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && newProjectName.trim()) {
+                      e.preventDefault();
+                      createProject();
+                    }
+                  }}
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Project Description</label>
+                <Textarea
+                  value={newProjectDescription}
+                  onChange={(e) => setNewProjectDescription(e.target.value)}
+                  placeholder="Describe the project goals, scope, or objectives..."
+                  rows={4}
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIsCreateProjectDialogOpen(false);
+                  setNewProjectName("");
+                  setNewProjectDescription("");
+                }}
+              >
+                Cancel
+              </Button>
+              <Button onClick={createProject} disabled={!newProjectName.trim()}>
+                Create Project
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
