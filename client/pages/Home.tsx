@@ -128,7 +128,7 @@ const Home = () => {
   const [aiRecommendations, setAiRecommendations] = useState<Array<{ id: string; reason: string }>>([]);
   const [loadingRecommendations, setLoadingRecommendations] = useState(false);
   const [recommendationsError, setRecommendationsError] = useState<string | null>(null);
-  const fetchTimeoutRef = React.useRef<NodeJS.Timeout>();
+  const fetchTimeoutRef = useRef<NodeJS.Timeout>();
   const [inputValue, setInputValue] = useState("");
   const [workspace, setWorkspace] = useState<Workspace>("everything");
   const [filter, setFilter] = useState<FilterType>("all");
