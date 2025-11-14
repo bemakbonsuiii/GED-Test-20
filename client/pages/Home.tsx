@@ -531,6 +531,11 @@ const Home = () => {
                                 EOD
                               </Badge>
                             )}
+                            {workspace === "everything" && (
+                              <Badge variant="secondary" className="text-xs capitalize">
+                                {meeting.workspace}
+                              </Badge>
+                            )}
                           </div>
                         </div>
                       </div>
