@@ -1349,7 +1349,10 @@ const Home = () => {
           </p>
         </div>
 
-        <Tabs value={workspace} onValueChange={(v) => setWorkspace(v as Workspace)}>
+        <Tabs value={workspace} onValueChange={(v) => {
+          setWorkspace(v as Workspace);
+          setSelectedProjectPage(null);
+        }}>
           <div className="flex flex-col items-center gap-3 mb-6">
             <TabsList>
               <TabsTrigger value="everything">Homepage</TabsTrigger>
@@ -1360,6 +1363,55 @@ const Home = () => {
               <TabsTrigger value="creative">Creative</TabsTrigger>
             </TabsList>
           </div>
+
+          {/* Project Pages Navigation */}
+          {workspace !== "everything" && (() => {
+            const currentWorkspaceProjects = getWorkspaceProjects(workspace as WorkspaceType);
+            if (currentWorkspaceProjects.length === 0) return null;
+
+            return (
+              <div className="flex justify-center mb-6">
+                <Card className="w-full max-w-4xl">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm flex items-center gap-2">
+                      <Briefcase className="h-4 w-4" />
+                      {workspace.charAt(0).toUpperCase() + workspace.slice(1)} Projects
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-wrap gap-2">
+                      <Button
+                        variant={selectedProjectPage === null ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setSelectedProjectPage(null)}
+                      >
+                        All {workspace.charAt(0).toUpperCase() + workspace.slice(1)} To-Dos
+                      </Button>
+                      {currentWorkspaceProjects.map((project) => {
+                        const projectTodosCount = todos.filter(t => t.project === project && t.workspace === workspace).length;
+                        const activeTodosCount = todos.filter(t => t.project === project && t.workspace === workspace && !t.completed).length;
+                        return (
+                          <Button
+                            key={project}
+                            variant={selectedProjectPage === project ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => setSelectedProjectPage(project)}
+                            className="gap-2"
+                          >
+                            <Briefcase className="h-3 w-3" />
+                            {project}
+                            <Badge variant="secondary" className="ml-1 text-xs">
+                              {activeTodosCount}/{projectTodosCount}
+                            </Badge>
+                          </Button>
+                        );
+                      })}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            );
+          })()}
 
           <TabsContent value={workspace}>
             {/* Expandable Add New To-Do */}
