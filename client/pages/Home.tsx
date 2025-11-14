@@ -643,7 +643,7 @@ const Home = () => {
                       key={parent.id}
                       variant="ghost"
                       size="sm"
-                      className="h-auto py-1 px-2 text-xs w-full justify-start"
+                      className="h-auto py-1 px-2 text-xs w-full justify-start break-words text-left"
                       onClick={() => linkTodoToParent(todo.id, parent.id)}
                     >
                       [{parent.type}] {parent.text}
