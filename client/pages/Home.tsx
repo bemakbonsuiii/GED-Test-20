@@ -1048,6 +1048,30 @@ const Home = () => {
           </div>
 
           <TabsContent value={workspace}>
+            {/* Add New To-Do */}
+            <Card className="mb-6 shadow-lg border-2 border-blue-200 dark:border-blue-800">
+              <CardHeader className="pb-3 bg-gradient-to-r from-blue-50 to-slate-50 dark:from-blue-950/30 dark:to-slate-950/30">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Plus className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                  Add New To-Do
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <form onSubmit={addTodo} className="flex gap-2">
+                  <Input
+                    type="text"
+                    placeholder="Add a new to-do..."
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    className="flex-1"
+                  />
+                  <Button type="submit" size="icon">
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+
             <Card className="mb-6">
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg flex items-center gap-2">
