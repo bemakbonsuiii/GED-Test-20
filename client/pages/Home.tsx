@@ -1604,10 +1604,7 @@ const Home = () => {
                       checked={viewingTodo.completed}
                       onCheckedChange={() => {
                         toggleTodo(viewingTodo.id);
-                        const updatedTodo = todos.find(t => t.id === viewingTodo.id);
-                        if (updatedTodo) {
-                          setViewingTodo(updatedTodo);
-                        }
+                        setViewingTodo({ ...viewingTodo, completed: !viewingTodo.completed });
                       }}
                       className="mt-1"
                     />
