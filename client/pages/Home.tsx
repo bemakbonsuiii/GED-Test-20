@@ -586,6 +586,7 @@ const Home = () => {
   };
 
   const createTodo = () => {
+    const startDateTime = newTodoStartDate ? newTodoStartDate.getTime() : undefined;
     let dueDateTime = newTodoDueDate ? newTodoDueDate.getTime() : undefined;
 
     if (newTodoType === "Meeting" && newTodoDueDate && newTodoMeetingTime) {
@@ -607,6 +608,7 @@ const Home = () => {
       createdAt: Date.now(),
       type: newTodoType,
       workspace: getActualWorkspace(),
+      startDate: newTodoType !== "Meeting" ? startDateTime : undefined,
       dueDate: dueDateTime,
       dueTime: newTodoType !== "Meeting" ? (newTodoDueTime || undefined) : undefined,
       project: newTodoProject || undefined,
@@ -625,6 +627,7 @@ const Home = () => {
     setNewTodoText("");
     setNewTodoType("Task");
     setNewTodoWorkspace("personal");
+    setNewTodoStartDate(undefined);
     setNewTodoDueDate(undefined);
     setNewTodoProject("");
     setIsCreatingNewProject(false);
