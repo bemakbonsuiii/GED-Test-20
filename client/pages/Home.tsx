@@ -545,6 +545,93 @@ const Home = () => {
                 )}
               </div>
             )}
+
+            {(todo.parentId || getChildren(todo.id).length > 0) && (
+              <div className="text-sm space-y-2 pt-2 border-t mt-2">
+                {todo.parentId && (() => {
+                  const parent = todos.find(t => t.id === todo.parentId);
+                  return parent ? (
+                    <div className="text-muted-foreground">
+                      <span className="font-medium">Parent:</span>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-xs bg-accent px-2 py-0.5 rounded">[{parent.type}] {parent.text}</span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-5 px-2 text-xs"
+                          onClick={() => unlinkTodo(todo.id)}
+                        >
+                          Unlink
+                        </Button>
+                      </div>
+                    </div>
+                  ) : null;
+                })()}
+                {getChildren(todo.id).length > 0 && (
+                  <div className="text-muted-foreground">
+                    <span className="font-medium">Children ({getChildren(todo.id).length}):</span>
+                    <div className="mt-1 space-y-1">
+                      {getChildren(todo.id).map((child) => (
+                        <div key={child.id} className="flex items-center gap-2">
+                          <span className="text-xs bg-accent px-2 py-0.5 rounded">[{child.type}] {child.text}</span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-5 px-2 text-xs"
+                            onClick={() => unlinkTodo(child.id)}
+                          >
+                            Unlink
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {!todo.parentId && linkingTodoId !== todo.id && (
+              <div className="pt-2 mt-2 border-t">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-6 px-2 text-xs"
+                  onClick={() => setLinkingTodoId(todo.id)}
+                >
+                  Link to Parent
+                </Button>
+              </div>
+            )}
+
+            {linkingTodoId === todo.id && (
+              <div className="pt-2 mt-2 border-t space-y-2">
+                <p className="text-xs font-medium">Select a parent to link to:</p>
+                <div className="space-y-1 max-h-32 overflow-y-auto">
+                  {getEligibleParents(todo.type, todo.workspace).map((parent) => (
+                    <Button
+                      key={parent.id}
+                      variant="ghost"
+                      size="sm"
+                      className="h-auto py-1 px-2 text-xs w-full justify-start"
+                      onClick={() => linkTodoToParent(todo.id, parent.id)}
+                    >
+                      [{parent.type}] {parent.text}
+                    </Button>
+                  ))}
+                  {getEligibleParents(todo.type, todo.workspace).length === 0 && (
+                    <p className="text-xs text-muted-foreground">No eligible parents available</p>
+                  )}
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-6 px-2 text-xs"
+                  onClick={() => setLinkingTodoId(null)}
+                >
+                  Cancel
+                </Button>
+              </div>
+            )}
           </div>
           <Button
             variant="ghost"
