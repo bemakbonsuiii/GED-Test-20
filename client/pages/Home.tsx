@@ -1541,11 +1541,14 @@ const Home = () => {
                     <div className="space-y-2">
                       <label className="text-sm font-medium">Agenda</label>
                       <Textarea
-                        placeholder="Enter meeting agenda (optional)"
+                        placeholder="Enter agenda items, one per line (optional)"
                         value={newTodoAgenda}
                         onChange={(e) => setNewTodoAgenda(e.target.value)}
-                        rows={3}
+                        rows={4}
                       />
+                      <p className="text-xs text-muted-foreground">
+                        Enter each agenda item on a new line - they will be displayed as bullet points
+                      </p>
                     </div>
                   )}
                 </div>
@@ -1625,6 +1628,32 @@ const Home = () => {
                   </div>
                 </div>
 
+                {/* Meeting Agenda and Notes - Shown first for meetings */}
+                {viewingTodo.type === "Meeting" && (viewingTodo.agenda || viewingTodo.notes) && (
+                  <div className="space-y-3 p-4 bg-orange-50 dark:bg-orange-950/20 rounded-lg border border-orange-200 dark:border-orange-900">
+                    <h4 className="text-sm font-semibold text-orange-900 dark:text-orange-100">Meeting Details</h4>
+                    {viewingTodo.agenda && (
+                      <div>
+                        <p className="text-sm font-medium mb-2">Agenda</p>
+                        <ul className="space-y-1.5 text-sm text-muted-foreground">
+                          {viewingTodo.agenda.split('\n').filter(item => item.trim()).map((item, idx) => (
+                            <li key={idx} className="flex gap-2">
+                              <span className="text-orange-500 dark:text-orange-400 flex-shrink-0">•</span>
+                              <span className="flex-1">{item.trim()}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    {viewingTodo.notes && (
+                      <div>
+                        <p className="text-sm font-medium mb-2">Notes</p>
+                        <p className="text-sm text-muted-foreground whitespace-pre-wrap">{viewingTodo.notes}</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {/* Details Grid */}
                 <div className="grid grid-cols-2 gap-4 p-4 bg-accent/30 rounded-lg">
                   {viewingTodo.dueDate && (
@@ -1657,15 +1686,35 @@ const Home = () => {
                   </div>
                 </div>
 
-                {/* Notes and Links */}
-                {(viewingTodo.notes || viewingTodo.links || (viewingTodo.type === "Meeting" && viewingTodo.agenda)) && (
-                  <div className="space-y-3">
-                    {viewingTodo.type === "Meeting" && viewingTodo.agenda && (
+                {/* Meeting Agenda and Notes - Prioritized for meetings */}
+                {viewingTodo.type === "Meeting" && (viewingTodo.agenda || viewingTodo.notes) && (
+                  <div className="space-y-3 p-4 bg-orange-50 dark:bg-orange-950/20 rounded-lg border border-orange-200 dark:border-orange-900">
+                    <h4 className="text-sm font-semibold text-orange-900 dark:text-orange-100">Meeting Details</h4>
+                    {viewingTodo.agenda && (
                       <div>
                         <p className="text-sm font-medium mb-2">Agenda</p>
-                        <p className="text-sm text-muted-foreground whitespace-pre-wrap">{viewingTodo.agenda}</p>
+                        <ul className="space-y-1.5 text-sm text-muted-foreground">
+                          {viewingTodo.agenda.split('\n').filter(item => item.trim()).map((item, idx) => (
+                            <li key={idx} className="flex gap-2">
+                              <span className="text-orange-500 dark:text-orange-400 flex-shrink-0">•</span>
+                              <span className="flex-1">{item.trim()}</span>
+                            </li>
+                          ))}
+                        </ul>
                       </div>
                     )}
+                    {viewingTodo.notes && (
+                      <div>
+                        <p className="text-sm font-medium mb-2">Notes</p>
+                        <p className="text-sm text-muted-foreground whitespace-pre-wrap">{viewingTodo.notes}</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Notes and Links for non-meeting types */}
+                {viewingTodo.type !== "Meeting" && (viewingTodo.notes || viewingTodo.links) && (
+                  <div className="space-y-3">
                     {viewingTodo.notes && (
                       <div>
                         <p className="text-sm font-medium mb-2">Notes</p>
@@ -1690,6 +1739,26 @@ const Home = () => {
                         </div>
                       </div>
                     )}
+                  </div>
+                )}
+
+                {/* Links for meeting types */}
+                {viewingTodo.type === "Meeting" && viewingTodo.links && (
+                  <div>
+                    <p className="text-sm font-medium mb-2">Links</p>
+                    <div className="space-y-1">
+                      {viewingTodo.links.split('\n').filter(link => link.trim()).map((link, idx) => (
+                        <a
+                          key={idx}
+                          href={link.trim()}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block text-sm text-blue-500 hover:text-blue-600 underline break-all"
+                        >
+                          {link.trim()}
+                        </a>
+                      ))}
+                    </div>
                   </div>
                 )}
 
@@ -1952,8 +2021,12 @@ const Home = () => {
                         <Textarea
                           value={editingTodo.agenda || ""}
                           onChange={(e) => setEditingTodo({ ...editingTodo, agenda: e.target.value || undefined })}
-                          rows={3}
+                          placeholder="Enter agenda items, one per line (optional)"
+                          rows={4}
                         />
+                        <p className="text-xs text-muted-foreground">
+                          Enter each agenda item on a new line - they will be displayed as bullet points
+                        </p>
                       </div>
                     </>
                   )}
