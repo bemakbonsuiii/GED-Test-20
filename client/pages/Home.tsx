@@ -1128,6 +1128,33 @@ const Home = () => {
                   </div>
 
                   <div className="space-y-2">
+                    <label className="text-sm font-medium">Parent To-Do (Optional)</label>
+                    <Select
+                      value={newTodoParentId || "__none__"}
+                      onValueChange={(value) => {
+                        setNewTodoParentId(value === "__none__" ? undefined : value);
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Link to a parent to-do" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="__none__">No Parent</SelectItem>
+                        {getEligibleParents(newTodoType, getActualWorkspace()).map((parent) => (
+                          <SelectItem key={parent.id} value={parent.id}>
+                            [{parent.type}] {parent.text}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {getEligibleParents(newTodoType, getActualWorkspace()).length === 0 && (
+                      <p className="text-xs text-muted-foreground">
+                        No eligible parent to-dos available
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
                     <label className="text-sm font-medium">Notes</label>
                     <Textarea
                       placeholder="Add any notes about this to-do (optional)"
