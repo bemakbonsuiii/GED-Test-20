@@ -100,6 +100,27 @@ Be concise but friendly. Address the user's specific question.`;
       return dueTime < now;
     });
 
+    // Check for upcoming meetings (today or tomorrow) with incomplete children
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 2); // End of tomorrow
+    tomorrow.setHours(0, 0, 0, 0);
+
+    const upcomingMeetingsWithIncompletePrep = incompleteTodos.filter(t => {
+      if (t.type !== "Meeting") return false;
+      if (!t.dueDate) return false;
+      const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+      if (dueTime < today.getTime() || dueTime >= tomorrow.getTime()) return false;
+      // Check if this meeting has incomplete children
+      const hasIncompleteChildren = todos.some(child => child.parentId === t.id && !child.completed);
+      return hasIncompleteChildren;
+    });
+
+    const meetingPrepTasks = upcomingMeetingsWithIncompletePrep.flatMap(meeting => {
+      return incompleteTodos.filter(t => t.parentId === meeting.id);
+    });
+
     // Build parent-child relationship map
     const todosWithChildren = incompleteTodos.filter(t =>
       todos.some(child => child.parentId === t.id && !child.completed)
