@@ -148,7 +148,7 @@ const Home = () => {
   };
 
   const getActualWorkspace = (): WorkspaceType => {
-    if (workspace === "everything") return "personal";
+    if (workspace === "everything") return newTodoWorkspace;
     return workspace as WorkspaceType;
   };
 
