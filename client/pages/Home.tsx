@@ -250,7 +250,7 @@ const Home = () => {
   });
 
   const meetingTodos = workspaceTodos
-    .filter((todo) => todo.isMeeting && todo.dueDate && !todo.completed)
+    .filter((todo) => todo.type === "Meeting" && todo.dueDate && !todo.completed)
     .sort((a, b) => (a.dueDate || 0) - (b.dueDate || 0));
 
   const activeCount = workspaceTodos.filter((todo) => !todo.completed).length;
