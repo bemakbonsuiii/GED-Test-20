@@ -668,7 +668,7 @@ const Home = () => {
                               <div className="flex items-start gap-2 flex-wrap">
                                 <span
                                   className={`text-sm break-words cursor-pointer hover:underline ${child.completed ? "line-through text-muted-foreground" : ""}`}
-                                  onClick={() => openEditDialog(child)}
+                                  onClick={() => openSummaryDialog(child)}
                                 >
                                   {child.text}
                                 </span>
@@ -718,7 +718,7 @@ const Home = () => {
                                     <div className="flex-1 min-w-0">
                                       <span
                                         className={`break-words cursor-pointer hover:underline ${grandchild.completed ? "line-through text-muted-foreground" : ""}`}
-                                        onClick={() => openEditDialog(grandchild)}
+                                        onClick={() => openSummaryDialog(grandchild)}
                                       >
                                         {grandchild.text}
                                       </span>
@@ -910,7 +910,7 @@ const Home = () => {
                         <div className="flex-1 min-w-0">
                           <div
                             className="font-medium text-sm break-words cursor-pointer hover:underline"
-                            onClick={() => openEditDialog(meeting)}
+                            onClick={() => openSummaryDialog(meeting)}
                           >
                             {meeting.text}
                           </div>
