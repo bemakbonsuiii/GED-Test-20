@@ -85,9 +85,20 @@ Be concise but friendly. Address the user's specific question.`;
     const now = Date.now();
     const futureStartItems = incompleteTodos.filter(t => t.startDate && t.startDate > now);
 
-    const userPrompt = `${eodItems.length > 0 ? `⚠️ URGENT EOD ITEMS (must complete today): ${eodItems.length}\n` : ''}${futureStartItems.length > 0 ? `⏳ FUTURE START ITEMS (cannot start yet): ${futureStartItems.length}\n` : ''}Current todos:
+    // Build parent-child relationship map
+    const todosWithChildren = incompleteTodos.filter(t =>
+      todos.some(child => child.parentId === t.id && !child.completed)
+    );
+    const childTodos = incompleteTodos.filter(t => t.parentId);
+
+    const userPrompt = `${eodItems.length > 0 ? `⚠️ URGENT EOD ITEMS (must complete today): ${eodItems.length}\n` : ''}${futureStartItems.length > 0 ? `⏳ FUTURE START ITEMS (cannot start yet): ${futureStartItems.length}\n` : ''}${todosWithChildren.length > 0 ? `🔗 PARENT ITEMS (blocked by children): ${todosWithChildren.length}\n` : ''}${childTodos.length > 0 ? `👶 CHILD ITEMS (blockers for parents): ${childTodos.length}\n` : ''}
+Current todos:
 ${JSON.stringify(incompleteTodos.slice(0, 50).map(t => {
   const canStart = !t.startDate || t.startDate <= now;
+  const hasChildren = todos.some(child => child.parentId === t.id && !child.completed);
+  const isChild = !!t.parentId;
+  const parentInfo = t.parentId ? todos.find(p => p.id === t.parentId) : null;
+
   return {
     id: t.id,
     text: t.text,
@@ -98,7 +109,10 @@ ${JSON.stringify(incompleteTodos.slice(0, 50).map(t => {
     dueDate: t.dueDate,
     isEOD: t.isEOD ? "⚠️ EOD - URGENT" : false,
     isPriority: t.isPriority,
-    project: t.project
+    project: t.project,
+    hasChildren: hasChildren ? "🔗 BLOCKED - has incomplete children" : false,
+    isChild: isChild ? `👶 CHILD of: "${parentInfo?.text || 'parent'}"` : false,
+    parentId: t.parentId || undefined
   };
 }), null, 2)}
 
