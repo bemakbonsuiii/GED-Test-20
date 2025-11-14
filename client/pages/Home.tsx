@@ -141,9 +141,9 @@ const Home = () => {
     setIsCreateDialogOpen(true);
   };
 
-  const getActualWorkspace = (): "personal" | "work" | "creative" => {
+  const getActualWorkspace = (): WorkspaceType => {
     if (workspace === "everything") return "personal";
-    return workspace as "personal" | "work" | "creative";
+    return workspace as WorkspaceType;
   };
 
   const createTodo = () => {
