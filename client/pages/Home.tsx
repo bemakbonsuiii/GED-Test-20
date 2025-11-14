@@ -394,43 +394,107 @@ const Home = () => {
     setEditingTodo(null);
   };
 
-  const fetchAIRecommendations = async () => {
-    const incompleteTodos = todos.filter(t => !t.completed);
-    if (incompleteTodos.length === 0) {
-      setAiRecommendations([]);
-      setRecommendationsError(null);
-      return;
-    }
+  const togglePriority = (todoId: string) => {
+    setTodos(prevTodos => {
+      const todo = prevTodos.find(t => t.id === todoId);
+      if (!todo) return prevTodos;
 
-    setLoadingRecommendations(true);
-    setRecommendationsError(null);
+      const newIsPriority = !todo.isPriority;
+      const priorityTodos = prevTodos.filter(t => t.isPriority && t.id !== todoId);
+      const newPriorityOrder = newIsPriority ? priorityTodos.length : undefined;
+
+      return prevTodos.map(t =>
+        t.id === todoId
+          ? { ...t, isPriority: newIsPriority, priorityOrder: newPriorityOrder }
+          : t
+      );
+    });
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (!over || active.id === over.id) return;
+
+    setTodos(prevTodos => {
+      const priorityTodos = prevTodos
+        .filter(t => t.isPriority)
+        .sort((a, b) => (a.priorityOrder || 0) - (b.priorityOrder || 0));
+
+      const oldIndex = priorityTodos.findIndex(t => t.id === active.id);
+      const newIndex = priorityTodos.findIndex(t => t.id === over.id);
+
+      const reorderedPriority = arrayMove(priorityTodos, oldIndex, newIndex);
+
+      // Update priority orders
+      const updatedTodos = prevTodos.map(todo => {
+        const priorityIndex = reorderedPriority.findIndex(pt => pt.id === todo.id);
+        if (priorityIndex !== -1) {
+          return { ...todo, priorityOrder: priorityIndex };
+        }
+        return todo;
+      });
+
+      return updatedTodos;
+    });
+  };
+
+  const askTodd = async () => {
+    if (!toddInput.trim()) return;
+
+    const userMessage = toddInput.trim();
+    setToddInput("");
+    setToddMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+    setToddLoading(true);
+
     try {
-      const response = await fetch('/api/ai-prioritize', {
+      const response = await fetch('/api/todd-assistant', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ todos }),
+        body: JSON.stringify({
+          message: userMessage,
+          todos: todos,
+          priorityTodos: todos.filter(t => t.isPriority).sort((a, b) => (a.priorityOrder || 0) - (b.priorityOrder || 0))
+        }),
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        if (response.status === 429) {
-          throw new Error('Rate limit reached. Recommendations will refresh in a moment.');
-        }
-        throw new Error(errorData.error || 'Failed to get AI recommendations');
+        throw new Error('Failed to get Todd response');
       }
 
       const data = await response.json();
-      setAiRecommendations(data.recommendations || []);
-      setRecommendationsError(null);
+      setToddMessages(prev => [...prev, {
+        role: 'assistant',
+        content: data.response,
+        suggestions: data.suggestions
+      }]);
     } catch (error: any) {
-      console.error('Error fetching AI recommendations:', error);
-      setRecommendationsError(error.message);
-      setAiRecommendations([]);
+      console.error('Error talking to Todd:', error);
+      setToddMessages(prev => [...prev, {
+        role: 'assistant',
+        content: 'Sorry, I encountered an error. Please try again.'
+      }]);
     } finally {
-      setLoadingRecommendations(false);
+      setToddLoading(false);
     }
+  };
+
+  const addTodoToPriorities = (todoId: string) => {
+    setTodos(prevTodos => {
+      const todo = prevTodos.find(t => t.id === todoId);
+      if (!todo || todo.isPriority) return prevTodos;
+
+      const priorityTodos = prevTodos.filter(t => t.isPriority);
+      const newPriorityOrder = priorityTodos.length;
+
+      return prevTodos.map(t =>
+        t.id === todoId
+          ? { ...t, isPriority: true, priorityOrder: newPriorityOrder }
+          : t
+      );
+    });
   };
 
   const createTodo = () => {
