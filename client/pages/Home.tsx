@@ -105,6 +105,8 @@ const Home = () => {
   const [creatingChildForId, setCreatingChildForId] = useState<string | null>(null);
   const [editingTodo, setEditingTodo] = useState<Todo | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [viewingTodo, setViewingTodo] = useState<Todo | null>(null);
+  const [isSummaryDialogOpen, setIsSummaryDialogOpen] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem("todos");
