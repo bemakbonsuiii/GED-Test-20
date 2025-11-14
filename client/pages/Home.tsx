@@ -769,6 +769,7 @@ const Home = () => {
                       setDialogStep("type");
                       setNewTodoText("");
                       setNewTodoType("Task");
+                      setNewTodoWorkspace("personal");
                       setNewTodoDueDate(undefined);
                       setNewTodoProject("");
                       setIsCreatingNewProject(false);
