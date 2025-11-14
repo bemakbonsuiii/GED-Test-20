@@ -29,7 +29,7 @@ import {
 } from "lucide-react";
 import { format, isPast, isToday, isTomorrow, differenceInDays } from "date-fns";
 
-type TodoType = "Task" | "Deliverable" | "Quick Win";
+type TodoType = "Task" | "Deliverable" | "Quick Win" | "Meeting";
 type Workspace = "personal" | "work";
 
 interface Todo {
@@ -41,7 +41,6 @@ interface Todo {
   type: TodoType;
   dueDate?: number;
   project?: string;
-  isMeeting: boolean;
   workspace: Workspace;
 }
 
@@ -68,6 +67,7 @@ const TODO_TYPE_CONFIG: Record<
   Task: { icon: CheckCircle2, color: "bg-blue-500" },
   Deliverable: { icon: Target, color: "bg-purple-500" },
   "Quick Win": { icon: Zap, color: "bg-green-500" },
+  Meeting: { icon: Users, color: "bg-orange-500" },
 };
 
 const Home = () => {
@@ -92,8 +92,7 @@ const Home = () => {
         const migrated = parsed.map((todo: any) => ({
           ...todo,
           tags: todo.tags || [],
-          type: todo.type || "Task",
-          isMeeting: todo.isMeeting || false,
+          type: todo.isMeeting ? "Meeting" : (todo.type || "Task"),
           workspace: todo.workspace || "personal",
         }));
         setTodos(migrated);
@@ -145,7 +144,6 @@ const Home = () => {
       createdAt: Date.now(),
       tags: [],
       type: "Task",
-      isMeeting: false,
       workspace,
     };
 
