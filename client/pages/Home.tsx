@@ -3221,12 +3221,25 @@ const Home = () => {
         </Dialog>
 
         {/* Create Project Dialog */}
-        <Dialog open={isCreateProjectDialogOpen} onOpenChange={setIsCreateProjectDialogOpen}>
+        <Dialog open={isCreateProjectDialogOpen} onOpenChange={(open) => {
+          if (!open) {
+            setIsCreateProjectDialogOpen(false);
+            setNewProjectName("");
+            setNewProjectDescription("");
+            if (pendingTodoData) {
+              setPendingTodoData(null);
+              setIsCreateDialogOpen(true);
+            }
+          }
+        }}>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Create New Project</DialogTitle>
               <DialogDescription>
-                Define a new project in your {newProjectWorkspace} workspace
+                {pendingTodoData
+                  ? `First, let's set up the project for your new to-do in the ${newProjectWorkspace} workspace`
+                  : `Define a new project in your ${newProjectWorkspace} workspace`
+                }
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
@@ -3262,12 +3275,16 @@ const Home = () => {
                   setIsCreateProjectDialogOpen(false);
                   setNewProjectName("");
                   setNewProjectDescription("");
+                  if (pendingTodoData) {
+                    setPendingTodoData(null);
+                    setIsCreateDialogOpen(true);
+                  }
                 }}
               >
                 Cancel
               </Button>
               <Button onClick={createProject} disabled={!newProjectName.trim()}>
-                Create Project
+                {pendingTodoData ? "Create Project & To-Do" : "Create Project"}
               </Button>
             </DialogFooter>
           </DialogContent>
