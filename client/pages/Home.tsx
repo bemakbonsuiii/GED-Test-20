@@ -2104,6 +2104,13 @@ Return ONLY the todo IDs, no explanation needed.`;
               </Card>
             )}
 
+            {/* Alerts Widget */}
+            <AlertsWidget
+              todos={todos}
+              workspace={workspace}
+              selectedProjectPage={selectedProjectPage}
+            />
+
             {/* Priorities Widget */}
             <Card className="mb-6 shadow-lg border-2 border-yellow-200 dark:border-yellow-800">
                 <CardHeader className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/30 dark:to-orange-950/30">
