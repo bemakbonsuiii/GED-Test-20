@@ -1144,6 +1144,19 @@ const Home = () => {
             <Button
               variant="ghost"
               size="icon"
+              onClick={() => togglePriority(todo.id)}
+              className="h-8 w-8"
+              title={todo.isPriority ? "Remove from priorities" : "Add to priorities"}
+            >
+              {todo.isPriority ? (
+                <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+              ) : (
+                <Star className="h-4 w-4" />
+              )}
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={() => openEditDialog(todo)}
               className="h-8 w-8"
               title="Edit todo"
