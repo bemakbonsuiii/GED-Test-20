@@ -716,11 +716,17 @@ const Home = () => {
           <DialogContent className="max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
-                {dialogStep === "type" ? "Select To-Do Type" : "Create New To-Do"}
+                {dialogStep === "type"
+                  ? "Select To-Do Type"
+                  : dialogStep === "workspace"
+                  ? "Select Workspace"
+                  : "Create New To-Do"}
               </DialogTitle>
               <DialogDescription>
                 {dialogStep === "type"
                   ? `What type of to-do is "${newTodoText}"?`
+                  : dialogStep === "workspace"
+                  ? `Where does "${newTodoText}" belong?`
                   : `Add details for "${newTodoText}"`
                 }
               </DialogDescription>
