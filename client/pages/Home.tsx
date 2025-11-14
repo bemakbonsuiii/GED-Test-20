@@ -881,13 +881,13 @@ const Home = () => {
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent
-                          className="w-auto p-0"
+                          className="w-auto p-0 z-[60]"
                           align="start"
                           onInteractOutside={(e) => {
-                            const target = e.target as HTMLElement;
-                            if (target.closest('[role="dialog"]')) {
-                              e.preventDefault();
-                            }
+                            e.preventDefault();
+                          }}
+                          onPointerDownOutside={(e) => {
+                            e.preventDefault();
                           }}
                         >
                           <Calendar
