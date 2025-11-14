@@ -1569,9 +1569,15 @@ const Home = () => {
                     return parent ? (
                       <div className="space-y-1">
                         <p className="text-xs text-muted-foreground">Parent:</p>
-                        <div className="flex items-center gap-2 p-2 bg-background rounded border">
+                        <div
+                          className="flex items-center gap-2 p-2 bg-background rounded border cursor-pointer hover:bg-accent/50 transition-colors"
+                          onClick={() => {
+                            setEditingTodo(parent);
+                          }}
+                        >
                           <Badge variant="outline" className="text-xs">{parent.type}</Badge>
                           <span className="text-sm flex-1 break-words">{parent.text}</span>
+                          <span className="text-xs text-muted-foreground">Click to edit</span>
                         </div>
                       </div>
                     ) : null;
