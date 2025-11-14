@@ -81,9 +81,10 @@ const Home = () => {
   const [projectInput, setProjectInput] = useState("");
   const [editingProject, setEditingProject] = useState<string | null>(null);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [dialogStep, setDialogStep] = useState<"type" | "details">("type");
+  const [dialogStep, setDialogStep] = useState<"type" | "workspace" | "details">("type");
   const [newTodoText, setNewTodoText] = useState("");
   const [newTodoType, setNewTodoType] = useState<TodoType>("Task");
+  const [newTodoWorkspace, setNewTodoWorkspace] = useState<WorkspaceType>("personal");
   const [newTodoDueDate, setNewTodoDueDate] = useState<Date | undefined>(undefined);
   const [newTodoProject, setNewTodoProject] = useState("");
   const [isCreatingNewProject, setIsCreatingNewProject] = useState(false);
