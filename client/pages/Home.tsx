@@ -196,7 +196,6 @@ const Home = () => {
     setNewTodoAgenda("");
     setNewTodoMeetingTime("");
     setNewTodoDueTime("");
-    setIsDatePopoverOpen(false);
   };
 
   const toggleTodo = (id: string) => {
