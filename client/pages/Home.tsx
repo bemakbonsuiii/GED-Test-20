@@ -188,14 +188,6 @@ const Home = () => {
     setEditingProject(null);
   };
 
-  const toggleMeeting = (id: string) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, isMeeting: !todo.isMeeting } : todo
-      )
-    );
-  };
-
   const addTagToTodo = (todoId: string, tag: string) => {
     const trimmedTag = tag.trim().toLowerCase();
     if (!trimmedTag) return;
