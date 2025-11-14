@@ -949,6 +949,7 @@ const Home = () => {
                       setDueDatePopoverOpen(false);
                       setNewTodoNotes("");
                       setNewTodoLinks("");
+                      setNewTodoParentId(undefined);
                     }}
                   >
                     Cancel
@@ -1213,6 +1214,7 @@ const Home = () => {
                       setDueDatePopoverOpen(false);
                       setNewTodoNotes("");
                       setNewTodoLinks("");
+                      setNewTodoParentId(undefined);
                     }}
                   >
                     Cancel
