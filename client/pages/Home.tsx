@@ -64,6 +64,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { format, isPast, isToday, isTomorrow, differenceInDays } from "date-fns";
+import { MetricsWidget } from "../components/MetricsWidget";
 
 type TodoType = "Task" | "Deliverable" | "Quick Win" | "Meeting";
 type WorkspaceType = "personal" | "work" | "creative";
@@ -2265,8 +2266,17 @@ Return ONLY the todo IDs, no explanation needed.`;
               </Card>
             </div>
 
-            {/* Metrics Widget - Only on Homepage */}
-            {workspace === "everything" && (
+            {/* Metrics Widget */}
+            <MetricsWidget
+              workspace={workspace}
+              selectedProjectPage={selectedProjectPage}
+              todos={todos}
+              projects={projects}
+              isExpanded={isMetricsExpanded}
+              setIsExpanded={setIsMetricsExpanded}
+            />
+
+            {false && (
               <Card className="mb-6 shadow-lg border-2 border-blue-200 dark:border-blue-800">
                 <CardHeader className="cursor-pointer hover:bg-accent/50 transition-colors" onClick={() => setIsMetricsExpanded(!isMetricsExpanded)}>
                   <CardTitle className="text-lg flex items-center gap-2">
