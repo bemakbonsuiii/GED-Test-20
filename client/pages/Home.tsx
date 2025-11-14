@@ -1467,13 +1467,27 @@ const Home = () => {
               {/* Priorities Widget */}
               <Card className="shadow-lg border-2 border-yellow-200 dark:border-yellow-800">
                 <CardHeader className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/30 dark:to-orange-950/30">
-                  <CardTitle className="flex items-center gap-2">
-                    <Star className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
-                    Today's Priorities
-                  </CardTitle>
-                  <p className="text-sm text-muted-foreground">
-                    Drag to reorder your priority items
-                  </p>
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <CardTitle className="flex items-center gap-2">
+                        <Star className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+                        Today's Priorities
+                      </CardTitle>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Drag to reorder your priority items
+                      </p>
+                    </div>
+                    {todos.some(t => t.isPriority) && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={clearPriorities}
+                        className="text-xs"
+                      >
+                        Clear All
+                      </Button>
+                    )}
+                  </div>
                 </CardHeader>
                 <CardContent className="pt-6">
                   {(() => {
