@@ -272,7 +272,7 @@ const Home = () => {
   // Auto-minimize empty widgets
   useEffect(() => {
     const meetings = workspaceTodos.filter((todo) => todo.type === "Meeting" && !todo.completed);
-    const deadlines = todos.filter(t => !t.completed && t.dueDate && t.type !== "Meeting");
+    const deadlines = workspaceTodos.filter(t => !t.completed && t.dueDate && t.type !== "Meeting");
 
     if (meetings.length === 0) {
       setIsMeetingsExpanded(false);
@@ -280,7 +280,7 @@ const Home = () => {
     if (deadlines.length === 0) {
       setIsDeadlinesExpanded(false);
     }
-  }, [workspaceTodos, todos]);
+  }, [workspaceTodos]);
 
 
   useEffect(() => {
