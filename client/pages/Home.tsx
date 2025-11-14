@@ -164,6 +164,7 @@ const Home = () => {
     })
   );
   const [workspace, setWorkspace] = useState<Workspace>("everything");
+  const [selectedProjectPage, setSelectedProjectPage] = useState<string | null>(null);
   const [filter, setFilter] = useState<FilterType>("all");
   const [selectedTypeFilter, setSelectedTypeFilter] = useState<TodoType | null>(null);
   const [selectedProjectFilter, setSelectedProjectFilter] = useState<string | null>(null);
@@ -249,6 +250,10 @@ const Home = () => {
     ? todos
     : todos.filter((todo) => todo.workspace === workspace)
   ).filter((todo) => {
+    // If viewing a specific project page, only show todos from that project
+    if (selectedProjectPage && todo.project !== selectedProjectPage) {
+      return false;
+    }
     // If filtering by type, show child todos of that type as standalone items
     if (selectedTypeFilter) {
       return true; // Don't filter out children when type filter is active
