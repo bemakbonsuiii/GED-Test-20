@@ -77,6 +77,7 @@ const Home = () => {
   const [newTodoText, setNewTodoText] = useState("");
   const [newTodoDueDate, setNewTodoDueDate] = useState<Date | undefined>(undefined);
   const [newTodoProject, setNewTodoProject] = useState("");
+  const [isCreatingNewProject, setIsCreatingNewProject] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem("todos");
@@ -136,6 +137,7 @@ const Home = () => {
     setNewTodoText("");
     setNewTodoDueDate(undefined);
     setNewTodoProject("");
+    setIsCreatingNewProject(false);
   };
 
   const toggleTodo = (id: string) => {
@@ -662,9 +664,19 @@ const Home = () => {
 
               <div className="space-y-2">
                 <label className="text-sm font-medium">Project</label>
-                {allProjects.length > 0 ? (
+                {allProjects.length > 0 && !isCreatingNewProject ? (
                   <>
-                    <Select value={newTodoProject} onValueChange={setNewTodoProject}>
+                    <Select
+                      value={newTodoProject}
+                      onValueChange={(value) => {
+                        if (value === "__new__") {
+                          setIsCreatingNewProject(true);
+                          setNewTodoProject("");
+                        } else {
+                          setNewTodoProject(value);
+                        }
+                      }}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select or create a project" />
                       </SelectTrigger>
@@ -678,22 +690,30 @@ const Home = () => {
                         <SelectItem value="__new__">+ Create New Project</SelectItem>
                       </SelectContent>
                     </Select>
-                    {newTodoProject === "__new__" && (
-                      <Input
-                        placeholder="Enter new project name"
-                        onChange={(e) => setNewTodoProject(e.target.value)}
-                        autoFocus
-                      />
-                    )}
                   </>
                 ) : (
-                  <Input
-                    placeholder="Enter project name or leave empty"
-                    value={newTodoProject}
-                    onChange={(e) => setNewTodoProject(e.target.value)}
-                  />
+                  <div className="space-y-2">
+                    <Input
+                      placeholder="Enter project name or leave empty"
+                      value={newTodoProject}
+                      onChange={(e) => setNewTodoProject(e.target.value)}
+                      autoFocus={isCreatingNewProject}
+                    />
+                    {allProjects.length > 0 && isCreatingNewProject && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          setIsCreatingNewProject(false);
+                          setNewTodoProject("");
+                        }}
+                      >
+                        ← Back to select
+                      </Button>
+                    )}
+                  </div>
                 )}
-                {!newTodoProject && (
+                {!newTodoProject && !isCreatingNewProject && (
                   <p className="text-xs text-muted-foreground">
                     Leave empty for "No Project"
                   </p>
@@ -708,6 +728,7 @@ const Home = () => {
                   setNewTodoText("");
                   setNewTodoDueDate(undefined);
                   setNewTodoProject("");
+                  setIsCreatingNewProject(false);
                 }}
               >
                 Cancel
