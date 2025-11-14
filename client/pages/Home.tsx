@@ -289,12 +289,11 @@ const Home = () => {
     return !todo.parentId;
   });
 
-  const getAllProjects = (): string[] => {
-    const projectSet = new Set<string>();
-    workspaceTodos.forEach((todo) => {
-      if (todo.project) projectSet.add(todo.project);
-    });
-    return Array.from(projectSet).sort();
+  const getAllProjects = (): Project[] => {
+    if (workspace === "everything") {
+      return projects.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    return getWorkspaceProjects(workspace as WorkspaceType);
   };
 
   const getWorkspaceProjects = (targetWorkspace: WorkspaceType): Project[] => {
@@ -1997,21 +1996,20 @@ const Home = () => {
                             All Projects
                           </Button>
                           {allProjects.map((project) => {
-                            const projectWorkspace = todos.find(t => t.project === project)?.workspace;
                             return (
                             <Button
-                              key={project}
+                              key={project.id}
                               variant={
-                                selectedProjectFilter === project ? "default" : "outline"
+                                selectedProjectFilter === project.name ? "default" : "outline"
                               }
                               size="sm"
-                              onClick={() => setSelectedProjectFilter(project)}
+                              onClick={() => setSelectedProjectFilter(project.name)}
                               className="justify-start"
                             >
-                              <span className="flex-1 text-left">{project}</span>
-                              {workspace === "everything" && projectWorkspace && (
+                              <span className="flex-1 text-left">{project.name}</span>
+                              {workspace === "everything" && (
                                 <Badge variant="secondary" className="ml-2 text-[10px] capitalize">
-                                  {projectWorkspace}
+                                  {project.workspace}
                                 </Badge>
                               )}
                             </Button>
