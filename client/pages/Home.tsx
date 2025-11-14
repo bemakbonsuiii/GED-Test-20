@@ -2188,61 +2188,70 @@ const Home = () => {
                   )}
 
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Project</label>
-                    {allProjects.length > 0 && !isCreatingNewProject ? (
-                      <>
-                        <Select
-                      value={newTodoProject || "__none__"}
-                      onValueChange={(value) => {
-                        if (value === "__new__") {
-                          setIsCreatingNewProject(true);
-                          setNewTodoProject("");
-                        } else if (value === "__none__") {
-                          setNewTodoProject("");
-                        } else {
-                          setNewTodoProject(value);
-                        }
-                      }}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select or create a project" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="__none__">No Project</SelectItem>
-                            {allProjects.map((project) => (
-                              <SelectItem key={project} value={project}>
-                                {project}
-                              </SelectItem>
+                    <label className="text-sm font-medium">Project ({getActualWorkspace()})</label>
+                    {(() => {
+                      const currentWorkspaceProjects = getWorkspaceProjects(getActualWorkspace());
+                      return currentWorkspaceProjects.length > 0 && !isCreatingNewProject ? (
+                        <>
+                          <Select
+                        value={newTodoProject || "__none__"}
+                        onValueChange={(value) => {
+                          if (value === "__new__") {
+                            setIsCreatingNewProject(true);
+                            setNewTodoProject("");
+                          } else if (value === "__none__") {
+                            setNewTodoProject("");
+                          } else {
+                            setNewTodoProject(value);
+                          }
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select or create a project" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="__none__">No Project</SelectItem>
+                              {currentWorkspaceProjects.map((project) => (
+                                <SelectItem key={project} value={project}>
+                                  {project}
+                                </SelectItem>
+                              ))}
+                              <SelectItem value="__new__">+ Create New Project</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </>
+                      ) : (
+                        <div className="space-y-2">
+                          <Input
+                            placeholder={`Enter ${getActualWorkspace()} project name`}
+                            value={newTodoProject}
+                            onChange={(e) => setNewTodoProject(e.target.value)}
+                            autoFocus={isCreatingNewProject}
+                            list={`workspace-projects-input-${getActualWorkspace()}`}
+                          />
+                          <datalist id={`workspace-projects-input-${getActualWorkspace()}`}>
+                            {currentWorkspaceProjects.map((proj) => (
+                              <option key={proj} value={proj} />
                             ))}
-                            <SelectItem value="__new__">+ Create New Project</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </>
-                    ) : (
-                      <div className="space-y-2">
-                        <Input
-                          placeholder="Enter project name or leave empty"
-                          value={newTodoProject}
-                          onChange={(e) => setNewTodoProject(e.target.value)}
-                          autoFocus={isCreatingNewProject}
-                        />
-                        {allProjects.length > 0 && isCreatingNewProject && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => {
-                              setIsCreatingNewProject(false);
-                              setNewTodoProject("");
-                            }}
-                          >
-                            ← Back to select
-                          </Button>
-                        )}
-                      </div>
-                    )}
+                          </datalist>
+                          {currentWorkspaceProjects.length > 0 && isCreatingNewProject && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                setIsCreatingNewProject(false);
+                                setNewTodoProject("");
+                              }}
+                            >
+                              ← Back to select
+                            </Button>
+                          )}
+                        </div>
+                      );
+                    })()}
                     {!newTodoProject && !isCreatingNewProject && (
                       <p className="text-xs text-muted-foreground">
-                        Leave empty for "No Project"
+                        Projects are specific to {getActualWorkspace()} workspace
                       </p>
                     )}
                   </div>
