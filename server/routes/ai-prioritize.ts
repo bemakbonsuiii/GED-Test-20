@@ -70,9 +70,12 @@ export async function handleAIPrioritize(req: Request, res: Response) {
 Consider:
 - Due dates and times (prioritize urgent items)
 - Priority levels (P0 > P1 > P2)
-- EOD (end of day) flags
+- EOD (end of day) flags (HIGHEST PRIORITY)
+- **Parent-Child Relationships**: Children MUST be completed before their parent can be completed
+  - Items with hasChildren=true are BLOCKED until their children are done
+  - Items with isChild=true are BLOCKERS and should be prioritized over their parents
+  - ALWAYS prioritize children over parents
 - Task types (Deliverables and Meetings may need preparation)
-- Dependencies (items with children may need to be broken down)
 - Project context and workspace
 
 To-dos:
