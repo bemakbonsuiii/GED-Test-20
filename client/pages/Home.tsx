@@ -587,7 +587,7 @@ const Home = () => {
             </div>
 
             {todo.type === "Meeting" && (todo.meetingTime || todo.agenda) && (
-              <div className="text-sm space-y-1 pt-1 border-t">
+              <div className="text-sm space-y-2 pt-2 border-t">
                 {todo.meetingTime && (
                   <div className="flex items-center gap-1 text-muted-foreground">
                     <Clock className="h-3 w-3" />
@@ -596,7 +596,15 @@ const Home = () => {
                 )}
                 {todo.agenda && (
                   <div className="text-muted-foreground">
-                    <span className="font-medium">Agenda:</span> {todo.agenda}
+                    <span className="font-medium">Agenda:</span>
+                    <ul className="mt-1 ml-4 space-y-0.5">
+                      {todo.agenda.split('\n').filter(item => item.trim()).map((item, idx) => (
+                        <li key={idx} className="flex gap-2">
+                          <span className="text-orange-500 dark:text-orange-400 flex-shrink-0">•</span>
+                          <span className="flex-1">{item.trim()}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 )}
               </div>
