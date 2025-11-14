@@ -1702,7 +1702,7 @@ const Home = () => {
                 </CardHeader>
                 <CardContent>
                   {(() => {
-                    const upcomingDeadlines = todos
+                    const upcomingDeadlines = workspaceTodos
                       .filter(t => !t.completed && t.dueDate && t.type !== "Meeting")
                       .sort((a, b) => {
                         const dateA = new Date(a.dueDate!);
