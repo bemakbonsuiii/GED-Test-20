@@ -571,17 +571,47 @@ const Home = () => {
                 {getChildren(todo.id).length > 0 && (
                   <div className="text-muted-foreground">
                     <span className="font-medium">Children ({getChildren(todo.id).length}):</span>
-                    <div className="mt-1 space-y-1">
+                    <div className="mt-2 ml-4 space-y-2 border-l-2 border-muted pl-3">
                       {getChildren(todo.id).map((child) => (
-                        <div key={child.id} className="flex items-center gap-2">
-                          <span className="text-xs bg-accent px-2 py-0.5 rounded">[{child.type}] {child.text}</span>
+                        <div key={child.id} className="flex items-start gap-2">
+                          <Checkbox
+                            checked={child.completed}
+                            onCheckedChange={() => toggleTodo(child.id)}
+                            className="mt-1"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-start gap-2 flex-wrap">
+                              <span className={`text-sm ${child.completed ? "line-through text-muted-foreground" : ""}`}>
+                                {child.text}
+                              </span>
+                              <Badge variant="outline" className="text-xs">
+                                {child.type}
+                              </Badge>
+                            </div>
+                            {child.priority !== "P2" && (
+                              <Badge
+                                variant={child.priority === "P0" ? "destructive" : "default"}
+                                className="text-xs mt-1"
+                              >
+                                {child.priority}
+                              </Badge>
+                            )}
+                          </div>
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-5 px-2 text-xs"
+                            className="h-6 px-2 text-xs"
                             onClick={() => unlinkTodo(child.id)}
                           >
                             Unlink
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => deleteTodo(child.id)}
+                            className="h-6 w-6"
+                          >
+                            <Trash2 className="h-3 w-3 text-destructive" />
                           </Button>
                         </div>
                       ))}
