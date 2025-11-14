@@ -787,6 +787,8 @@ const Home = () => {
                       setNewTodoMeetingTime("");
                       setNewTodoDueTime("");
                       setDueDatePopoverOpen(false);
+                      setNewTodoNotes("");
+                      setNewTodoLinks("");
                     }}
                   >
                     Cancel
