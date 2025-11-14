@@ -2380,8 +2380,8 @@ const Home = () => {
                         <SelectContent>
                           <SelectItem value="__none__">No Project</SelectItem>
                               {currentWorkspaceProjects.map((project) => (
-                                <SelectItem key={project} value={project}>
-                                  {project}
+                                <SelectItem key={project.id} value={project.name}>
+                                  {project.name}
                                 </SelectItem>
                               ))}
                               <SelectItem value="__new__">+ Create New Project</SelectItem>
@@ -2399,7 +2399,7 @@ const Home = () => {
                           />
                           <datalist id={`workspace-projects-input-${getActualWorkspace()}`}>
                             {currentWorkspaceProjects.map((proj) => (
-                              <option key={proj} value={proj} />
+                              <option key={proj.id} value={proj.name} />
                             ))}
                           </datalist>
                           {currentWorkspaceProjects.length > 0 && isCreatingNewProject && (
