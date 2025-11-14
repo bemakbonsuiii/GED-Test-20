@@ -778,6 +778,7 @@ const Home = () => {
                       setNewTodoAgenda("");
                       setNewTodoMeetingTime("");
                       setNewTodoDueTime("");
+                      setDueDatePopoverOpen(false);
                     }}
                   >
                     Cancel
@@ -856,6 +857,7 @@ const Home = () => {
                       setNewTodoAgenda("");
                       setNewTodoMeetingTime("");
                       setNewTodoDueTime("");
+                      setDueDatePopoverOpen(false);
                     }}
                   >
                     Cancel
@@ -1070,6 +1072,7 @@ const Home = () => {
                       setNewTodoAgenda("");
                       setNewTodoMeetingTime("");
                       setNewTodoDueTime("");
+                      setDueDatePopoverOpen(false);
                     }}
                   >
                     Cancel
