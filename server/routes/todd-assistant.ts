@@ -21,6 +21,7 @@ interface Todo {
   isEOD?: boolean;
   isPriority?: boolean;
   priorityOrder?: number;
+  parentId?: string;
 }
 
 export async function handleToddAssistant(req: Request, res: Response) {
