@@ -197,6 +197,7 @@ const Home = () => {
     // Inherit parent's due date, project, and priority
     setNewTodoDueDate(parent.dueDate ? new Date(parent.dueDate) : undefined);
     setNewTodoDueTime(parent.dueTime || "");
+    setNewTodoMeetingTime(parent.meetingTime || "");
     setNewTodoProject(parent.project || "");
     setNewTodoPriority(parent.priority);
 
