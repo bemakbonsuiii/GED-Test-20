@@ -1535,16 +1535,28 @@ const Home = () => {
                         Drag to reorder your priority items
                       </p>
                     </div>
-                    {todos.some(t => t.isPriority) && (
+                    <div className="flex gap-2">
                       <Button
-                        variant="outline"
+                        variant="default"
                         size="sm"
-                        onClick={clearPriorities}
-                        className="text-xs"
+                        onClick={autoPrioritize}
+                        disabled={toddLoading}
+                        className="text-xs bg-yellow-600 hover:bg-yellow-700 dark:bg-yellow-500 dark:hover:bg-yellow-600"
                       >
-                        Clear All
+                        <Sparkles className="h-3 w-3 mr-1" />
+                        Auto
                       </Button>
-                    )}
+                      {todos.some(t => t.isPriority) && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={clearPriorities}
+                          className="text-xs"
+                        >
+                          Clear All
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent className="pt-6">
