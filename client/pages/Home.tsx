@@ -59,6 +59,7 @@ interface Todo {
   meetingTime?: string;
   notes?: string;
   links?: string;
+  parentId?: string;
 }
 
 type FilterType = "all" | "active" | "completed";
@@ -99,6 +100,8 @@ const Home = () => {
   const [dueDatePopoverOpen, setDueDatePopoverOpen] = useState(false);
   const [newTodoNotes, setNewTodoNotes] = useState("");
   const [newTodoLinks, setNewTodoLinks] = useState("");
+  const [newTodoParentId, setNewTodoParentId] = useState<string | undefined>(undefined);
+  const [linkingTodoId, setLinkingTodoId] = useState<string | null>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem("todos");
