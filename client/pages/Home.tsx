@@ -2416,6 +2416,12 @@ const Home = () => {
 
                 {/* Details Grid */}
                 <div className="grid grid-cols-2 gap-4 p-4 bg-accent/30 rounded-lg">
+                  {viewingTodo.startDate && (
+                    <div>
+                      <p className="text-xs text-muted-foreground font-medium mb-1">Start Date</p>
+                      <p className="text-sm">{format(new Date(viewingTodo.startDate), "PPP")}</p>
+                    </div>
+                  )}
                   {viewingTodo.dueDate && (
                     <div>
                       <p className="text-xs text-muted-foreground font-medium mb-1">Due Date</p>
