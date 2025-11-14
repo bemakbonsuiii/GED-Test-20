@@ -769,6 +769,7 @@ const Home = () => {
                       setNewTodoAgenda("");
                       setNewTodoMeetingTime("");
                       setNewTodoDueTime("");
+                      setIsDatePopoverOpen(false);
                     }}
                   >
                     Cancel
