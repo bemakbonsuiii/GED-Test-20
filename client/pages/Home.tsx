@@ -781,6 +781,8 @@ const Home = () => {
                   setNewTodoDueDate(undefined);
                   setNewTodoProject("");
                   setIsCreatingNewProject(false);
+                  setNewTodoPriority("P2");
+                  setNewTodoIsEOD(false);
                 }}
               >
                 Cancel
