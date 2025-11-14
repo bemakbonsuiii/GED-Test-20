@@ -1407,7 +1407,7 @@ const Home = () => {
                         <span className="font-medium">Creating child for:</span> {todos.find(t => t.id === creatingChildForId)?.text}
                       </div>
                       <p className="text-xs text-muted-foreground">
-                        Due date, project, and priority are inherited from parent. You can change them below.
+                        Due date, project, priority, and EOD settings are inherited from parent. You can change them below.
                       </p>
                     </div>
                   )}
