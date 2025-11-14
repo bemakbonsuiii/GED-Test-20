@@ -11,6 +11,7 @@ interface Todo {
   type: "Task" | "Deliverable" | "Quick Win" | "Meeting";
   priority: string;
   completed: boolean;
+  startDate?: number;
   dueDate?: string;
   dueTime?: string;
   meetingTime?: string;
