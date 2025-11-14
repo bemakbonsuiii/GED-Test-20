@@ -867,6 +867,7 @@ const Home = () => {
                       setDueDatePopoverOpen(false);
                       setNewTodoNotes("");
                       setNewTodoLinks("");
+                      setNewTodoParentId(undefined);
                     }}
                   >
                     Cancel
