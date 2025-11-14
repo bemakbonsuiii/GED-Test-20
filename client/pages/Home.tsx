@@ -1528,13 +1528,27 @@ const Home = () => {
               {/* Todd AI Assistant */}
               <Card className="shadow-lg border-2 border-purple-200 dark:border-purple-800">
                 <CardHeader className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/30 dark:to-blue-950/30">
-                  <CardTitle className="flex items-center gap-2">
-                    <Sparkles className="h-5 w-5 text-purple-600 dark:text-purple-400" />
-                    Ask Todd
-                  </CardTitle>
-                  <p className="text-sm text-muted-foreground">
-                    Your AI productivity assistant
-                  </p>
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <CardTitle className="flex items-center gap-2">
+                        <Sparkles className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                        Ask Todd
+                      </CardTitle>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Your AI productivity assistant
+                      </p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={suggestPrioritization}
+                      disabled={toddLoading}
+                      className="text-xs"
+                    >
+                      <Sparkles className="h-3 w-3 mr-1" />
+                      Suggest
+                    </Button>
+                  </div>
                 </CardHeader>
                 <CardContent className="pt-4">
                   <div className="space-y-4">
