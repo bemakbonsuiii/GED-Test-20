@@ -459,15 +459,19 @@ const Home = () => {
           </div>
 
           <TabsContent value={workspace}>
-            {meetingTodos.length > 0 && (
-              <Card className="mb-6">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Users className="h-5 w-5" />
-                    Upcoming Meetings
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
+            <Card className="mb-6">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Users className="h-5 w-5" />
+                  Upcoming Meetings
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {meetingTodos.length === 0 ? (
+                  <div className="text-center py-4 text-muted-foreground text-sm">
+                    No upcoming meetings
+                  </div>
+                ) : (
                   <div className="flex gap-3 overflow-x-auto pb-2">
                     {meetingTodos.map((meeting) => (
                       <div
@@ -511,9 +515,9 @@ const Home = () => {
                       </div>
                     ))}
                   </div>
-                </CardContent>
-              </Card>
-            )}
+                )}
+              </CardContent>
+            </Card>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2">
                 <Card className="shadow-lg">
