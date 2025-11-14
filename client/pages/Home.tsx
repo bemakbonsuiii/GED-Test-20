@@ -194,8 +194,17 @@ const Home = () => {
 
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
-    fetchAIRecommendations();
   }, [todos]);
+
+  useEffect(() => {
+    // Refresh AI recommendations when incomplete todos count changes
+    const incompleteTodosCount = todos.filter(t => !t.completed).length;
+    if (incompleteTodosCount > 0) {
+      fetchAIRecommendations();
+    } else {
+      setAiRecommendations([]);
+    }
+  }, [todos.length, todos.filter(t => !t.completed).length]);
 
   useEffect(() => {
     localStorage.setItem("darkMode", darkMode.toString());
