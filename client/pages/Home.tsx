@@ -38,6 +38,7 @@ import { format, isPast, isToday, isTomorrow, differenceInDays } from "date-fns"
 
 type TodoType = "Task" | "Deliverable" | "Quick Win" | "Meeting";
 type Workspace = "personal" | "work";
+type Priority = "P0" | "P1" | "P2";
 
 interface Todo {
   id: string;
@@ -48,6 +49,8 @@ interface Todo {
   dueDate?: number;
   project?: string;
   workspace: Workspace;
+  priority: Priority;
+  isEOD: boolean;
 }
 
 type FilterType = "all" | "active" | "completed";
@@ -78,6 +81,8 @@ const Home = () => {
   const [newTodoDueDate, setNewTodoDueDate] = useState<Date | undefined>(undefined);
   const [newTodoProject, setNewTodoProject] = useState("");
   const [isCreatingNewProject, setIsCreatingNewProject] = useState(false);
+  const [newTodoPriority, setNewTodoPriority] = useState<Priority>("P2");
+  const [newTodoIsEOD, setNewTodoIsEOD] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem("todos");
@@ -88,6 +93,8 @@ const Home = () => {
           ...todo,
           type: todo.isMeeting ? "Meeting" : (todo.type || "Task"),
           workspace: todo.workspace || "personal",
+          priority: todo.priority || "P2",
+          isEOD: todo.isEOD || false,
         }));
         setTodos(migrated);
       } catch (e) {
@@ -130,6 +137,8 @@ const Home = () => {
       workspace,
       dueDate: newTodoDueDate ? newTodoDueDate.getTime() : undefined,
       project: newTodoProject || undefined,
+      priority: newTodoPriority,
+      isEOD: newTodoIsEOD,
     };
 
     setTodos([newTodo, ...todos]);
@@ -138,6 +147,8 @@ const Home = () => {
     setNewTodoDueDate(undefined);
     setNewTodoProject("");
     setIsCreatingNewProject(false);
+    setNewTodoPriority("P2");
+    setNewTodoIsEOD(false);
   };
 
   const toggleTodo = (id: string) => {
