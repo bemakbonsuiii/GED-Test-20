@@ -784,6 +784,85 @@ const Home = () => {
                   </Button>
                 </DialogFooter>
               </>
+            ) : dialogStep === "workspace" ? (
+              <>
+                <div className="space-y-3 py-4">
+                  <Button
+                    variant={newTodoWorkspace === "personal" ? "default" : "outline"}
+                    className="w-full justify-start h-auto py-4"
+                    onClick={() => {
+                      setNewTodoWorkspace("personal");
+                      setDialogStep("details");
+                    }}
+                  >
+                    <div className="text-left">
+                      <div className="font-semibold">Personal</div>
+                      <div className="text-xs text-muted-foreground">
+                        Personal tasks and activities
+                      </div>
+                    </div>
+                  </Button>
+                  <Button
+                    variant={newTodoWorkspace === "work" ? "default" : "outline"}
+                    className="w-full justify-start h-auto py-4"
+                    onClick={() => {
+                      setNewTodoWorkspace("work");
+                      setDialogStep("details");
+                    }}
+                  >
+                    <div className="text-left">
+                      <div className="font-semibold">Work</div>
+                      <div className="text-xs text-muted-foreground">
+                        Professional and work-related tasks
+                      </div>
+                    </div>
+                  </Button>
+                  <Button
+                    variant={newTodoWorkspace === "creative" ? "default" : "outline"}
+                    className="w-full justify-start h-auto py-4"
+                    onClick={() => {
+                      setNewTodoWorkspace("creative");
+                      setDialogStep("details");
+                    }}
+                  >
+                    <div className="text-left">
+                      <div className="font-semibold">Creative</div>
+                      <div className="text-xs text-muted-foreground">
+                        Creative projects and ideas
+                      </div>
+                    </div>
+                  </Button>
+                </div>
+                <DialogFooter>
+                  <Button
+                    variant="ghost"
+                    onClick={() => setDialogStep("type")}
+                  >
+                    Back
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setIsCreateDialogOpen(false);
+                      setDialogStep("type");
+                      setNewTodoText("");
+                      setNewTodoType("Task");
+                      setNewTodoWorkspace("personal");
+                      setNewTodoDueDate(undefined);
+                      setNewTodoProject("");
+                      setIsCreatingNewProject(false);
+                      setNewTodoPriority("P2");
+                      setNewTodoIsEOD(false);
+                      setNewTodoAgenda("");
+                      setNewTodoMeetingTime("");
+                      setNewTodoDueTime("");
+                      setIsDatePopoverOpen(false);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </DialogFooter>
+              </>
             ) : (
               <>
                 <div className="space-y-4 py-4">
