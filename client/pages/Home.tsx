@@ -2788,12 +2788,21 @@ const Home = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Project</label>
+                    <label className="text-sm font-medium">Project ({editingTodo.workspace})</label>
                     <Input
                       value={editingTodo.project || ""}
                       onChange={(e) => setEditingTodo({ ...editingTodo, project: e.target.value || undefined })}
-                      placeholder="Enter project name (optional)"
+                      placeholder={`Enter ${editingTodo.workspace} project name (optional)`}
+                      list={`edit-workspace-projects-${editingTodo.workspace}`}
                     />
+                    <datalist id={`edit-workspace-projects-${editingTodo.workspace}`}>
+                      {getWorkspaceProjects(editingTodo.workspace).map((proj) => (
+                        <option key={proj} value={proj} />
+                      ))}
+                    </datalist>
+                    <p className="text-xs text-muted-foreground">
+                      Projects are specific to {editingTodo.workspace} workspace
+                    </p>
                   </div>
 
                   {editingTodo.type !== "Meeting" && (
