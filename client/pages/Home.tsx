@@ -1048,6 +1048,131 @@ Return ONLY the todo IDs, no explanation needed.`;
     });
   };
 
+  // Workspace-specific metrics
+  const getWorkspaceMetrics = (targetWorkspace: WorkspaceType) => {
+    const wsTodos = todos.filter(t => t.workspace === targetWorkspace);
+    const wsProjects = projects.filter(p => p.workspace === targetWorkspace);
+
+    // Daily tasks for this workspace
+    const now = Date.now();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999);
+
+    const dailyTasks = wsTodos.filter(t => {
+      if (t.completed) return false;
+      if (t.isEOD) return true;
+      if (t.dueDate) {
+        const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+        return dueTime >= today.getTime() && dueTime <= todayEnd.getTime();
+      }
+      return false;
+    });
+
+    const completedToday = wsTodos.filter(t => {
+      if (!t.completed) return false;
+      if (t.isEOD) return true;
+      if (t.dueDate) {
+        const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+        return dueTime >= today.getTime() && dueTime <= todayEnd.getTime();
+      }
+      return false;
+    });
+
+    // Actionable tasks for this workspace
+    const actionableTasks = wsTodos.filter(t => {
+      if (t.completed) return false;
+      return !t.startDate || t.startDate <= now;
+    });
+
+    const totalIncompleteTasks = wsTodos.filter(t => !t.completed);
+
+    // Projects in this workspace
+    const projectsData = wsProjects.map(project => {
+      const projectTodos = wsTodos.filter(t => t.project === project.name);
+      const completed = projectTodos.filter(t => t.completed).length;
+      return {
+        name: project.name,
+        total: projectTodos.length,
+        completed,
+        percentage: projectTodos.length > 0 ? Math.round((completed / projectTodos.length) * 100) : 0
+      };
+    });
+
+    return {
+      dailyTasks: {
+        total: dailyTasks.length,
+        completed: completedToday.length,
+        percentage: (dailyTasks.length + completedToday.length) > 0 ? Math.round((completedToday.length / (dailyTasks.length + completedToday.length)) * 100) : 0
+      },
+      actionableTasks: {
+        actionable: actionableTasks.length,
+        total: totalIncompleteTasks.length,
+        percentage: totalIncompleteTasks.length > 0 ? Math.round((actionableTasks.length / totalIncompleteTasks.length) * 100) : 0
+      },
+      projects: projectsData
+    };
+  };
+
+  // Project-specific metrics
+  const getProjectMetrics = (projectName: string) => {
+    const projectTodos = todos.filter(t => t.project === projectName);
+    const now = Date.now();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999);
+
+    // Daily tasks for this project
+    const dailyTasks = projectTodos.filter(t => {
+      if (t.completed) return false;
+      if (t.isEOD) return true;
+      if (t.dueDate) {
+        const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+        return dueTime >= today.getTime() && dueTime <= todayEnd.getTime();
+      }
+      return false;
+    });
+
+    const completedToday = projectTodos.filter(t => {
+      if (!t.completed) return false;
+      if (t.isEOD) return true;
+      if (t.dueDate) {
+        const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+        return dueTime >= today.getTime() && dueTime <= todayEnd.getTime();
+      }
+      return false;
+    });
+
+    // Actionable tasks for this project
+    const actionableTasks = projectTodos.filter(t => {
+      if (t.completed) return false;
+      return !t.startDate || t.startDate <= now;
+    });
+
+    const totalIncompleteTasks = projectTodos.filter(t => !t.completed);
+    const totalCompleted = projectTodos.filter(t => t.completed).length;
+
+    return {
+      dailyTasks: {
+        total: dailyTasks.length,
+        completed: completedToday.length,
+        percentage: (dailyTasks.length + completedToday.length) > 0 ? Math.round((completedToday.length / (dailyTasks.length + completedToday.length)) * 100) : 0
+      },
+      actionableTasks: {
+        actionable: actionableTasks.length,
+        total: totalIncompleteTasks.length,
+        percentage: totalIncompleteTasks.length > 0 ? Math.round((actionableTasks.length / totalIncompleteTasks.length) * 100) : 0
+      },
+      overall: {
+        total: projectTodos.length,
+        completed: totalCompleted,
+        percentage: projectTodos.length > 0 ? Math.round((totalCompleted / projectTodos.length) * 100) : 0
+      }
+    };
+  };
+
   const SortablePriorityItem = ({ todo }: { todo: Todo }) => {
     const {
       attributes,
