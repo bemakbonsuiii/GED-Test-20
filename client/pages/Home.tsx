@@ -884,13 +884,15 @@ const Home = () => {
                             )}
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0">
+                        <PopoverContent className="w-auto p-0" align="start">
                           <Calendar
                             mode="single"
                             selected={newTodoDueDate}
                             onSelect={(date) => {
-                              setNewTodoDueDate(date);
-                              setIsDatePopoverOpen(false);
+                              if (date) {
+                                setNewTodoDueDate(date);
+                                setTimeout(() => setIsDatePopoverOpen(false), 0);
+                              }
                             }}
                             initialFocus
                           />
