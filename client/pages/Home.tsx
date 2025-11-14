@@ -1782,7 +1782,19 @@ const Home = () => {
               <div className="lg:col-span-2">
                 <Card className="shadow-lg">
                   <CardHeader>
-                    <CardTitle>My Tasks</CardTitle>
+                    <CardTitle className="flex items-center gap-2">
+                      {selectedProjectPage ? (
+                        <>
+                          <Briefcase className="h-5 w-5" />
+                          {selectedProjectPage}
+                          <Badge variant="secondary" className="ml-2">
+                            {workspaceTodos.filter(t => !t.completed).length} active
+                          </Badge>
+                        </>
+                      ) : (
+                        "My Tasks"
+                      )}
+                    </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-6">
                         <div className="flex gap-2 flex-wrap">
