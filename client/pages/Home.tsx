@@ -2097,9 +2097,23 @@ const Home = () => {
 
               <div className="space-y-6">
                 <Card>
-                  <CardHeader>
-                    <CardTitle className="text-lg">Filters</CardTitle>
+                  <CardHeader className="cursor-pointer hover:bg-accent/50 transition-colors" onClick={() => setIsFiltersExpanded(!isFiltersExpanded)}>
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      Filters
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="ml-auto h-6 w-6 p-0"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsFiltersExpanded(!isFiltersExpanded);
+                        }}
+                      >
+                        {isFiltersExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                      </Button>
+                    </CardTitle>
                   </CardHeader>
+                  {isFiltersExpanded && (
                   <CardContent className="space-y-4">
                     <div className="space-y-2">
                       <div className="text-sm font-medium">Type</div>
@@ -2174,6 +2188,7 @@ const Home = () => {
                       </div>
                     )}
                   </CardContent>
+                  )}
                 </Card>
               </div>
             </div>
