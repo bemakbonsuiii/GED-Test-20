@@ -1345,9 +1345,11 @@ const Home = () => {
         </div>
 
         <Tabs value={workspace} onValueChange={(v) => setWorkspace(v as Workspace)}>
-          <div className="flex justify-center mb-6">
+          <div className="flex flex-col items-center gap-3 mb-6">
             <TabsList>
-              <TabsTrigger value="everything">Everything</TabsTrigger>
+              <TabsTrigger value="everything">Homepage</TabsTrigger>
+            </TabsList>
+            <TabsList>
               <TabsTrigger value="personal">Personal</TabsTrigger>
               <TabsTrigger value="work">Work</TabsTrigger>
               <TabsTrigger value="creative">Creative</TabsTrigger>
