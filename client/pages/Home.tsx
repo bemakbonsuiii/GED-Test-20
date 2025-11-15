@@ -1223,6 +1223,63 @@ Return ONLY the todo IDs, no explanation needed.`;
     });
     alertCount += imminentDeadlines.length;
 
+    // Check for multiple overdue deliverables
+    const overdueDeliverables = overdueTodos.filter(t => t.type === "Deliverable");
+    if (overdueDeliverables.length >= 3) {
+      alertCount += 1;
+    }
+
+    // Check for P0 tasks with no due date
+    const unscheduledCritical = relevantTodos.filter(t => {
+      if (t.completed) return false;
+      if (t.priority !== "P0") return false;
+      return !t.dueDate;
+    });
+    alertCount += Math.min(unscheduledCritical.length, 2);
+
+    // Check for high-priority tasks blocked by incomplete children
+    const blockedPriorityTasks = relevantTodos.filter(t => {
+      if (t.completed) return false;
+      if (t.priority !== "P0" && t.priority !== "P1") return false;
+      const hasIncompleteChildren = relevantTodos.some(child =>
+        child.parentId === t.id && !child.completed
+      );
+      return hasIncompleteChildren;
+    });
+    alertCount += Math.min(blockedPriorityTasks.length, 2);
+
+    // Check for workload overload
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999);
+
+    const tasksToday = relevantTodos.filter(t => {
+      if (t.completed) return false;
+      if (t.isEOD) return true;
+      if (t.dueDate) {
+        const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+        return dueTime >= today.getTime() && dueTime <= todayEnd.getTime();
+      }
+      return false;
+    });
+
+    if (tasksToday.length >= 8) {
+      alertCount += 1;
+    }
+
+    // Check for deliverables due in 2-3 days not started
+    const upcomingDeliverables = relevantTodos.filter(t => {
+      if (t.completed || t.type !== "Deliverable") return false;
+      if (!t.dueDate) return false;
+      const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+      const dueDate = new Date(dueTime);
+      const daysUntil = differenceInDays(dueDate, today);
+      const notStarted = !t.startDate || t.startDate > now;
+      return daysUntil >= 2 && daysUntil <= 3 && notStarted;
+    });
+    alertCount += Math.min(upcomingDeliverables.length, 2);
+
     return alertCount;
   };
 
