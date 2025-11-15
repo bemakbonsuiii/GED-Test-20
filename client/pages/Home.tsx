@@ -2118,78 +2118,90 @@ Return ONLY the todo IDs, no explanation needed.`;
             )}
 
             {/* Expandable Create Project */}
-            {isCreateProjectExpanded && (
-              <Card className="mb-6 shadow-lg border-2 border-green-200 dark:border-green-800 animate-in fade-in slide-in-from-top-2 duration-200">
-                <CardHeader className="pb-3 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Briefcase className="h-5 w-5 text-green-600 dark:text-green-400" />
-                    Create New Project
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="pt-4">
-                  <form onSubmit={(e) => {
-                    e.preventDefault();
-                    createProject();
-                    setIsCreateProjectExpanded(false);
-                  }} className="space-y-4">
-                    {workspace === "everything" && (
+            {isCreateProjectExpanded && (() => {
+              // Auto-set workspace when not on homepage
+              if (workspace !== "everything" && newProjectWorkspace !== workspace) {
+                setNewProjectWorkspace(workspace as WorkspaceType);
+              }
+
+              return (
+                <Card className="mb-6 shadow-lg border-2 border-green-200 dark:border-green-800 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <CardHeader className="pb-3 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30">
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <Briefcase className="h-5 w-5 text-green-600 dark:text-green-400" />
+                      Create New Project
+                      {workspace !== "everything" && (
+                        <Badge variant="secondary" className="ml-2">
+                          {workspace.charAt(0).toUpperCase() + workspace.slice(1)}
+                        </Badge>
+                      )}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="pt-4">
+                    <form onSubmit={(e) => {
+                      e.preventDefault();
+                      createProject();
+                      setIsCreateProjectExpanded(false);
+                    }} className="space-y-4">
+                      {workspace === "everything" && (
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">Workspace</label>
+                          <Select
+                            value={newProjectWorkspace}
+                            onValueChange={(value) => setNewProjectWorkspace(value as WorkspaceType)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select workspace" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="personal">Personal</SelectItem>
+                              <SelectItem value="work">Work</SelectItem>
+                              <SelectItem value="creative">Creative</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      )}
                       <div className="space-y-2">
-                        <label className="text-sm font-medium">Workspace</label>
-                        <Select
-                          value={newProjectWorkspace}
-                          onValueChange={(value) => setNewProjectWorkspace(value as WorkspaceType)}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select workspace" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="personal">Personal</SelectItem>
-                            <SelectItem value="work">Work</SelectItem>
-                            <SelectItem value="creative">Creative</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        <label className="text-sm font-medium">Project Name</label>
+                        <Input
+                          type="text"
+                          placeholder="Enter project name"
+                          value={newProjectName}
+                          onChange={(e) => setNewProjectName(e.target.value)}
+                          autoFocus
+                        />
                       </div>
-                    )}
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Project Name</label>
-                      <Input
-                        type="text"
-                        placeholder="Enter project name"
-                        value={newProjectName}
-                        onChange={(e) => setNewProjectName(e.target.value)}
-                        autoFocus
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Project Description (Optional)</label>
-                      <Textarea
-                        placeholder="Describe the project goals, scope, or objectives..."
-                        value={newProjectDescription}
-                        onChange={(e) => setNewProjectDescription(e.target.value)}
-                        rows={3}
-                      />
-                    </div>
-                    <div className="flex gap-2 justify-end">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => {
-                          setIsCreateProjectExpanded(false);
-                          setNewProjectName("");
-                          setNewProjectDescription("");
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                      <Button type="submit" disabled={!newProjectName.trim()}>
-                        <Briefcase className="h-4 w-4 mr-2" />
-                        Create Project
-                      </Button>
-                    </div>
-                  </form>
-                </CardContent>
-              </Card>
-            )}
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Project Description (Optional)</label>
+                        <Textarea
+                          placeholder="Describe the project goals, scope, or objectives..."
+                          value={newProjectDescription}
+                          onChange={(e) => setNewProjectDescription(e.target.value)}
+                          rows={3}
+                        />
+                      </div>
+                      <div className="flex gap-2 justify-end">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => {
+                            setIsCreateProjectExpanded(false);
+                            setNewProjectName("");
+                            setNewProjectDescription("");
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                        <Button type="submit" disabled={!newProjectName.trim()}>
+                          <Briefcase className="h-4 w-4 mr-2" />
+                          Create Project
+                        </Button>
+                      </div>
+                    </form>
+                  </CardContent>
+                </Card>
+              );
+            })()}
 
             {/* Expandable Ask Todd */}
             {isToddExpanded && (
