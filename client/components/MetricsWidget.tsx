@@ -154,7 +154,7 @@ export function MetricsWidget({
             />
           </div>
           <p className="text-xs text-muted-foreground">
-            Project tasks due today • {dailyMetrics.percentage}% complete
+            Tasks due today & overdue • {dailyMetrics.percentage}% complete
           </p>
         </div>
 
@@ -219,7 +219,7 @@ export function MetricsWidget({
             />
           </div>
           <p className="text-xs text-muted-foreground">
-            Tasks due today in {workspace} • {dailyMetrics.percentage}% complete
+            Tasks due today & overdue • {dailyMetrics.percentage}% complete
           </p>
         </div>
 
@@ -323,7 +323,7 @@ export function MetricsWidget({
             />
           </div>
           <p className="text-xs text-muted-foreground">
-            Tasks due today or marked as EOD • {dailyMetrics.percentage}% complete
+            Tasks due today, overdue, or marked as EOD • {dailyMetrics.percentage}% complete
           </p>
         </div>
 
