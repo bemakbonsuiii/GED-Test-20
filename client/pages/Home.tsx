@@ -180,7 +180,7 @@ const Home = () => {
   const [isCreateProjectDialogOpen, setIsCreateProjectDialogOpen] = useState(false);
   const [isMeetingsExpanded, setIsMeetingsExpanded] = useState(true);
   const [isDeadlinesExpanded, setIsDeadlinesExpanded] = useState(true);
-  const [isFiltersExpanded, setIsFiltersExpanded] = useState(true);
+  const [isFiltersExpanded, setIsFiltersExpanded] = useState(false);
   const [isTasksExpanded, setIsTasksExpanded] = useState(true);
   const [isMetricsExpanded, setIsMetricsExpanded] = useState(true);
   const [newProjectName, setNewProjectName] = useState("");
