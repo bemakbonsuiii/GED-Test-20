@@ -1092,6 +1092,14 @@ Return ONLY the todo IDs, no explanation needed.`;
       return false;
     });
 
+    // Overdue tasks - incomplete
+    const overdueTasks = filteredByProject.filter(t => {
+      if (t.completed) return false;
+      if (!t.dueDate) return false;
+      const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+      return dueTime < today.getTime();
+    });
+
     // Completed tasks/meetings for today
     const completedToday = filteredByProject.filter(t => {
       if (!t.completed) return false;
@@ -1103,8 +1111,16 @@ Return ONLY the todo IDs, no explanation needed.`;
       return false;
     });
 
-    const incompleteDailyWork = tasksForToday.length + meetingsToday.length;
-    const totalDailyWork = incompleteDailyWork + completedToday.length;
+    // Completed overdue tasks
+    const completedOverdue = filteredByProject.filter(t => {
+      if (!t.completed) return false;
+      if (!t.dueDate) return false;
+      const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+      return dueTime < today.getTime();
+    });
+
+    const incompleteDailyWork = tasksForToday.length + meetingsToday.length + overdueTasks.length;
+    const totalDailyWork = incompleteDailyWork + completedToday.length + completedOverdue.length;
 
     // If no work for today, return 0
     if (totalDailyWork === 0) return 0;
