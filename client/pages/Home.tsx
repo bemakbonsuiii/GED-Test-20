@@ -3059,14 +3059,14 @@ Return ONLY the todo IDs, no explanation needed.`;
                           {filteredTodos.length === 0 ? (
                             <div className="text-center py-12 text-slate-500 dark:text-slate-400">
                               {filter === "active" && workspaceTodos.length > 0
-                                ? "No active tasks. Great job!"
+                                ? "No active to-dos. Great job!"
                                 : filter === "completed" && workspaceTodos.length > 0
-                                ? "No completed tasks yet."
+                                ? "No completed to-dos yet."
                                 : selectedTypeFilter
-                                ? `No ${selectedTypeFilter} tasks`
+                                ? `No ${selectedTypeFilter} to-dos`
                                 : selectedProjectFilter
-                                ? `No tasks in project "${selectedProjectFilter}"`
-                                : "No tasks yet. Add one to get started!"}
+                                ? `No to-dos in project "${selectedProjectFilter}"`
+                                : "No to-dos yet. Add one to get started!"}
                             </div>
                           ) : (
                             filteredTodos.map(renderTodoItem)
