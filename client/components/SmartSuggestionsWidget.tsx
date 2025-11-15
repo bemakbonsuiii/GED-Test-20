@@ -13,6 +13,7 @@ interface Todo {
   project?: string;
   workspace: string;
   priority: string;
+  isEOD?: boolean;
 }
 
 interface SmartSuggestionsWidgetProps {
