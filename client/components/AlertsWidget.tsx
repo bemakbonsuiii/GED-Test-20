@@ -1,5 +1,5 @@
 import React from "react";
-import { AlertTriangle, Calendar, Clock, Users } from "lucide-react";
+import { AlertTriangle, Calendar, Clock, Users, Target, Flame, FileWarning } from "lucide-react";
 import { format, isToday, isTomorrow, isPast, differenceInDays } from "date-fns";
 
 interface Todo {
@@ -32,7 +32,7 @@ interface AlertsWidgetProps {
 
 interface Alert {
   id: string;
-  type: "meeting-incomplete" | "imminent-deadline" | "overdue";
+  type: "meeting-incomplete" | "imminent-deadline" | "overdue" | "unscheduled-critical" | "blocked-priority" | "workload-overload" | "deliverable-not-started" | "multiple-overdue";
   priority: number;
   message: string;
   icon: React.ComponentType<{ className?: string }>;
