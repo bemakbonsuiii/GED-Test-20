@@ -126,8 +126,8 @@ const TODO_TYPE_CONFIG: Record<
     color: "bg-blue-500",
     bgLight: "bg-blue-50",
     bgDark: "dark:bg-blue-950/30",
-    borderLight: "border-blue-200",
-    borderDark: "dark:border-blue-800",
+    borderLight: "border-l-blue-500",
+    borderDark: "dark:border-l-blue-500",
     textLight: "text-blue-700",
     textDark: "dark:text-blue-300"
   },
@@ -136,8 +136,8 @@ const TODO_TYPE_CONFIG: Record<
     color: "bg-purple-500",
     bgLight: "bg-purple-50",
     bgDark: "dark:bg-purple-950/30",
-    borderLight: "border-purple-200",
-    borderDark: "dark:border-purple-800",
+    borderLight: "border-l-purple-500",
+    borderDark: "dark:border-l-purple-500",
     textLight: "text-purple-700",
     textDark: "dark:text-purple-300"
   },
@@ -146,8 +146,8 @@ const TODO_TYPE_CONFIG: Record<
     color: "bg-green-500",
     bgLight: "bg-green-50",
     bgDark: "dark:bg-green-950/30",
-    borderLight: "border-green-200",
-    borderDark: "dark:border-green-800",
+    borderLight: "border-l-green-500",
+    borderDark: "dark:border-l-green-500",
     textLight: "text-green-700",
     textDark: "dark:text-green-300"
   },
@@ -156,8 +156,8 @@ const TODO_TYPE_CONFIG: Record<
     color: "bg-orange-500",
     bgLight: "bg-orange-50",
     bgDark: "dark:bg-orange-950/30",
-    borderLight: "border-orange-200",
-    borderDark: "dark:border-orange-800",
+    borderLight: "border-l-orange-500",
+    borderDark: "dark:border-l-orange-500",
     textLight: "text-orange-700",
     textDark: "dark:text-orange-300"
   },
