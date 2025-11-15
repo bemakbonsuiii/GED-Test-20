@@ -2023,23 +2023,49 @@ Return ONLY the todo IDs, no explanation needed.`;
                 {isCreateProjectExpanded ? <X className="h-5 w-5" /> : <Briefcase className="h-5 w-5" />}
               </Button>
             </div>
-            <Button
-              variant="default"
-              size="icon"
-              onClick={() => {
-                setIsToddExpanded(!isToddExpanded);
-                if (!isToddExpanded) {
-                  setIsAddTodoExpanded(false);
-                  setIsAlertsExpanded(false);
-                  setIsCreateProjectExpanded(false);
-                  setIsSmartSuggestionsExpanded(false);
-                }
-              }}
-              className="rounded-full shadow-lg bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600"
-              title={isToddExpanded ? "Close" : "Ask Todd"}
-            >
-              {isToddExpanded ? <X className="h-5 w-5" /> : <Sparkles className="h-5 w-5" />}
-            </Button>
+            <div className="flex flex-col gap-2">
+              <Button
+                variant="default"
+                size="icon"
+                onClick={() => {
+                  setIsToddExpanded(!isToddExpanded);
+                  if (!isToddExpanded) {
+                    setIsAddTodoExpanded(false);
+                    setIsAlertsExpanded(false);
+                    setIsCreateProjectExpanded(false);
+                    setIsSmartSuggestionsExpanded(false);
+                  }
+                }}
+                className="rounded-full shadow-lg bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600"
+                title={isToddExpanded ? "Close" : "Ask Todd"}
+              >
+                {isToddExpanded ? <X className="h-5 w-5" /> : <Sparkles className="h-5 w-5" />}
+              </Button>
+              {getSmartSuggestionsCount() > 0 && (
+                <Button
+                  variant="default"
+                  size="icon"
+                  onClick={() => {
+                    setIsSmartSuggestionsExpanded(!isSmartSuggestionsExpanded);
+                    if (!isSmartSuggestionsExpanded) {
+                      setIsAddTodoExpanded(false);
+                      setIsToddExpanded(false);
+                      setIsAlertsExpanded(false);
+                      setIsCreateProjectExpanded(false);
+                    }
+                  }}
+                  className="rounded-full shadow-lg bg-yellow-600 hover:bg-yellow-700 dark:bg-yellow-500 dark:hover:bg-yellow-600 relative"
+                  title={isSmartSuggestionsExpanded ? "Close" : "Smart Suggestions"}
+                >
+                  {isSmartSuggestionsExpanded ? <X className="h-5 w-5" /> : <Lightbulb className="h-5 w-5" />}
+                  {!isSmartSuggestionsExpanded && (
+                    <span className="absolute -top-1 -right-1 bg-white dark:bg-slate-900 text-yellow-600 dark:text-yellow-400 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center border-2 border-yellow-600 dark:border-yellow-400">
+                      {getSmartSuggestionsCount()}
+                    </span>
+                  )}
+                </Button>
+              )}
+            </div>
             {getAlertsCount() > 0 && (
               <Button
                 variant="default"
