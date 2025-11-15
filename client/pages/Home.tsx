@@ -3062,9 +3062,9 @@ Return ONLY the todo IDs, no explanation needed.`;
               </div>
 
               <div className="space-y-6">
-                <Card>
-                  <CardHeader className="cursor-pointer hover:bg-accent/50 transition-colors" onClick={() => setIsFiltersExpanded(!isFiltersExpanded)}>
-                    <CardTitle className="text-lg flex items-center gap-2">
+                <Card className="border border-slate-200 dark:border-slate-800">
+                  <CardHeader className="cursor-pointer" onClick={() => setIsFiltersExpanded(!isFiltersExpanded)}>
+                    <CardTitle className="text-base font-medium flex items-center gap-2">
                       Filters
                       <Button
                         variant="ghost"
@@ -3075,7 +3075,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                           setIsFiltersExpanded(!isFiltersExpanded);
                         }}
                       >
-                        {isFiltersExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                        {isFiltersExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
                       </Button>
                     </CardTitle>
                   </CardHeader>
@@ -3099,13 +3099,13 @@ Return ONLY the todo IDs, no explanation needed.`;
                             <Button
                               key={type}
                               variant={
-                                selectedTypeFilter === type ? "default" : "outline"
+                                selectedTypeFilter === type ? "default" : "ghost"
                               }
                               size="sm"
                               onClick={() => setSelectedTypeFilter(type)}
-                              className={`justify-start gap-1.5 ${selectedTypeFilter !== type ? `border-2 ${typeConfig.borderLight} ${typeConfig.borderDark}` : ''}`}
+                              className="justify-start gap-1.5"
                             >
-                              <Icon className={`h-3.5 w-3.5 ${selectedTypeFilter !== type ? `${typeConfig.textLight} ${typeConfig.textDark}` : ''}`} />
+                              <Icon className="h-3.5 w-3.5" />
                               {type} ({typeCount(type)})
                             </Button>
                           );
