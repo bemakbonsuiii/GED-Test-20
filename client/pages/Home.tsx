@@ -2553,8 +2553,8 @@ Return ONLY the todo IDs, no explanation needed.`;
             )}
 
             {/* Priorities Widget */}
-            <Card className="mb-6 border-2 border-amber-300 dark:border-amber-600 bg-gradient-to-br from-amber-50/50 to-orange-50/50 dark:from-amber-950/30 dark:to-orange-950/30 shadow-lg">
-                <CardHeader className="bg-gradient-to-r from-amber-100/50 to-orange-100/50 dark:from-amber-900/20 dark:to-orange-900/20">
+            <Card className="mb-6 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 border-l-4 border-l-amber-500 dark:border-l-amber-500 shadow-md">
+                <CardHeader>
                   <div className="flex items-start justify-between">
                     <div>
                       <CardTitle className="text-base font-semibold flex items-center gap-2">
