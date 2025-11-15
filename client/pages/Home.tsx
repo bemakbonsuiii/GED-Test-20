@@ -2048,7 +2048,13 @@ Return ONLY the todo IDs, no explanation needed.`;
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => openCreateProjectDialog(workspace as WorkspaceType)}
+                        onClick={() => {
+                          setNewProjectWorkspace(workspace as WorkspaceType);
+                          setIsCreateProjectExpanded(true);
+                          setIsAddTodoExpanded(false);
+                          setIsToddExpanded(false);
+                          setIsAlertsExpanded(false);
+                        }}
                         className="gap-2 border-dashed"
                       >
                         <Plus className="h-3 w-3" />
