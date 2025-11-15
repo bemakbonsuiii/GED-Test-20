@@ -2280,11 +2280,11 @@ Return ONLY the todo IDs, no explanation needed.`;
           <TabsContent value={workspace}>
             {/* Expandable Add New To-Do */}
             {isAddTodoExpanded && (
-              <Card className="mb-6 shadow-lg border-2 border-blue-200 dark:border-blue-800 animate-in fade-in slide-in-from-top-2 duration-200">
-                <CardHeader className="pb-3 bg-gradient-to-r from-blue-50 to-slate-50 dark:from-blue-950/30 dark:to-slate-950/30">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Plus className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                    Add New To-Do
+              <Card className="mb-6 border border-slate-200 dark:border-slate-800 animate-in fade-in slide-in-from-top-2 duration-200">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base font-medium flex items-center gap-2">
+                    <Plus className="h-4 w-4" />
+                    New Task
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="pt-4">
@@ -2316,11 +2316,11 @@ Return ONLY the todo IDs, no explanation needed.`;
               }
 
               return (
-                <Card className="mb-6 shadow-lg border-2 border-green-200 dark:border-green-800 animate-in fade-in slide-in-from-top-2 duration-200">
-                  <CardHeader className="pb-3 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30">
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <Briefcase className="h-5 w-5 text-green-600 dark:text-green-400" />
-                      Create New Project
+                <Card className="mb-6 border border-slate-200 dark:border-slate-800 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base font-medium flex items-center gap-2">
+                      <Briefcase className="h-4 w-4" />
+                      New Project
                       {workspace !== "everything" && (
                         <Badge variant="secondary" className="ml-2">
                           {workspace.charAt(0).toUpperCase() + workspace.slice(1)}
@@ -2396,16 +2396,16 @@ Return ONLY the todo IDs, no explanation needed.`;
 
             {/* Expandable Ask Todd */}
             {isToddExpanded && (
-              <Card className="mb-6 shadow-lg border-2 border-purple-200 dark:border-purple-800 animate-in fade-in slide-in-from-top-2 duration-200">
-                <CardHeader className="pb-3 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/30 dark:to-blue-950/30">
+              <Card className="mb-6 border border-slate-200 dark:border-slate-800 animate-in fade-in slide-in-from-top-2 duration-200">
+                <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
                     <div>
-                      <CardTitle className="text-lg flex items-center gap-2">
-                        <Sparkles className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                      <CardTitle className="text-base font-medium flex items-center gap-2">
+                        <Sparkles className="h-4 w-4" />
                         Ask Todd
                       </CardTitle>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        Your AI productivity assistant
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                        AI productivity assistant
                       </p>
                     </div>
                     <Button
@@ -2496,11 +2496,12 @@ Return ONLY the todo IDs, no explanation needed.`;
 
             {/* Expandable Alerts Widget */}
             {isAlertsExpanded && getAlertsCount() > 0 && (
-              <Card className="mb-6 shadow-lg border-2 border-red-200 dark:border-red-800 animate-in fade-in slide-in-from-top-2 duration-200">
-                <CardHeader className="bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-950/30 dark:to-orange-950/30">
-                  <CardTitle className="flex items-center gap-2">
-                    <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" />
-                    Alerts ({getAlertsCount()})
+              <Card className="mb-6 border border-slate-200 dark:border-slate-800 animate-in fade-in slide-in-from-top-2 duration-200">
+                <CardHeader>
+                  <CardTitle className="text-base font-medium flex items-center gap-2">
+                    <AlertTriangle className="h-4 w-4 text-red-600 dark:text-red-400" />
+                    Alerts
+                    <Badge variant="secondary" className="ml-1">{getAlertsCount()}</Badge>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="pt-6">
@@ -2516,11 +2517,12 @@ Return ONLY the todo IDs, no explanation needed.`;
 
             {/* Expandable Smart Suggestions Widget */}
             {isSmartSuggestionsExpanded && getSmartSuggestionsCount() > 0 && (
-              <Card className="mb-6 shadow-lg border-2 border-yellow-200 dark:border-yellow-800 animate-in fade-in slide-in-from-top-2 duration-200">
-                <CardHeader className="bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-950/30 dark:to-amber-950/30">
-                  <CardTitle className="flex items-center gap-2">
-                    <Lightbulb className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
-                    Smart Suggestions ({getSmartSuggestionsCount()})
+              <Card className="mb-6 border border-slate-200 dark:border-slate-800 animate-in fade-in slide-in-from-top-2 duration-200">
+                <CardHeader>
+                  <CardTitle className="text-base font-medium flex items-center gap-2">
+                    <Lightbulb className="h-4 w-4" />
+                    Suggestions
+                    <Badge variant="secondary" className="ml-1">{getSmartSuggestionsCount()}</Badge>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="pt-6">
