@@ -1533,7 +1533,7 @@ Return ONLY the todo IDs, no explanation needed.`;
             <div className="flex items-center gap-2 mt-1 flex-wrap">
               <Badge
                 variant="outline"
-                className={`text-xs border-2 ${typeConfig.borderLight} ${typeConfig.borderDark} ${typeConfig.textLight} ${typeConfig.textDark}`}
+                className={`text-xs ${typeConfig.textLight} ${typeConfig.textDark}`}
               >
                 {todo.type}
               </Badge>
