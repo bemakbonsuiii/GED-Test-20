@@ -2074,7 +2074,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                   className="text-sm"
                 >
                   <Plus className="h-4 w-4 mr-1" />
-                  New Task
+                  New To-do
                 </Button>
                 <Button
                   variant="ghost"
@@ -2300,7 +2300,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base font-medium flex items-center gap-2">
                     <Plus className="h-4 w-4" />
-                    New Task
+                    New To-do
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="pt-4">
