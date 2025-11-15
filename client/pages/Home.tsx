@@ -63,6 +63,7 @@ import {
   ChevronUp,
   ChevronDown,
   AlertTriangle,
+  Lightbulb,
 } from "lucide-react";
 import { format, isPast, isToday, isTomorrow, differenceInDays } from "date-fns";
 import { MetricsWidget } from "../components/MetricsWidget";
