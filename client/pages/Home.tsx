@@ -171,6 +171,7 @@ const Home = () => {
   const [inputValue, setInputValue] = useState("");
   const [isAddTodoExpanded, setIsAddTodoExpanded] = useState(false);
   const [isToddExpanded, setIsToddExpanded] = useState(false);
+  const [isAlertsExpanded, setIsAlertsExpanded] = useState(false);
   const [isCreateProjectDialogOpen, setIsCreateProjectDialogOpen] = useState(false);
   const [isMeetingsExpanded, setIsMeetingsExpanded] = useState(true);
   const [isDeadlinesExpanded, setIsDeadlinesExpanded] = useState(true);
@@ -1851,7 +1852,10 @@ Return ONLY the todo IDs, no explanation needed.`;
               size="icon"
               onClick={() => {
                 setIsAddTodoExpanded(!isAddTodoExpanded);
-                if (!isAddTodoExpanded) setIsToddExpanded(false);
+                if (!isAddTodoExpanded) {
+                  setIsToddExpanded(false);
+                  setIsAlertsExpanded(false);
+                }
               }}
               className="rounded-full shadow-lg bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
               title={isAddTodoExpanded ? "Close" : "Add new to-do"}
@@ -1863,7 +1867,10 @@ Return ONLY the todo IDs, no explanation needed.`;
               size="icon"
               onClick={() => {
                 setIsToddExpanded(!isToddExpanded);
-                if (!isToddExpanded) setIsAddTodoExpanded(false);
+                if (!isToddExpanded) {
+                  setIsAddTodoExpanded(false);
+                  setIsAlertsExpanded(false);
+                }
               }}
               className="rounded-full shadow-lg bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600"
               title={isToddExpanded ? "Close" : "Ask Todd"}
