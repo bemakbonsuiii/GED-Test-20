@@ -2252,7 +2252,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                       onClick={() => setSelectedProjectPage(null)}
                       className="rounded-full"
                     >
-                      All Tasks
+                      All To-dos
                     </Button>
                   )}
                   <Button
