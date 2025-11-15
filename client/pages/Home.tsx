@@ -1501,7 +1501,7 @@ Return ONLY the todo IDs, no explanation needed.`;
       <div
         ref={setNodeRef}
         style={style}
-        className={`p-4 rounded-lg border-2 transition-all hover:shadow-md ${typeConfig.bgLight} ${typeConfig.bgDark} ${typeConfig.borderLight} ${typeConfig.borderDark}`}
+        className={`p-4 rounded-lg border border-slate-200 dark:border-slate-800 transition-all hover:shadow-md bg-white dark:bg-slate-900 border-l-4 ${typeConfig.borderLight} ${typeConfig.borderDark}`}
       >
         <div className="flex items-start gap-2">
           <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing mt-1">
