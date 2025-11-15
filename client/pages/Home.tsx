@@ -1226,6 +1226,67 @@ Return ONLY the todo IDs, no explanation needed.`;
     return alertCount;
   };
 
+  // Get smart suggestions count
+  const getSmartSuggestionsCount = () => {
+    const now = Date.now();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Filter todos by workspace and project
+    const relevantTodos = todos.filter(t => {
+      if (workspace !== "everything" && t.workspace !== workspace) return false;
+      if (selectedProjectPage && t.project !== selectedProjectPage) return false;
+      return true;
+    });
+
+    const incompleteTodos = relevantTodos.filter(t => !t.completed);
+    let suggestionCount = 0;
+
+    // Stale todos
+    const staleTodos = incompleteTodos.filter(t => {
+      const daysSinceCreated = differenceInDays(new Date(), new Date(t.createdAt));
+      return daysSinceCreated >= 7;
+    });
+    suggestionCount += Math.min(staleTodos.length, 2);
+
+    // Head start opportunities
+    const todayTasks = incompleteTodos.filter(t => {
+      if (t.dueDate) {
+        const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+        const dueDate = new Date(dueTime);
+        return isToday(dueDate);
+      }
+      return t.isEOD;
+    });
+
+    if (todayTasks.length <= 2) {
+      const upcomingTasks = incompleteTodos.filter(t => {
+        if (!t.dueDate) return false;
+        const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+        const dueDate = new Date(dueTime);
+        const daysUntil = differenceInDays(dueDate, today);
+        return daysUntil >= 3 && daysUntil <= 5;
+      });
+      if (upcomingTasks.length > 0) suggestionCount += 1;
+    }
+
+    // Quick wins
+    const quickWins = incompleteTodos.filter(t => t.type === "Quick Win");
+    if (quickWins.length >= 3) suggestionCount += 1;
+
+    // Upcoming deadlines
+    const upcomingDeadlines = incompleteTodos.filter(t => {
+      if (!t.dueDate) return false;
+      const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+      const dueDate = new Date(dueTime);
+      const daysUntil = differenceInDays(dueDate, today);
+      return daysUntil >= 1 && daysUntil <= 3 && t.type === "Deliverable";
+    });
+    suggestionCount += Math.min(upcomingDeadlines.length, 1);
+
+    return suggestionCount;
+  };
+
   // Workspace-specific metrics
   const getWorkspaceMetrics = (targetWorkspace: WorkspaceType) => {
     const wsTodos = todos.filter(t => t.workspace === targetWorkspace);
