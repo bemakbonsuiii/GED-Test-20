@@ -402,11 +402,11 @@ export function MetricsWidget({
   };
 
   return (
-    <Card className="mb-6 shadow-lg border-2 border-blue-200 dark:border-blue-800">
-      <CardHeader className="cursor-pointer hover:bg-accent/50 transition-colors" onClick={() => setIsExpanded(!isExpanded)}>
-        <CardTitle className="text-lg flex items-center gap-2">
-          <Target className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-          Metrics & Progress
+    <Card className="mb-6 border border-slate-200 dark:border-slate-800">
+      <CardHeader className="cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
+        <CardTitle className="text-base font-medium flex items-center gap-2">
+          <Target className="h-4 w-4" />
+          Progress
           <Button
             variant="ghost"
             size="sm"
@@ -416,7 +416,7 @@ export function MetricsWidget({
               setIsExpanded(!isExpanded);
             }}
           >
-            {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            {isExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
           </Button>
         </CardTitle>
       </CardHeader>
