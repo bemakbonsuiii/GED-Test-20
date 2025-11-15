@@ -2247,7 +2247,14 @@ Return ONLY the todo IDs, no explanation needed.`;
                 <CardContent className="pt-6">
                   {(() => {
                     const priorityTodos = todos
-                      .filter(t => t.isPriority && !t.completed)
+                      .filter(t => {
+                        if (!t.isPriority || t.completed) return false;
+                        // Filter by workspace
+                        if (workspace !== "everything" && t.workspace !== workspace) return false;
+                        // Filter by project if on a project page
+                        if (selectedProjectPage && t.project !== selectedProjectPage) return false;
+                        return true;
+                      })
                       .sort((a, b) => (a.priorityOrder || 0) - (b.priorityOrder || 0));
 
                     if (priorityTodos.length === 0) {
