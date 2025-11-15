@@ -1501,7 +1501,7 @@ Return ONLY the todo IDs, no explanation needed.`;
       <div
         ref={setNodeRef}
         style={style}
-        className="p-4 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all bg-white dark:bg-slate-900"
+        className={`p-4 rounded-lg border-2 transition-all hover:shadow-md ${typeConfig.bgLight} ${typeConfig.bgDark} ${typeConfig.borderLight} ${typeConfig.borderDark}`}
       >
         <div className="flex items-start gap-2">
           <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing mt-1">
@@ -1533,7 +1533,7 @@ Return ONLY the todo IDs, no explanation needed.`;
             <div className="flex items-center gap-2 mt-1 flex-wrap">
               <Badge
                 variant="outline"
-                className="text-xs"
+                className={`text-xs border-2 ${typeConfig.borderLight} ${typeConfig.borderDark} ${typeConfig.textLight} ${typeConfig.textDark}`}
               >
                 {todo.type}
               </Badge>
@@ -1569,7 +1569,7 @@ Return ONLY the todo IDs, no explanation needed.`;
     return (
       <div
         key={todo.id}
-        className="p-4 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-colors group bg-white dark:bg-slate-900"
+        className={`p-4 rounded-lg border-2 transition-colors group hover:shadow-md ${typeConfig.bgLight} ${typeConfig.bgDark} ${typeConfig.borderLight} ${typeConfig.borderDark}`}
       >
         <div className="flex items-start gap-3">
           <Checkbox
@@ -1822,7 +1822,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                         const childConfig = TODO_TYPE_CONFIG[child.type];
                         return (
                         <div key={child.id} className="space-y-2">
-                          <div className="flex items-start gap-2 p-2 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+                          <div className={`flex items-start gap-2 p-2 rounded-md border-2 ${childConfig.bgLight} ${childConfig.bgDark} ${childConfig.borderLight} ${childConfig.borderDark}`}>
                             <Checkbox
                               checked={child.completed}
                               onCheckedChange={() => toggleTodo(child.id)}
@@ -1838,7 +1838,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                                 </span>
                                 <Badge
                                   variant="outline"
-                                  className="text-xs"
+                                  className={`text-xs border-2 ${childConfig.borderLight} ${childConfig.borderDark} ${childConfig.bgLight} ${childConfig.bgDark} ${childConfig.textLight} ${childConfig.textDark}`}
                                 >
                                   {child.type}
                                 </Badge>
@@ -1878,7 +1878,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                                 const grandchildConfig = TODO_TYPE_CONFIG[grandchild.type];
                                 return (
                                 <div key={grandchild.id} className="space-y-1">
-                                  <div className="flex items-start gap-2 text-xs p-2 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+                                  <div className={`flex items-start gap-2 text-xs p-2 rounded-md border-2 ${grandchildConfig.bgLight} ${grandchildConfig.bgDark} ${grandchildConfig.borderLight} ${grandchildConfig.borderDark}`}>
                                     <Checkbox
                                       checked={grandchild.completed}
                                       onCheckedChange={() => toggleTodo(grandchild.id)}
@@ -1893,7 +1893,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                                       </span>
                                       <Badge
                                         variant="outline"
-                                        className="text-[10px] ml-1 px-1 py-0"
+                                        className={`text-[10px] ml-1 px-1 py-0 border ${grandchildConfig.borderLight} ${grandchildConfig.borderDark} ${grandchildConfig.textLight} ${grandchildConfig.textDark}`}
                                       >
                                         {grandchild.type}
                                       </Badge>
@@ -2654,7 +2654,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                         return (
                         <div
                           key={meeting.id}
-                          className="flex-shrink-0 flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-colors min-w-[300px] bg-white dark:bg-slate-900"
+                          className={`flex-shrink-0 flex items-center gap-3 p-3 rounded-lg border-2 transition-colors min-w-[300px] ${meetingConfig.bgLight} ${meetingConfig.bgDark} ${meetingConfig.borderLight} ${meetingConfig.borderDark} hover:shadow-md`}
                         >
                           <Checkbox
                             checked={meeting.completed}
@@ -2767,7 +2767,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                           return (
                             <div
                               key={todo.id}
-                              className="flex-shrink-0 flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-colors min-w-[300px] bg-white dark:bg-slate-900"
+                              className={`flex-shrink-0 flex items-center gap-3 p-3 rounded-lg border-2 transition-colors min-w-[300px] ${typeConfig.bgLight} ${typeConfig.bgDark} ${typeConfig.borderLight} ${typeConfig.borderDark} hover:shadow-md`}
                             >
                               <Checkbox
                                 checked={todo.completed}
