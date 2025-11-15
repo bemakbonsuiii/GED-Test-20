@@ -1822,7 +1822,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                         const childConfig = TODO_TYPE_CONFIG[child.type];
                         return (
                         <div key={child.id} className="space-y-2">
-                          <div className={`flex items-start gap-2 p-2 rounded-md border-2 ${childConfig.bgLight} ${childConfig.bgDark} ${childConfig.borderLight} ${childConfig.borderDark}`}>
+                          <div className="flex items-start gap-2 p-2 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
                             <Checkbox
                               checked={child.completed}
                               onCheckedChange={() => toggleTodo(child.id)}
@@ -1838,7 +1838,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                                 </span>
                                 <Badge
                                   variant="outline"
-                                  className={`text-xs border-2 ${childConfig.borderLight} ${childConfig.borderDark} ${childConfig.bgLight} ${childConfig.bgDark} ${childConfig.textLight} ${childConfig.textDark}`}
+                                  className="text-xs"
                                 >
                                   {child.type}
                                 </Badge>
@@ -1878,7 +1878,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                                 const grandchildConfig = TODO_TYPE_CONFIG[grandchild.type];
                                 return (
                                 <div key={grandchild.id} className="space-y-1">
-                                  <div className={`flex items-start gap-2 text-xs p-2 rounded-md border-2 ${grandchildConfig.bgLight} ${grandchildConfig.bgDark} ${grandchildConfig.borderLight} ${grandchildConfig.borderDark}`}>
+                                  <div className="flex items-start gap-2 text-xs p-2 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
                                     <Checkbox
                                       checked={grandchild.completed}
                                       onCheckedChange={() => toggleTodo(grandchild.id)}
@@ -1893,7 +1893,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                                       </span>
                                       <Badge
                                         variant="outline"
-                                        className={`text-[10px] ml-1 px-1 py-0 border ${grandchildConfig.borderLight} ${grandchildConfig.borderDark} ${grandchildConfig.textLight} ${grandchildConfig.textDark}`}
+                                        className="text-[10px] ml-1 px-1 py-0"
                                       >
                                         {grandchild.type}
                                       </Badge>
