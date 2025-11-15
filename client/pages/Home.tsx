@@ -2918,7 +2918,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                           <div className="flex items-center justify-between">
                             <span className="text-sm font-medium capitalize">{wsMetric.workspace}</span>
                             <span className="text-xs text-muted-foreground">
-                              {wsMetric.totalCompleted} / {wsMetric.totalTodos} tasks
+                              {wsMetric.totalCompleted} / {wsMetric.totalTodos} to-dos
                             </span>
                           </div>
                           {wsMetric.totalTodos > 0 ? (
