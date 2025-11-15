@@ -176,6 +176,7 @@ const Home = () => {
   const [isToddExpanded, setIsToddExpanded] = useState(false);
   const [isAlertsExpanded, setIsAlertsExpanded] = useState(false);
   const [isCreateProjectExpanded, setIsCreateProjectExpanded] = useState(false);
+  const [isSmartSuggestionsExpanded, setIsSmartSuggestionsExpanded] = useState(false);
   const [isCreateProjectDialogOpen, setIsCreateProjectDialogOpen] = useState(false);
   const [isMeetingsExpanded, setIsMeetingsExpanded] = useState(true);
   const [isDeadlinesExpanded, setIsDeadlinesExpanded] = useState(true);
