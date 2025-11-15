@@ -1932,6 +1932,28 @@ Return ONLY the todo IDs, no explanation needed.`;
             >
               {isToddExpanded ? <X className="h-5 w-5" /> : <Sparkles className="h-5 w-5" />}
             </Button>
+            {getAlertsCount() > 0 && (
+              <Button
+                variant="default"
+                size="icon"
+                onClick={() => {
+                  setIsAlertsExpanded(!isAlertsExpanded);
+                  if (!isAlertsExpanded) {
+                    setIsAddTodoExpanded(false);
+                    setIsToddExpanded(false);
+                  }
+                }}
+                className="rounded-full shadow-lg bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 relative"
+                title={isAlertsExpanded ? "Close" : "View Alerts"}
+              >
+                {isAlertsExpanded ? <X className="h-5 w-5" /> : <AlertTriangle className="h-5 w-5" />}
+                {!isAlertsExpanded && (
+                  <span className="absolute -top-1 -right-1 bg-white dark:bg-slate-900 text-red-600 dark:text-red-400 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center border-2 border-red-600 dark:border-red-400">
+                    {getAlertsCount()}
+                  </span>
+                )}
+              </Button>
+            )}
           </div>
           <div className="absolute right-0 top-0 flex items-start gap-4">
             <CircularScore
