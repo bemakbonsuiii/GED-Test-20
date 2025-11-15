@@ -2945,21 +2945,21 @@ Return ONLY the todo IDs, no explanation needed.`;
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2">
-                <Card className="shadow-lg">
-                  <CardHeader className="cursor-pointer hover:bg-accent/50 transition-colors" onClick={() => setIsTasksExpanded(!isTasksExpanded)}>
-                    <CardTitle className="flex items-center gap-2">
+                <Card className="border border-slate-200 dark:border-slate-800">
+                  <CardHeader className="cursor-pointer" onClick={() => setIsTasksExpanded(!isTasksExpanded)}>
+                    <CardTitle className="text-base font-medium flex items-center gap-2">
                       {selectedProjectPage ? (
                         <>
-                          <Briefcase className="h-5 w-5" />
+                          <Briefcase className="h-4 w-4" />
                           {selectedProjectPage}
-                          <Badge variant="secondary" className="ml-2">
-                            {workspaceTodos.filter(t => !t.completed).length} active
+                          <Badge variant="secondary" className="ml-2 text-xs">
+                            {workspaceTodos.filter(t => !t.completed).length}
                           </Badge>
                         </>
                       ) : (
-                        "My Tasks"
+                        "Tasks"
                       )}
-                      <Badge variant="secondary" className="ml-auto">
+                      <Badge variant="secondary" className="ml-auto text-xs">
                         {workspaceTodos.length}
                       </Badge>
                       <Button
@@ -2971,7 +2971,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                           setIsTasksExpanded(!isTasksExpanded);
                         }}
                       >
-                        {isTasksExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                        {isTasksExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
                       </Button>
                     </CardTitle>
                   </CardHeader>
