@@ -2435,6 +2435,25 @@ Return ONLY the todo IDs, no explanation needed.`;
               </Card>
             )}
 
+            {/* Expandable Smart Suggestions Widget */}
+            {isSmartSuggestionsExpanded && getSmartSuggestionsCount() > 0 && (
+              <Card className="mb-6 shadow-lg border-2 border-yellow-200 dark:border-yellow-800 animate-in fade-in slide-in-from-top-2 duration-200">
+                <CardHeader className="bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-950/30 dark:to-amber-950/30">
+                  <CardTitle className="flex items-center gap-2">
+                    <Lightbulb className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+                    Smart Suggestions ({getSmartSuggestionsCount()})
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-6">
+                  <SmartSuggestionsWidget
+                    todos={todos}
+                    workspace={workspace}
+                    selectedProjectPage={selectedProjectPage}
+                  />
+                </CardContent>
+              </Card>
+            )}
+
             {/* Priorities Widget */}
             <Card className="mb-6 shadow-lg border-2 border-yellow-200 dark:border-yellow-800">
                 <CardHeader className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/30 dark:to-orange-950/30">
