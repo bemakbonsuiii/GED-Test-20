@@ -2973,7 +2973,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                           </Badge>
                         </>
                       ) : (
-                        "Tasks"
+                        "To-dos"
                       )}
                       <Badge variant="secondary" className="ml-auto text-xs">
                         {workspaceTodos.length}
