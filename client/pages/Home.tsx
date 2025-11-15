@@ -3303,7 +3303,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                     <div className="text-left">
                       <div className="font-semibold">Personal</div>
                       <div className="text-xs text-muted-foreground">
-                        Personal tasks and activities
+                        Personal to-dos and activities
                       </div>
                     </div>
                   </Button>
@@ -3318,7 +3318,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                     <div className="text-left">
                       <div className="font-semibold">Work</div>
                       <div className="text-xs text-muted-foreground">
-                        Professional and work-related tasks
+                        Professional and work-related to-dos
                       </div>
                     </div>
                   </Button>
