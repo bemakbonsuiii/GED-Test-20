@@ -3940,14 +3940,14 @@ Return ONLY the todo IDs, no explanation needed.`;
                             return (
                             <div
                               key={child.id}
-                              className={`flex items-center gap-2 p-2 rounded border-2 text-xs cursor-pointer hover:shadow-md transition-colors ${childConfig.bgLight} ${childConfig.bgDark} ${childConfig.borderLight} ${childConfig.borderDark}`}
+                              className={`flex items-center gap-2 p-2 rounded border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 border-l-4 ${childConfig.borderLight} ${childConfig.borderDark} text-xs cursor-pointer hover:shadow-md transition-all`}
                               onClick={() => {
                                 setViewingTodo(child);
                               }}
                             >
                               <Badge
                                 variant="outline"
-                                className={`text-[10px] border ${childConfig.borderLight} ${childConfig.borderDark} ${childConfig.textLight} ${childConfig.textDark}`}
+                                className={`text-[10px] ${childConfig.textLight} ${childConfig.textDark}`}
                               >
                                 {child.type}
                               </Badge>
@@ -4062,14 +4062,14 @@ Return ONLY the todo IDs, no explanation needed.`;
                           return (
                           <div
                             key={child.id}
-                            className={`flex items-center gap-2 p-2 rounded border-2 text-xs cursor-pointer hover:shadow-md transition-colors ${childConfig.bgLight} ${childConfig.bgDark} ${childConfig.borderLight} ${childConfig.borderDark}`}
+                            className={`flex items-center gap-2 p-2 rounded border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 border-l-4 ${childConfig.borderLight} ${childConfig.borderDark} text-xs cursor-pointer hover:shadow-md transition-all`}
                             onClick={() => {
                               setEditingTodo(child);
                             }}
                           >
                             <Badge
                               variant="outline"
-                              className={`text-[10px] border ${childConfig.borderLight} ${childConfig.borderDark} ${childConfig.textLight} ${childConfig.textDark}`}
+                              className={`text-[10px] ${childConfig.textLight} ${childConfig.textDark}`}
                             >
                               {child.type}
                             </Badge>
