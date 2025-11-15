@@ -2189,14 +2189,32 @@ Return ONLY the todo IDs, no explanation needed.`;
           setWorkspace(v as Workspace);
           setSelectedProjectPage(null);
         }}>
-          <div className="flex flex-col items-center gap-3 mb-6">
-            <TabsList>
-              <TabsTrigger value="everything">Homepage</TabsTrigger>
-            </TabsList>
-            <TabsList>
-              <TabsTrigger value="personal">Personal</TabsTrigger>
-              <TabsTrigger value="work">Work</TabsTrigger>
-              <TabsTrigger value="creative">Creative</TabsTrigger>
+          <div className="flex items-center gap-1 mb-8 border-b border-slate-200 dark:border-slate-800">
+            <TabsList className="bg-transparent border-0 h-auto p-0">
+              <TabsTrigger
+                value="everything"
+                className="data-[state=active]:bg-transparent data-[state=active]:shadow-none border-b-2 border-transparent data-[state=active]:border-blue-600 dark:data-[state=active]:border-blue-400 rounded-none px-4 py-2 text-sm"
+              >
+                All
+              </TabsTrigger>
+              <TabsTrigger
+                value="personal"
+                className="data-[state=active]:bg-transparent data-[state=active]:shadow-none border-b-2 border-transparent data-[state=active]:border-blue-600 dark:data-[state=active]:border-blue-400 rounded-none px-4 py-2 text-sm"
+              >
+                Personal
+              </TabsTrigger>
+              <TabsTrigger
+                value="work"
+                className="data-[state=active]:bg-transparent data-[state=active]:shadow-none border-b-2 border-transparent data-[state=active]:border-blue-600 dark:data-[state=active]:border-blue-400 rounded-none px-4 py-2 text-sm"
+              >
+                Work
+              </TabsTrigger>
+              <TabsTrigger
+                value="creative"
+                className="data-[state=active]:bg-transparent data-[state=active]:shadow-none border-b-2 border-transparent data-[state=active]:border-blue-600 dark:data-[state=active]:border-blue-400 rounded-none px-4 py-2 text-sm"
+              >
+                Creative
+              </TabsTrigger>
             </TabsList>
           </div>
 
