@@ -1928,13 +1928,14 @@ Return ONLY the todo IDs, no explanation needed.`;
                 variant="default"
                 size="icon"
                 onClick={() => {
-                  setIsAddTodoExpanded(!isAddTodoExpanded);
-                  if (!isAddTodoExpanded) {
-                    setIsToddExpanded(false);
-                    setIsAlertsExpanded(false);
-                    setIsCreateProjectExpanded(false);
-                  }
-                }}
+                setIsAddTodoExpanded(!isAddTodoExpanded);
+                if (!isAddTodoExpanded) {
+                  setIsToddExpanded(false);
+                  setIsAlertsExpanded(false);
+                  setIsCreateProjectExpanded(false);
+                  setIsSmartSuggestionsExpanded(false);
+                }
+              }}
                 className="rounded-full shadow-lg bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
                 title={isAddTodoExpanded ? "Close" : "Add new to-do"}
               >
@@ -1952,6 +1953,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                     setIsAddTodoExpanded(false);
                     setIsToddExpanded(false);
                     setIsAlertsExpanded(false);
+                    setIsSmartSuggestionsExpanded(false);
                   }
                 }}
                 className="rounded-full shadow-lg bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600"
@@ -1969,6 +1971,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                   setIsAddTodoExpanded(false);
                   setIsAlertsExpanded(false);
                   setIsCreateProjectExpanded(false);
+                  setIsSmartSuggestionsExpanded(false);
                 }
               }}
               className="rounded-full shadow-lg bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600"
@@ -1986,6 +1989,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                     setIsAddTodoExpanded(false);
                     setIsToddExpanded(false);
                     setIsCreateProjectExpanded(false);
+                    setIsSmartSuggestionsExpanded(false);
                   }
                 }}
                 className="rounded-full shadow-lg bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 relative"
