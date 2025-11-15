@@ -1569,7 +1569,7 @@ Return ONLY the todo IDs, no explanation needed.`;
     return (
       <div
         key={todo.id}
-        className={`p-3 rounded-lg border-2 transition-colors group ${typeConfig.bgLight} ${typeConfig.bgDark} ${typeConfig.borderLight} ${typeConfig.borderDark} hover:shadow-md`}
+        className="p-4 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-colors group bg-white dark:bg-slate-900"
       >
         <div className="flex items-start gap-3">
           <Checkbox
