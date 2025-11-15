@@ -134,38 +134,29 @@ export const AlertsWidget: React.FC<AlertsWidgetProps> = ({ todos, workspace, se
   const alerts = getAlerts();
 
   if (alerts.length === 0) {
-    return null;
+    return (
+      <div className="text-center py-4 text-muted-foreground text-sm">
+        No alerts at the moment. Great job staying on top of things!
+      </div>
+    );
   }
 
   return (
-    <Card className="mb-4 border-2 border-orange-200 dark:border-orange-800 bg-orange-50/50 dark:bg-orange-950/20">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-sm flex items-center gap-2">
-          <AlertTriangle className="h-4 w-4 text-orange-600 dark:text-orange-400" />
-          Alerts ({alerts.length})
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-2">
-        {alerts.slice(0, 5).map(alert => {
-          const Icon = alert.icon;
-          return (
-            <div
-              key={alert.id}
-              className="flex items-start gap-2 p-2 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700"
-            >
-              <Icon className={`h-4 w-4 mt-0.5 flex-shrink-0 ${alert.color}`} />
-              <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
-                {alert.message}
-              </p>
-            </div>
-          );
-        })}
-        {alerts.length > 5 && (
-          <p className="text-xs text-muted-foreground text-center pt-1">
-            +{alerts.length - 5} more alert{alerts.length - 5 !== 1 ? 's' : ''}
-          </p>
-        )}
-      </CardContent>
-    </Card>
+    <div className="space-y-2">
+      {alerts.map(alert => {
+        const Icon = alert.icon;
+        return (
+          <div
+            key={alert.id}
+            className="flex items-start gap-2 p-3 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700"
+          >
+            <Icon className={`h-4 w-4 mt-0.5 flex-shrink-0 ${alert.color}`} />
+            <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+              {alert.message}
+            </p>
+          </div>
+        );
+      })}
+    </div>
   );
 };
