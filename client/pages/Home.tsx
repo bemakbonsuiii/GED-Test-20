@@ -2161,13 +2161,29 @@ Return ONLY the todo IDs, no explanation needed.`;
             </div>
             <div className="flex items-center gap-3">
               <div className="hidden md:flex items-center gap-4 text-sm">
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col items-end gap-0.5">
                   <div className="text-xs text-slate-500 dark:text-slate-400">Today</div>
-                  <div className="font-medium text-slate-900 dark:text-white">{100 - getWorkLeftForDayScore()}%</div>
+                  <div className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-orange-600">
+                    {100 - getWorkLeftForDayScore()}%
+                  </div>
+                  <div className="w-12 h-1 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-orange-500 to-orange-600 transition-all duration-500"
+                      style={{ width: `${100 - getWorkLeftForDayScore()}%` }}
+                    />
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col items-end gap-0.5">
                   <div className="text-xs text-slate-500 dark:text-slate-400">Overall</div>
-                  <div className="font-medium text-slate-900 dark:text-white">{100 - getWorkLeftScore()}%</div>
+                  <div className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-blue-600">
+                    {100 - getWorkLeftScore()}%
+                  </div>
+                  <div className="w-12 h-1 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-500"
+                      style={{ width: `${100 - getWorkLeftScore()}%` }}
+                    />
+                  </div>
                 </div>
               </div>
               <Button
