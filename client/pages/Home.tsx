@@ -524,6 +524,16 @@ const Home = () => {
     setIsSummaryDialogOpen(true);
   };
 
+  const handleTodoClick = (todoId: string) => {
+    const todo = todos.find(t => t.id === todoId);
+    if (todo) {
+      openSummaryDialog(todo);
+      // Close the alerts and suggestions widgets for cleaner UX
+      setIsAlertsExpanded(false);
+      setIsSmartSuggestionsExpanded(false);
+    }
+  };
+
   const saveEditedTodo = () => {
     if (!editingTodo) return;
 
