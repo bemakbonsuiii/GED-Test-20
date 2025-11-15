@@ -2056,7 +2056,7 @@ Return ONLY the todo IDs, no explanation needed.`;
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-8">
               <h1 className="text-xl font-semibold text-slate-900 dark:text-white">
-                Tasks
+                To-dos
               </h1>
               <div className="hidden md:flex items-center gap-2">
                 <Button
