@@ -2223,62 +2223,56 @@ Return ONLY the todo IDs, no explanation needed.`;
             const currentWorkspaceProjects = getWorkspaceProjects(workspace as WorkspaceType);
 
             return (
-              <div className="flex justify-center mb-6">
-                <Card className="w-full max-w-4xl">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-sm flex items-center gap-2">
-                      <Briefcase className="h-4 w-4" />
-                      {workspace.charAt(0).toUpperCase() + workspace.slice(1)} Projects
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-wrap gap-2">
-                      {currentWorkspaceProjects.length > 0 && (
-                        <Button
-                          variant={selectedProjectPage === null ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => setSelectedProjectPage(null)}
-                        >
-                          All {workspace.charAt(0).toUpperCase() + workspace.slice(1)} To-Dos
-                        </Button>
-                      )}
+              <div className="mb-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <Briefcase className="h-4 w-4 text-slate-400" />
+                  <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Projects</span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {currentWorkspaceProjects.length > 0 && (
+                    <Button
+                      variant={selectedProjectPage === null ? "default" : "ghost"}
+                      size="sm"
+                      onClick={() => setSelectedProjectPage(null)}
+                      className="rounded-full"
+                    >
+                      All Tasks
+                    </Button>
+                  )}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setNewProjectWorkspace(workspace as WorkspaceType);
+                      setIsCreateProjectExpanded(true);
+                      setIsAddTodoExpanded(false);
+                      setIsToddExpanded(false);
+                      setIsAlertsExpanded(false);
+                    }}
+                    className="gap-1 border border-dashed border-slate-300 dark:border-slate-700 rounded-full"
+                  >
+                    <Plus className="h-3 w-3" />
+                    New
+                  </Button>
+                  {currentWorkspaceProjects.map((project) => {
+                    const projectTodosCount = todos.filter(t => t.project === project.name && t.workspace === workspace).length;
+                    const activeTodosCount = todos.filter(t => t.project === project.name && t.workspace === workspace && !t.completed).length;
+                    return (
                       <Button
-                        variant="outline"
+                        key={project.id}
+                        variant={selectedProjectPage === project.name ? "default" : "ghost"}
                         size="sm"
-                        onClick={() => {
-                          setNewProjectWorkspace(workspace as WorkspaceType);
-                          setIsCreateProjectExpanded(true);
-                          setIsAddTodoExpanded(false);
-                          setIsToddExpanded(false);
-                          setIsAlertsExpanded(false);
-                        }}
-                        className="gap-2 border-dashed"
+                        onClick={() => setSelectedProjectPage(project.name)}
+                        className="gap-2 rounded-full"
                       >
-                        <Plus className="h-3 w-3" />
-                        New Project
+                        {project.name}
+                        <span className="text-xs text-slate-500 dark:text-slate-400">
+                          {activeTodosCount}/{projectTodosCount}
+                        </span>
                       </Button>
-                      {currentWorkspaceProjects.map((project) => {
-                        const projectTodosCount = todos.filter(t => t.project === project.name && t.workspace === workspace).length;
-                        const activeTodosCount = todos.filter(t => t.project === project.name && t.workspace === workspace && !t.completed).length;
-                        return (
-                          <Button
-                            key={project.id}
-                            variant={selectedProjectPage === project.name ? "default" : "outline"}
-                            size="sm"
-                            onClick={() => setSelectedProjectPage(project.name)}
-                            className="gap-2"
-                          >
-                            <Briefcase className="h-3 w-3" />
-                            {project.name}
-                            <Badge variant="secondary" className="ml-1 text-xs">
-                              {activeTodosCount}/{projectTodosCount}
-                            </Badge>
-                          </Button>
-                        );
-                      })}
-                    </div>
-                  </CardContent>
-                </Card>
+                    );
+                  })}
+                </div>
               </div>
             );
           })()}
