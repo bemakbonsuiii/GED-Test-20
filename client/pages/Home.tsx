@@ -1904,22 +1904,40 @@ Return ONLY the todo IDs, no explanation needed.`;
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-8 relative">
           <div className="absolute left-0 top-0 flex gap-2">
-            <Button
-              variant="default"
-              size="icon"
-              onClick={() => {
-                setIsAddTodoExpanded(!isAddTodoExpanded);
-                if (!isAddTodoExpanded) {
-                  setIsToddExpanded(false);
-                  setIsAlertsExpanded(false);
-                  setIsCreateProjectExpanded(false);
-                }
-              }}
-              className="rounded-full shadow-lg bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
-              title={isAddTodoExpanded ? "Close" : "Add new to-do"}
-            >
-              {isAddTodoExpanded ? <X className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
-            </Button>
+            <div className="flex flex-col gap-2">
+              <Button
+                variant="default"
+                size="icon"
+                onClick={() => {
+                  setIsAddTodoExpanded(!isAddTodoExpanded);
+                  if (!isAddTodoExpanded) {
+                    setIsToddExpanded(false);
+                    setIsAlertsExpanded(false);
+                    setIsCreateProjectExpanded(false);
+                  }
+                }}
+                className="rounded-full shadow-lg bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+                title={isAddTodoExpanded ? "Close" : "Add new to-do"}
+              >
+                {isAddTodoExpanded ? <X className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
+              </Button>
+              <Button
+                variant="default"
+                size="icon"
+                onClick={() => {
+                  setIsCreateProjectExpanded(!isCreateProjectExpanded);
+                  if (!isCreateProjectExpanded) {
+                    setIsAddTodoExpanded(false);
+                    setIsToddExpanded(false);
+                    setIsAlertsExpanded(false);
+                  }
+                }}
+                className="rounded-full shadow-lg bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600"
+                title={isCreateProjectExpanded ? "Close" : "Create new project"}
+              >
+                {isCreateProjectExpanded ? <X className="h-5 w-5" /> : <Briefcase className="h-5 w-5" />}
+              </Button>
+            </div>
             <Button
               variant="default"
               size="icon"
