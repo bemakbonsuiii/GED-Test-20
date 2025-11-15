@@ -1925,6 +1925,9 @@ Return ONLY the todo IDs, no explanation needed.`;
                 variant="default"
                 size="icon"
                 onClick={() => {
+                  if (!isCreateProjectExpanded && workspace === "everything") {
+                    setNewProjectWorkspace("personal");
+                  }
                   setIsCreateProjectExpanded(!isCreateProjectExpanded);
                   if (!isCreateProjectExpanded) {
                     setIsAddTodoExpanded(false);
