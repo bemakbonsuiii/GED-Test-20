@@ -2618,13 +2618,13 @@ Return ONLY the todo IDs, no explanation needed.`;
 
             {/* Upcoming Meetings and Deadlines */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-              <Card>
-                <CardHeader className="pb-3 cursor-pointer hover:bg-accent/50 transition-colors" onClick={() => setIsMeetingsExpanded(!isMeetingsExpanded)}>
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Users className="h-5 w-5" />
-                    Upcoming Meetings
+              <Card className="border border-slate-200 dark:border-slate-800">
+                <CardHeader className="pb-3 cursor-pointer" onClick={() => setIsMeetingsExpanded(!isMeetingsExpanded)}>
+                  <CardTitle className="text-base font-medium flex items-center gap-2">
+                    <Users className="h-4 w-4" />
+                    Meetings
                     {meetingTodos.length > 0 && (
-                      <Badge variant="secondary">
+                      <Badge variant="secondary" className="text-xs">
                         {meetingTodos.length}
                       </Badge>
                     )}
@@ -2637,7 +2637,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                         setIsMeetingsExpanded(!isMeetingsExpanded);
                       }}
                     >
-                      {isMeetingsExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                      {isMeetingsExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
                     </Button>
                   </CardTitle>
                 </CardHeader>
