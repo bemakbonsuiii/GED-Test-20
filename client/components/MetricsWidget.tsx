@@ -53,6 +53,13 @@ export function MetricsWidget({
       return false;
     });
 
+    const overdueTasks = filteredTodos.filter(t => {
+      if (t.completed) return false;
+      if (!t.dueDate) return false;
+      const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+      return dueTime < today.getTime();
+    });
+
     const completedToday = filteredTodos.filter(t => {
       if (!t.completed) return false;
       if (t.isEOD) return true;
@@ -63,10 +70,21 @@ export function MetricsWidget({
       return false;
     });
 
+    const completedOverdue = filteredTodos.filter(t => {
+      if (!t.completed) return false;
+      if (!t.dueDate) return false;
+      const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+      return dueTime < today.getTime();
+    });
+
+    const totalIncomplete = dailyTasks.length + overdueTasks.length;
+    const totalCompleted = completedToday.length + completedOverdue.length;
+    const totalTasks = totalIncomplete + totalCompleted;
+
     return {
-      total: dailyTasks.length,
-      completed: completedToday.length,
-      percentage: (dailyTasks.length + completedToday.length) > 0 ? Math.round((completedToday.length / (dailyTasks.length + completedToday.length)) * 100) : 0
+      total: totalIncomplete,
+      completed: totalCompleted,
+      percentage: totalTasks > 0 ? Math.round((totalCompleted / totalTasks) * 100) : 0
     };
   };
 
