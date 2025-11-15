@@ -173,6 +173,7 @@ const Home = () => {
   const [isAddTodoExpanded, setIsAddTodoExpanded] = useState(false);
   const [isToddExpanded, setIsToddExpanded] = useState(false);
   const [isAlertsExpanded, setIsAlertsExpanded] = useState(false);
+  const [isCreateProjectExpanded, setIsCreateProjectExpanded] = useState(false);
   const [isCreateProjectDialogOpen, setIsCreateProjectDialogOpen] = useState(false);
   const [isMeetingsExpanded, setIsMeetingsExpanded] = useState(true);
   const [isDeadlinesExpanded, setIsDeadlinesExpanded] = useState(true);
@@ -1911,6 +1912,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                 if (!isAddTodoExpanded) {
                   setIsToddExpanded(false);
                   setIsAlertsExpanded(false);
+                  setIsCreateProjectExpanded(false);
                 }
               }}
               className="rounded-full shadow-lg bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
@@ -1926,6 +1928,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                 if (!isToddExpanded) {
                   setIsAddTodoExpanded(false);
                   setIsAlertsExpanded(false);
+                  setIsCreateProjectExpanded(false);
                 }
               }}
               className="rounded-full shadow-lg bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600"
@@ -1942,6 +1945,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                   if (!isAlertsExpanded) {
                     setIsAddTodoExpanded(false);
                     setIsToddExpanded(false);
+                    setIsCreateProjectExpanded(false);
                   }
                 }}
                 className="rounded-full shadow-lg bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 relative"
