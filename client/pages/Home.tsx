@@ -3099,13 +3099,13 @@ Return ONLY the todo IDs, no explanation needed.`;
                             <Button
                               key={type}
                               variant={
-                                selectedTypeFilter === type ? "default" : "ghost"
+                                selectedTypeFilter === type ? "default" : "outline"
                               }
                               size="sm"
                               onClick={() => setSelectedTypeFilter(type)}
-                              className="justify-start gap-1.5"
+                              className={`justify-start gap-1.5 ${selectedTypeFilter !== type ? `border-2 ${typeConfig.borderLight} ${typeConfig.borderDark}` : ''}`}
                             >
-                              <Icon className="h-3.5 w-3.5" />
+                              <Icon className={`h-3.5 w-3.5 ${selectedTypeFilter !== type ? `${typeConfig.textLight} ${typeConfig.textDark}` : ''}`} />
                               {type} ({typeCount(type)})
                             </Button>
                           );
