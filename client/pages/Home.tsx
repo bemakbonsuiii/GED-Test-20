@@ -2049,144 +2049,141 @@ Return ONLY the todo IDs, no explanation needed.`;
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 py-12 px-4">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-8 relative">
-          <div className="absolute left-0 top-0 flex gap-2">
-            <div className="flex flex-col gap-2">
-              <Button
-                variant="default"
-                size="icon"
-                onClick={() => {
-                setIsAddTodoExpanded(!isAddTodoExpanded);
-                if (!isAddTodoExpanded) {
-                  setIsToddExpanded(false);
-                  setIsAlertsExpanded(false);
-                  setIsCreateProjectExpanded(false);
-                  setIsSmartSuggestionsExpanded(false);
-                }
-              }}
-                className="rounded-full shadow-lg bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
-                title={isAddTodoExpanded ? "Close" : "Add new to-do"}
-              >
-                {isAddTodoExpanded ? <X className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
-              </Button>
-              <Button
-                variant="default"
-                size="icon"
-                onClick={() => {
-                  if (!isCreateProjectExpanded && workspace === "everything") {
-                    setNewProjectWorkspace("personal");
-                  }
-                  setIsCreateProjectExpanded(!isCreateProjectExpanded);
-                  if (!isCreateProjectExpanded) {
-                    setIsAddTodoExpanded(false);
-                    setIsToddExpanded(false);
-                    setIsAlertsExpanded(false);
-                    setIsSmartSuggestionsExpanded(false);
-                  }
-                }}
-                className="rounded-full shadow-lg bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600"
-                title={isCreateProjectExpanded ? "Close" : "Create new project"}
-              >
-                {isCreateProjectExpanded ? <X className="h-5 w-5" /> : <Briefcase className="h-5 w-5" />}
-              </Button>
-            </div>
-            <div className="flex flex-col gap-2">
-              <Button
-                variant="default"
-                size="icon"
-                onClick={() => {
-                  setIsToddExpanded(!isToddExpanded);
-                  if (!isToddExpanded) {
-                    setIsAddTodoExpanded(false);
-                    setIsAlertsExpanded(false);
-                    setIsCreateProjectExpanded(false);
-                    setIsSmartSuggestionsExpanded(false);
-                  }
-                }}
-                className="rounded-full shadow-lg bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600"
-                title={isToddExpanded ? "Close" : "Ask Todd"}
-              >
-                {isToddExpanded ? <X className="h-5 w-5" /> : <Sparkles className="h-5 w-5" />}
-              </Button>
-              {getSmartSuggestionsCount() > 0 && (
+    <div className="min-h-screen bg-white dark:bg-slate-950">
+      {/* Top Navigation Bar */}
+      <div className="border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 backdrop-blur-sm sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-8">
+              <h1 className="text-xl font-semibold text-slate-900 dark:text-white">
+                Tasks
+              </h1>
+              <div className="hidden md:flex items-center gap-2">
                 <Button
-                  variant="default"
-                  size="icon"
+                  variant="ghost"
+                  size="sm"
                   onClick={() => {
-                    setIsSmartSuggestionsExpanded(!isSmartSuggestionsExpanded);
-                    if (!isSmartSuggestionsExpanded) {
-                      setIsAddTodoExpanded(false);
+                    setIsAddTodoExpanded(!isAddTodoExpanded);
+                    if (!isAddTodoExpanded) {
                       setIsToddExpanded(false);
                       setIsAlertsExpanded(false);
                       setIsCreateProjectExpanded(false);
+                      setIsSmartSuggestionsExpanded(false);
                     }
                   }}
-                  className="rounded-full shadow-lg bg-yellow-600 hover:bg-yellow-700 dark:bg-yellow-500 dark:hover:bg-yellow-600 relative"
-                  title={isSmartSuggestionsExpanded ? "Close" : "Smart Suggestions"}
+                  className="text-sm"
                 >
-                  {isSmartSuggestionsExpanded ? <X className="h-5 w-5" /> : <Lightbulb className="h-5 w-5" />}
-                  {!isSmartSuggestionsExpanded && (
-                    <span className="absolute -top-1 -right-1 bg-white dark:bg-slate-900 text-yellow-600 dark:text-yellow-400 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center border-2 border-yellow-600 dark:border-yellow-400">
-                      {getSmartSuggestionsCount()}
-                    </span>
-                  )}
+                  <Plus className="h-4 w-4 mr-1" />
+                  New Task
                 </Button>
-              )}
-            </div>
-            {getAlertsCount() > 0 && (
-              <Button
-                variant="default"
-                size="icon"
-                onClick={() => {
-                  setIsAlertsExpanded(!isAlertsExpanded);
-                  if (!isAlertsExpanded) {
-                    setIsAddTodoExpanded(false);
-                    setIsToddExpanded(false);
-                    setIsCreateProjectExpanded(false);
-                    setIsSmartSuggestionsExpanded(false);
-                  }
-                }}
-                className="rounded-full shadow-lg bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 relative"
-                title={isAlertsExpanded ? "Close" : "View Alerts"}
-              >
-                {isAlertsExpanded ? <X className="h-5 w-5" /> : <AlertTriangle className="h-5 w-5" />}
-                {!isAlertsExpanded && (
-                  <span className="absolute -top-1 -right-1 bg-white dark:bg-slate-900 text-red-600 dark:text-red-400 text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center border-2 border-red-600 dark:border-red-400">
-                    {getAlertsCount()}
-                  </span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    if (!isCreateProjectExpanded && workspace === "everything") {
+                      setNewProjectWorkspace("personal");
+                    }
+                    setIsCreateProjectExpanded(!isCreateProjectExpanded);
+                    if (!isCreateProjectExpanded) {
+                      setIsAddTodoExpanded(false);
+                      setIsToddExpanded(false);
+                      setIsAlertsExpanded(false);
+                      setIsSmartSuggestionsExpanded(false);
+                    }
+                  }}
+                  className="text-sm"
+                >
+                  <Briefcase className="h-4 w-4 mr-1" />
+                  New Project
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setIsToddExpanded(!isToddExpanded);
+                    if (!isToddExpanded) {
+                      setIsAddTodoExpanded(false);
+                      setIsAlertsExpanded(false);
+                      setIsCreateProjectExpanded(false);
+                      setIsSmartSuggestionsExpanded(false);
+                    }
+                  }}
+                  className="text-sm"
+                >
+                  <Sparkles className="h-4 w-4 mr-1" />
+                  Ask Todd
+                </Button>
+                {getSmartSuggestionsCount() > 0 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setIsSmartSuggestionsExpanded(!isSmartSuggestionsExpanded);
+                      if (!isSmartSuggestionsExpanded) {
+                        setIsAddTodoExpanded(false);
+                        setIsToddExpanded(false);
+                        setIsAlertsExpanded(false);
+                        setIsCreateProjectExpanded(false);
+                      }
+                    }}
+                    className="text-sm relative"
+                  >
+                    <Lightbulb className="h-4 w-4 mr-1" />
+                    Suggestions
+                    <Badge variant="secondary" className="ml-1 h-5 w-5 p-0 flex items-center justify-center text-xs">
+                      {getSmartSuggestionsCount()}
+                    </Badge>
+                  </Button>
                 )}
+                {getAlertsCount() > 0 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setIsAlertsExpanded(!isAlertsExpanded);
+                      if (!isAlertsExpanded) {
+                        setIsAddTodoExpanded(false);
+                        setIsToddExpanded(false);
+                        setIsCreateProjectExpanded(false);
+                        setIsSmartSuggestionsExpanded(false);
+                      }
+                    }}
+                    className="text-sm relative"
+                  >
+                    <AlertTriangle className="h-4 w-4 mr-1 text-red-600 dark:text-red-400" />
+                    Alerts
+                    <Badge variant="secondary" className="ml-1 h-5 w-5 p-0 flex items-center justify-center text-xs">
+                      {getAlertsCount()}
+                    </Badge>
+                  </Button>
+                )}
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="hidden md:flex items-center gap-4 text-sm">
+                <div className="flex items-center gap-2">
+                  <div className="text-xs text-slate-500 dark:text-slate-400">Today</div>
+                  <div className="font-medium text-slate-900 dark:text-white">{100 - getWorkLeftForDayScore()}%</div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="text-xs text-slate-500 dark:text-slate-400">Overall</div>
+                  <div className="font-medium text-slate-900 dark:text-white">{100 - getWorkLeftScore()}%</div>
+                </div>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setDarkMode(!darkMode)}
+                className="h-9 w-9"
+              >
+                {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
               </Button>
-            )}
+            </div>
           </div>
-          <div className="absolute right-0 top-0 flex items-start gap-4">
-            <CircularScore
-              label="Work Left Today"
-              score={getWorkLeftForDayScore()}
-              color="#f97316"
-            />
-            <CircularScore
-              label="Work Left"
-              score={getWorkLeftScore()}
-              color="#3b82f6"
-            />
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setDarkMode(!darkMode)}
-              title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
-            >
-              {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </Button>
-          </div>
-          <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">
-            To-Do List
-          </h1>
-          <p className="text-slate-600 dark:text-slate-400">
-            Keep track of your tasks
-          </p>
         </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-6 py-8">
 
         <Tabs value={workspace} onValueChange={(v) => {
           setWorkspace(v as Workspace);
