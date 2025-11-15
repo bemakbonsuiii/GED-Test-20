@@ -2537,37 +2537,37 @@ Return ONLY the todo IDs, no explanation needed.`;
             )}
 
             {/* Priorities Widget */}
-            <Card className="mb-6 shadow-lg border-2 border-yellow-200 dark:border-yellow-800">
-                <CardHeader className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/30 dark:to-orange-950/30">
+            <Card className="mb-6 border border-slate-200 dark:border-slate-800">
+                <CardHeader>
                   <div className="flex items-start justify-between">
                     <div>
-                      <CardTitle className="flex items-center gap-2">
-                        <Star className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+                      <CardTitle className="text-base font-medium flex items-center gap-2">
+                        <Star className="h-4 w-4" />
                         Today's Priorities
                       </CardTitle>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        Drag to reorder your priority items
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                        Drag to reorder
                       </p>
                     </div>
                     <div className="flex gap-2">
                       <Button
-                        variant="default"
+                        variant="ghost"
                         size="sm"
                         onClick={autoPrioritize}
                         disabled={toddLoading}
-                        className="text-xs bg-yellow-600 hover:bg-yellow-700 dark:bg-yellow-500 dark:hover:bg-yellow-600"
+                        className="text-xs"
                       >
                         <Sparkles className="h-3 w-3 mr-1" />
                         Auto
                       </Button>
                       {todos.some(t => t.isPriority) && (
                         <Button
-                          variant="outline"
+                          variant="ghost"
                           size="sm"
                           onClick={clearPriorities}
                           className="text-xs"
                         >
-                          Clear All
+                          Clear
                         </Button>
                       )}
                     </div>
