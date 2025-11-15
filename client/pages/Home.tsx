@@ -2783,7 +2783,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                           return (
                             <div
                               key={todo.id}
-                              className={`flex-shrink-0 flex items-center gap-3 p-3 rounded-lg border-2 transition-colors min-w-[300px] ${typeConfig.bgLight} ${typeConfig.bgDark} ${typeConfig.borderLight} ${typeConfig.borderDark} hover:shadow-md`}
+                              className={`flex-shrink-0 flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-800 transition-all min-w-[300px] bg-white dark:bg-slate-900 border-l-4 ${typeConfig.borderLight} ${typeConfig.borderDark} hover:shadow-md`}
                             >
                               <Checkbox
                                 checked={todo.completed}
