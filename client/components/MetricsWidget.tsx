@@ -150,9 +150,9 @@ export function MetricsWidget({
               {dailyMetrics.completed} / {dailyMetrics.completed + dailyMetrics.total} completed
             </span>
           </div>
-          <div className="relative h-4 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+          <div className="relative h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
             <div 
-              className="absolute top-0 left-0 h-full bg-gradient-to-r from-orange-500 to-orange-600 transition-all duration-500"
+              className="absolute top-0 left-0 h-full bg-blue-600 dark:bg-blue-500 transition-all duration-500"
               style={{ width: `${dailyMetrics.percentage}%` }}
             />
           </div>
@@ -171,9 +171,9 @@ export function MetricsWidget({
               {actionableMetrics.actionable} / {actionableMetrics.total}
             </span>
           </div>
-          <div className="relative h-4 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+          <div className="relative h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
             <div 
-              className="absolute top-0 left-0 h-full bg-gradient-to-r from-green-500 to-green-600 transition-all duration-500"
+              className="absolute top-0 left-0 h-full bg-blue-600 dark:bg-blue-500 transition-all duration-500"
               style={{ width: `${actionableMetrics.percentage}%` }}
             />
           </div>
@@ -215,9 +215,9 @@ export function MetricsWidget({
               {dailyMetrics.completed} / {dailyMetrics.completed + dailyMetrics.total} completed
             </span>
           </div>
-          <div className="relative h-4 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+          <div className="relative h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
             <div 
-              className="absolute top-0 left-0 h-full bg-gradient-to-r from-orange-500 to-orange-600 transition-all duration-500"
+              className="absolute top-0 left-0 h-full bg-blue-600 dark:bg-blue-500 transition-all duration-500"
               style={{ width: `${dailyMetrics.percentage}%` }}
             />
           </div>
@@ -236,9 +236,9 @@ export function MetricsWidget({
               {actionableMetrics.actionable} / {actionableMetrics.total}
             </span>
           </div>
-          <div className="relative h-4 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+          <div className="relative h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
             <div 
-              className="absolute top-0 left-0 h-full bg-gradient-to-r from-green-500 to-green-600 transition-all duration-500"
+              className="absolute top-0 left-0 h-full bg-blue-600 dark:bg-blue-500 transition-all duration-500"
               style={{ width: `${actionableMetrics.percentage}%` }}
             />
           </div>
@@ -262,9 +262,9 @@ export function MetricsWidget({
                   </span>
                 </div>
                 {project.total > 0 && (
-                  <div className="relative h-3 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                  <div className="relative h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
                     <div 
-                      className="absolute top-0 left-0 h-full bg-gradient-to-r from-purple-500 to-purple-600 transition-all duration-500"
+                      className="absolute top-0 left-0 h-full bg-blue-600 dark:bg-blue-500 transition-all duration-500"
                       style={{ width: `${project.percentage}%` }}
                     />
                   </div>
@@ -319,9 +319,9 @@ export function MetricsWidget({
               {dailyMetrics.completed} / {dailyMetrics.completed + dailyMetrics.total} completed
             </span>
           </div>
-          <div className="relative h-4 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+          <div className="relative h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
             <div 
-              className="absolute top-0 left-0 h-full bg-gradient-to-r from-orange-500 to-orange-600 transition-all duration-500"
+              className="absolute top-0 left-0 h-full bg-blue-600 dark:bg-blue-500 transition-all duration-500"
               style={{ width: `${dailyMetrics.percentage}%` }}
             />
           </div>
@@ -340,9 +340,9 @@ export function MetricsWidget({
               {actionableMetrics.actionable} / {actionableMetrics.total}
             </span>
           </div>
-          <div className="relative h-4 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+          <div className="relative h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
             <div 
-              className="absolute top-0 left-0 h-full bg-gradient-to-r from-green-500 to-green-600 transition-all duration-500"
+              className="absolute top-0 left-0 h-full bg-blue-600 dark:bg-blue-500 transition-all duration-500"
               style={{ width: `${actionableMetrics.percentage}%` }}
             />
           </div>
@@ -366,9 +366,9 @@ export function MetricsWidget({
               </div>
               {wsMetric.totalTodos > 0 ? (
                 <>
-                  <div className="relative h-3 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                  <div className="relative h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
                     <div 
-                      className="absolute top-0 left-0 h-full bg-gradient-to-r from-purple-500 to-purple-600 transition-all duration-500"
+                      className="absolute top-0 left-0 h-full bg-blue-600 dark:bg-blue-500 transition-all duration-500"
                       style={{ width: `${wsMetric.overall}%` }}
                     />
                   </div>
@@ -381,7 +381,7 @@ export function MetricsWidget({
                             <span className="text-muted-foreground">{project.completed}/{project.total}</span>
                             <div className="w-16 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                               <div 
-                                className="h-full bg-purple-500"
+                                className="h-full bg-blue-600 dark:bg-blue-500"
                                 style={{ width: `${project.percentage}%` }}
                               />
                             </div>
