@@ -2557,11 +2557,11 @@ Return ONLY the todo IDs, no explanation needed.`;
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div>
-                      <CardTitle className="text-base font-semibold flex items-center gap-2">
-                        <Star className="h-5 w-5 fill-amber-500 text-amber-500" />
+                      <CardTitle className="text-base font-medium flex items-center gap-2">
+                        <Star className="h-4 w-4 fill-amber-500 text-amber-500" />
                         Today's Priorities
                       </CardTitle>
-                      <p className="text-xs text-amber-700 dark:text-amber-400 mt-1 font-medium">
+                      <p className="text-xs text-muted-foreground mt-1">
                         Drag to reorder
                       </p>
                     </div>
