@@ -2654,7 +2654,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                         return (
                         <div
                           key={meeting.id}
-                          className={`flex-shrink-0 flex items-center gap-3 p-3 rounded-lg border-2 transition-colors min-w-[300px] ${meetingConfig.bgLight} ${meetingConfig.bgDark} ${meetingConfig.borderLight} ${meetingConfig.borderDark} hover:shadow-md`}
+                          className="flex-shrink-0 flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-colors min-w-[300px] bg-white dark:bg-slate-900"
                         >
                           <Checkbox
                             checked={meeting.completed}
@@ -2710,15 +2710,15 @@ Return ONLY the todo IDs, no explanation needed.`;
               </Card>
 
               {/* Upcoming Deadlines */}
-              <Card>
-                <CardHeader className="pb-3 cursor-pointer hover:bg-accent/50 transition-colors" onClick={() => setIsDeadlinesExpanded(!isDeadlinesExpanded)}>
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <CalendarIcon className="h-5 w-5" />
-                    Upcoming Deadlines
+              <Card className="border border-slate-200 dark:border-slate-800">
+                <CardHeader className="pb-3 cursor-pointer" onClick={() => setIsDeadlinesExpanded(!isDeadlinesExpanded)}>
+                  <CardTitle className="text-base font-medium flex items-center gap-2">
+                    <CalendarIcon className="h-4 w-4" />
+                    Deadlines
                     {(() => {
                       const deadlineCount = workspaceTodos.filter(t => !t.completed && t.dueDate && t.type !== "Meeting").length;
                       return deadlineCount > 0 ? (
-                        <Badge variant="secondary">
+                        <Badge variant="secondary" className="text-xs">
                           {deadlineCount}
                         </Badge>
                       ) : null;
@@ -2732,7 +2732,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                         setIsDeadlinesExpanded(!isDeadlinesExpanded);
                       }}
                     >
-                      {isDeadlinesExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                      {isDeadlinesExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
                     </Button>
                   </CardTitle>
                 </CardHeader>
@@ -2767,7 +2767,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                           return (
                             <div
                               key={todo.id}
-                              className={`flex-shrink-0 flex items-center gap-3 p-3 rounded-lg border-2 transition-colors min-w-[300px] ${typeConfig.bgLight} ${typeConfig.bgDark} ${typeConfig.borderLight} ${typeConfig.borderDark} hover:shadow-md`}
+                              className="flex-shrink-0 flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-colors min-w-[300px] bg-white dark:bg-slate-900"
                             >
                               <Checkbox
                                 checked={todo.completed}
