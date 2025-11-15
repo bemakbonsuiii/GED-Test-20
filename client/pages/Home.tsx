@@ -2863,12 +2863,12 @@ Return ONLY the todo IDs, no explanation needed.`;
                 </CardHeader>
                 {isMetricsExpanded && (
                   <CardContent className="space-y-6 pt-4">
-                    {/* Daily Tasks Metric */}
+                    {/* Daily To-dos Metric */}
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <CalendarIcon className="h-4 w-4 text-orange-600 dark:text-orange-400" />
-                          <span className="text-sm font-medium">Today's Tasks</span>
+                          <span className="text-sm font-medium">Today's To-dos</span>
                         </div>
                         <span className="text-sm text-muted-foreground">
                           {getDailyTasksMetrics().completed} / {getDailyTasksMetrics().completed + getDailyTasksMetrics().total} completed
@@ -2881,16 +2881,16 @@ Return ONLY the todo IDs, no explanation needed.`;
                         />
                       </div>
                       <p className="text-xs text-muted-foreground">
-                        Tasks due today or marked as EOD • {getDailyTasksMetrics().percentage}% complete
+                        To-dos due today or marked as EOD • {getDailyTasksMetrics().percentage}% complete
                       </p>
                     </div>
 
-                    {/* Actionable Tasks Metric */}
+                    {/* Actionable To-dos Metric */}
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <Zap className="h-4 w-4 text-green-600 dark:text-green-400" />
-                          <span className="text-sm font-medium">Actionable Tasks</span>
+                          <span className="text-sm font-medium">Actionable To-dos</span>
                         </div>
                         <span className="text-sm text-muted-foreground">
                           {getActionableTasksMetrics().actionable} / {getActionableTasksMetrics().total}
@@ -2903,7 +2903,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                         />
                       </div>
                       <p className="text-xs text-muted-foreground">
-                        Tasks ready to start now • {getActionableTasksMetrics().percentage}% of all tasks
+                        To-dos ready to start now • {getActionableTasksMetrics().percentage}% of all to-dos
                       </p>
                     </div>
 
