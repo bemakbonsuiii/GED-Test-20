@@ -780,7 +780,7 @@ Return ONLY the todo IDs, no explanation needed.`;
   };
 
   const createTodo = () => {
-    const startDateTime = newTodoStartDate ? newTodoStartDate.getTime() : undefined;
+    const startDateTime = newTodoStartDate ? newTodoStartDate.getTime() : Date.now();
     let dueDateTime = newTodoDueDate ? newTodoDueDate.getTime() : undefined;
 
     if (newTodoType === "Meeting" && newTodoDueDate && newTodoMeetingTime) {
