@@ -125,6 +125,113 @@ export const AlertsWidget: React.FC<AlertsWidgetProps> = ({ todos, workspace, se
       });
     });
 
+    // Check for multiple overdue deliverables (critical situation)
+    const overdueDeliverables = overdueTodos.filter(t => t.type === "Deliverable");
+    if (overdueDeliverables.length >= 3) {
+      alerts.push({
+        id: `multiple-overdue`,
+        type: "multiple-overdue",
+        priority: 1,
+        message: `CRITICAL: ${overdueDeliverables.length} deliverables are overdue! Immediate action needed.`,
+        icon: Flame,
+        color: "text-red-600 dark:text-red-400",
+      });
+    }
+
+    // Check for P0 (critical priority) tasks with no due date
+    const unscheduledCritical = relevantTodos.filter(t => {
+      if (t.completed) return false;
+      if (t.priority !== "P0") return false;
+      return !t.dueDate;
+    });
+
+    unscheduledCritical.slice(0, 2).forEach(todo => {
+      alerts.push({
+        id: `unscheduled-${todo.id}`,
+        type: "unscheduled-critical",
+        priority: 2,
+        message: `Critical task "${todo.text}" has no due date. Schedule it now!`,
+        icon: Target,
+        color: "text-red-600 dark:text-red-400",
+      });
+    });
+
+    // Check for high-priority tasks blocked by incomplete children
+    const blockedPriorityTasks = relevantTodos.filter(t => {
+      if (t.completed) return false;
+      if (t.priority !== "P0" && t.priority !== "P1") return false;
+      const hasIncompleteChildren = relevantTodos.some(child =>
+        child.parentId === t.id && !child.completed
+      );
+      return hasIncompleteChildren;
+    });
+
+    blockedPriorityTasks.slice(0, 2).forEach(todo => {
+      const incompleteChildren = relevantTodos.filter(child =>
+        child.parentId === todo.id && !child.completed
+      );
+      alerts.push({
+        id: `blocked-${todo.id}`,
+        type: "blocked-priority",
+        priority: 2,
+        message: `High-priority "${todo.text}" is blocked by ${incompleteChildren.length} incomplete subtask${incompleteChildren.length !== 1 ? 's' : ''}`,
+        icon: AlertTriangle,
+        color: "text-orange-600 dark:text-orange-400",
+      });
+    });
+
+    // Check for workload overload (too many tasks due today)
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999);
+
+    const tasksToday = relevantTodos.filter(t => {
+      if (t.completed) return false;
+      if (t.isEOD) return true;
+      if (t.dueDate) {
+        const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+        return dueTime >= today.getTime() && dueTime <= todayEnd.getTime();
+      }
+      return false;
+    });
+
+    if (tasksToday.length >= 8) {
+      alerts.push({
+        id: `workload-overload`,
+        type: "workload-overload",
+        priority: 3,
+        message: `Overloaded schedule: ${tasksToday.length} tasks due today. Consider rescheduling some items.`,
+        icon: Flame,
+        color: "text-orange-600 dark:text-orange-400",
+      });
+    }
+
+    // Check for deliverables due in 2-3 days with no start date or future start date
+    const upcomingDeliverables = relevantTodos.filter(t => {
+      if (t.completed || t.type !== "Deliverable") return false;
+      if (!t.dueDate) return false;
+      const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+      const dueDate = new Date(dueTime);
+      const daysUntil = differenceInDays(dueDate, today);
+      // Check if it has a future start date or no start date
+      const notStarted = !t.startDate || t.startDate > now;
+      return daysUntil >= 2 && daysUntil <= 3 && notStarted;
+    });
+
+    upcomingDeliverables.slice(0, 2).forEach(todo => {
+      const dueTime = typeof todo.dueDate === 'string' ? new Date(todo.dueDate).getTime() : todo.dueDate!;
+      const daysUntil = differenceInDays(new Date(dueTime), today);
+      alerts.push({
+        id: `not-started-${todo.id}`,
+        type: "deliverable-not-started",
+        priority: 2,
+        message: `Deliverable "${todo.text}" due in ${daysUntil} days hasn't been started yet!`,
+        icon: FileWarning,
+        color: "text-orange-600 dark:text-orange-400",
+      });
+    });
+
     // Sort by priority (lower number = higher priority)
     return alerts.sort((a, b) => a.priority - b.priority);
   };
