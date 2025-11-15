@@ -2412,15 +2412,15 @@ Return ONLY the todo IDs, no explanation needed.`;
 
             {/* Expandable Ask Todd */}
             {isToddExpanded && (
-              <Card className="mb-6 border border-slate-200 dark:border-slate-800 animate-in fade-in slide-in-from-top-2 duration-200">
+              <Card className="mb-6 border border-slate-200 dark:border-slate-800 border-l-4 border-l-purple-500 dark:border-l-purple-500 shadow-md animate-in fade-in slide-in-from-top-2 duration-200">
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
                     <div>
                       <CardTitle className="text-base font-medium flex items-center gap-2">
-                        <Sparkles className="h-4 w-4" />
+                        <Sparkles className="h-4 w-4 text-purple-500" />
                         Ask Todd
                       </CardTitle>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                      <p className="text-xs text-muted-foreground mt-1">
                         AI productivity assistant
                       </p>
                     </div>
