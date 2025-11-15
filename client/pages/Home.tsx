@@ -2497,6 +2497,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                     todos={todos}
                     workspace={workspace}
                     selectedProjectPage={selectedProjectPage}
+                    onTodoClick={handleTodoClick}
                   />
                 </CardContent>
               </Card>
@@ -2516,6 +2517,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                     todos={todos}
                     workspace={workspace}
                     selectedProjectPage={selectedProjectPage}
+                    onTodoClick={handleTodoClick}
                   />
                 </CardContent>
               </Card>
