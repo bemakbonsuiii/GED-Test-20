@@ -1084,9 +1084,10 @@ Return ONLY the todo IDs, no explanation needed.`;
       ? relevantTodos.filter(t => t.project === selectedProjectPage)
       : relevantTodos;
 
-    // Tasks due today (including EOD) - incomplete
+    // Tasks due today (including EOD and priorities) - incomplete
     const tasksForToday = filteredByProject.filter(t => {
       if (t.completed) return false;
+      if (t.isPriority) return true;
       if (t.isEOD) return true;
       if (t.dueDate) {
         const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
@@ -1113,9 +1114,10 @@ Return ONLY the todo IDs, no explanation needed.`;
       return dueTime < today.getTime();
     });
 
-    // Completed tasks/meetings for today
+    // Completed tasks/meetings for today (including priorities)
     const completedToday = filteredByProject.filter(t => {
       if (!t.completed) return false;
+      if (t.isPriority) return true;
       if (t.isEOD) return true;
       if (t.dueDate) {
         const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;

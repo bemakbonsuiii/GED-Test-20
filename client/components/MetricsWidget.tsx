@@ -10,6 +10,7 @@ interface Todo {
   startDate?: number;
   project?: string;
   workspace: string;
+  isPriority?: boolean;
 }
 
 interface Project {
@@ -45,6 +46,7 @@ export function MetricsWidget({
 
     const dailyTasks = filteredTodos.filter(t => {
       if (t.completed) return false;
+      if (t.isPriority) return true;
       if (t.isEOD) return true;
       if (t.dueDate) {
         const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
@@ -62,6 +64,7 @@ export function MetricsWidget({
 
     const completedToday = filteredTodos.filter(t => {
       if (!t.completed) return false;
+      if (t.isPriority) return true;
       if (t.isEOD) return true;
       if (t.dueDate) {
         const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
