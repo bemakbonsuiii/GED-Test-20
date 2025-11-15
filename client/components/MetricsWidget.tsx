@@ -129,9 +129,9 @@ export function MetricsWidget({
               {totalCompleted} / {projectTodos.length} tasks
             </span>
           </div>
-          <div className="relative h-4 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-            <div 
-              className="absolute top-0 left-0 h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-500"
+          <div className="relative h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+            <div
+              className="absolute top-0 left-0 h-full bg-blue-600 dark:bg-blue-500 transition-all duration-500"
               style={{ width: `${overallPercentage}%` }}
             />
           </div>
