@@ -28,6 +28,7 @@ interface AlertsWidgetProps {
   todos: Todo[];
   workspace: string;
   selectedProjectPage: string | null;
+  onTodoClick?: (todoId: string) => void;
 }
 
 interface Alert {
@@ -37,9 +38,11 @@ interface Alert {
   message: string;
   icon: React.ComponentType<{ className?: string }>;
   color: string;
+  todoId?: string;
+  todoIds?: string[];
 }
 
-export const AlertsWidget: React.FC<AlertsWidgetProps> = ({ todos, workspace, selectedProjectPage }) => {
+export const AlertsWidget: React.FC<AlertsWidgetProps> = ({ todos, workspace, selectedProjectPage, onTodoClick }) => {
   const getAlerts = (): Alert[] => {
     const alerts: Alert[] = [];
     const now = Date.now();
@@ -73,6 +76,7 @@ export const AlertsWidget: React.FC<AlertsWidgetProps> = ({ todos, workspace, se
         message: `Overdue: "${todo.text}" (${daysOverdue} day${daysOverdue !== 1 ? 's' : ''} ago)`,
         icon: AlertTriangle,
         color: "text-red-600 dark:text-red-400",
+        todoId: todo.id,
       });
     });
 
@@ -98,6 +102,7 @@ export const AlertsWidget: React.FC<AlertsWidgetProps> = ({ todos, workspace, se
           message: `Meeting "${meeting.text}" ${when} has ${childTodos.length} incomplete prep task${childTodos.length !== 1 ? 's' : ''}`,
           icon: Users,
           color: "text-orange-600 dark:text-orange-400",
+          todoId: meeting.id,
         });
       }
     });
@@ -122,6 +127,7 @@ export const AlertsWidget: React.FC<AlertsWidgetProps> = ({ todos, workspace, se
         message: `Due ${when}: "${todo.text}"${todo.dueTime ? ` at ${todo.dueTime}` : ''}`,
         icon: Clock,
         color: "text-yellow-600 dark:text-yellow-400",
+        todoId: todo.id,
       });
     });
 
@@ -135,6 +141,7 @@ export const AlertsWidget: React.FC<AlertsWidgetProps> = ({ todos, workspace, se
         message: `CRITICAL: ${overdueDeliverables.length} deliverables are overdue! Immediate action needed.`,
         icon: Flame,
         color: "text-red-600 dark:text-red-400",
+        todoIds: overdueDeliverables.map(t => t.id),
       });
     }
 
@@ -153,6 +160,7 @@ export const AlertsWidget: React.FC<AlertsWidgetProps> = ({ todos, workspace, se
         message: `Critical task "${todo.text}" has no due date. Schedule it now!`,
         icon: Target,
         color: "text-red-600 dark:text-red-400",
+        todoId: todo.id,
       });
     });
 
@@ -177,6 +185,7 @@ export const AlertsWidget: React.FC<AlertsWidgetProps> = ({ todos, workspace, se
         message: `High-priority "${todo.text}" is blocked by ${incompleteChildren.length} incomplete subtask${incompleteChildren.length !== 1 ? 's' : ''}`,
         icon: AlertTriangle,
         color: "text-orange-600 dark:text-orange-400",
+        todoId: todo.id,
       });
     });
 
@@ -204,6 +213,7 @@ export const AlertsWidget: React.FC<AlertsWidgetProps> = ({ todos, workspace, se
         message: `Overloaded schedule: ${tasksToday.length} tasks due today. Consider rescheduling some items.`,
         icon: Flame,
         color: "text-orange-600 dark:text-orange-400",
+        todoIds: tasksToday.map(t => t.id),
       });
     }
 
@@ -229,6 +239,7 @@ export const AlertsWidget: React.FC<AlertsWidgetProps> = ({ todos, workspace, se
         message: `Deliverable "${todo.text}" due in ${daysUntil} days hasn't been started yet!`,
         icon: FileWarning,
         color: "text-orange-600 dark:text-orange-400",
+        todoId: todo.id,
       });
     });
 
@@ -250,14 +261,29 @@ export const AlertsWidget: React.FC<AlertsWidgetProps> = ({ todos, workspace, se
     <div className="space-y-2">
       {alerts.map(alert => {
         const Icon = alert.icon;
+        const isClickable = alert.todoId || (alert.todoIds && alert.todoIds.length > 0);
+        const handleClick = () => {
+          if (onTodoClick && alert.todoId) {
+            onTodoClick(alert.todoId);
+          } else if (onTodoClick && alert.todoIds && alert.todoIds.length > 0) {
+            onTodoClick(alert.todoIds[0]);
+          }
+        };
+
         return (
           <div
             key={alert.id}
-            className="flex items-start gap-2 p-3 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700"
+            onClick={isClickable ? handleClick : undefined}
+            className={`flex items-start gap-2 p-3 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 ${
+              isClickable ? 'cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors' : ''
+            }`}
           >
             <Icon className={`h-4 w-4 mt-0.5 flex-shrink-0 ${alert.color}`} />
             <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
               {alert.message}
+              {isClickable && (
+                <span className="ml-1 text-xs text-blue-600 dark:text-blue-400">(click to view)</span>
+              )}
             </p>
           </div>
         );

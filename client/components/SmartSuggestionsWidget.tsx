@@ -20,6 +20,7 @@ interface SmartSuggestionsWidgetProps {
   todos: Todo[];
   workspace: string;
   selectedProjectPage: string | null;
+  onTodoClick?: (todoId: string) => void;
 }
 
 interface Suggestion {
@@ -29,12 +30,15 @@ interface Suggestion {
   icon: React.ComponentType<{ className?: string }>;
   color: string;
   priority: number;
+  todoId?: string;
+  todoIds?: string[];
 }
 
-export const SmartSuggestionsWidget: React.FC<SmartSuggestionsWidgetProps> = ({ 
-  todos, 
-  workspace, 
-  selectedProjectPage 
+export const SmartSuggestionsWidget: React.FC<SmartSuggestionsWidgetProps> = ({
+  todos,
+  workspace,
+  selectedProjectPage,
+  onTodoClick
 }) => {
   const getSuggestions = (): Suggestion[] => {
     const suggestions: Suggestion[] = [];
@@ -66,6 +70,7 @@ export const SmartSuggestionsWidget: React.FC<SmartSuggestionsWidgetProps> = ({
         icon: Clock,
         color: "text-amber-600 dark:text-amber-400",
         priority: 3,
+        todoId: todo.id,
       });
     });
 
@@ -98,6 +103,7 @@ export const SmartSuggestionsWidget: React.FC<SmartSuggestionsWidgetProps> = ({
           icon: TrendingUp,
           color: "text-blue-600 dark:text-blue-400",
           priority: 2,
+          todoId: todo.id,
         });
       });
     }
@@ -143,6 +149,7 @@ export const SmartSuggestionsWidget: React.FC<SmartSuggestionsWidgetProps> = ({
         icon: Zap,
         color: "text-green-600 dark:text-green-400",
         priority: 5,
+        todoIds: quickWins.map(t => t.id),
       });
     }
 
@@ -165,6 +172,7 @@ export const SmartSuggestionsWidget: React.FC<SmartSuggestionsWidgetProps> = ({
         icon: Calendar,
         color: "text-orange-600 dark:text-orange-400",
         priority: 1,
+        todoId: todo.id,
       });
     });
 
@@ -186,14 +194,29 @@ export const SmartSuggestionsWidget: React.FC<SmartSuggestionsWidgetProps> = ({
     <div className="space-y-2">
       {suggestions.map(suggestion => {
         const Icon = suggestion.icon;
+        const isClickable = suggestion.todoId || (suggestion.todoIds && suggestion.todoIds.length > 0);
+        const handleClick = () => {
+          if (onTodoClick && suggestion.todoId) {
+            onTodoClick(suggestion.todoId);
+          } else if (onTodoClick && suggestion.todoIds && suggestion.todoIds.length > 0) {
+            onTodoClick(suggestion.todoIds[0]);
+          }
+        };
+
         return (
           <div
             key={suggestion.id}
-            className="flex items-start gap-2 p-3 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700"
+            onClick={isClickable ? handleClick : undefined}
+            className={`flex items-start gap-2 p-3 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 ${
+              isClickable ? 'cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors' : ''
+            }`}
           >
             <Icon className={`h-4 w-4 mt-0.5 flex-shrink-0 ${suggestion.color}`} />
             <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
               {suggestion.message}
+              {isClickable && (
+                <span className="ml-1 text-xs text-blue-600 dark:text-blue-400">(click to view)</span>
+              )}
             </p>
           </div>
         );
