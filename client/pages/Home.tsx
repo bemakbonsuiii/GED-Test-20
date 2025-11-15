@@ -1150,6 +1150,61 @@ Return ONLY the todo IDs, no explanation needed.`;
     return score;
   };
 
+  // Get alerts count
+  const getAlertsCount = () => {
+    const now = Date.now();
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(23, 59, 59, 999);
+
+    // Filter todos by workspace and project
+    const relevantTodos = todos.filter(t => {
+      if (workspace !== "everything" && t.workspace !== workspace) return false;
+      if (selectedProjectPage && t.project !== selectedProjectPage) return false;
+      return true;
+    });
+
+    let alertCount = 0;
+
+    // Check for overdue todos
+    const overdueTodos = relevantTodos.filter(t => {
+      if (t.completed) return false;
+      if (!t.dueDate) return false;
+      const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+      const dueDate = new Date(dueTime);
+      return isPast(dueDate) && !isToday(dueDate);
+    });
+    alertCount += overdueTodos.length;
+
+    // Check for upcoming meetings (today or tomorrow) with incomplete child todos
+    const upcomingMeetings = relevantTodos.filter(t => {
+      if (t.completed || t.type !== "Meeting") return false;
+      if (!t.dueDate) return false;
+      const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+      const dueDate = new Date(dueTime);
+      return isToday(dueDate) || isTomorrow(dueDate);
+    });
+
+    upcomingMeetings.forEach(meeting => {
+      const childTodos = relevantTodos.filter(t => t.parentId === meeting.id && !t.completed);
+      if (childTodos.length > 0) {
+        alertCount++;
+      }
+    });
+
+    // Check for imminent deadlines (due today or tomorrow)
+    const imminentDeadlines = relevantTodos.filter(t => {
+      if (t.completed || t.type === "Meeting") return false;
+      if (!t.dueDate) return false;
+      const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+      const dueDate = new Date(dueTime);
+      return isToday(dueDate) || isTomorrow(dueDate);
+    });
+    alertCount += imminentDeadlines.length;
+
+    return alertCount;
+  };
+
   // Workspace-specific metrics
   const getWorkspaceMetrics = (targetWorkspace: WorkspaceType) => {
     const wsTodos = todos.filter(t => t.workspace === targetWorkspace);
