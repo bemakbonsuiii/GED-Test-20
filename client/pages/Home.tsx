@@ -1501,7 +1501,7 @@ Return ONLY the todo IDs, no explanation needed.`;
       <div
         ref={setNodeRef}
         style={style}
-        className={`p-3 rounded-lg border-2 transition-all ${typeConfig.bgLight} ${typeConfig.bgDark} ${typeConfig.borderLight} ${typeConfig.borderDark} hover:shadow-md`}
+        className="p-4 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all bg-white dark:bg-slate-900"
       >
         <div className="flex items-start gap-2">
           <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing mt-1">
@@ -1533,7 +1533,7 @@ Return ONLY the todo IDs, no explanation needed.`;
             <div className="flex items-center gap-2 mt-1 flex-wrap">
               <Badge
                 variant="outline"
-                className={`text-xs border ${typeConfig.borderLight} ${typeConfig.borderDark} ${typeConfig.textLight} ${typeConfig.textDark}`}
+                className="text-xs"
               >
                 {todo.type}
               </Badge>
