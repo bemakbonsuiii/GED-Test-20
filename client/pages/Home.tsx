@@ -4432,6 +4432,8 @@ Return ONLY the todo IDs, no explanation needed.`;
                 onClick={() => {
                   setIsEditDialogOpen(false);
                   setEditingTodo(null);
+                  setEditLinkName("");
+                  setEditLinkUrl("");
                 }}
               >
                 Cancel
