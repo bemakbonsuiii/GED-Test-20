@@ -219,6 +219,8 @@ const Home = () => {
   const [dueDatePopoverOpen, setDueDatePopoverOpen] = useState(false);
   const [newTodoNotes, setNewTodoNotes] = useState("");
   const [newTodoLinks, setNewTodoLinks] = useState("");
+  const [newLinkName, setNewLinkName] = useState("");
+  const [newLinkUrl, setNewLinkUrl] = useState("");
   const [newTodoParentId, setNewTodoParentId] = useState<string | undefined>(undefined);
   const [linkingTodoId, setLinkingTodoId] = useState<string | null>(null);
   const [creatingChildForId, setCreatingChildForId] = useState<string | null>(null);
