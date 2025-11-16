@@ -3941,15 +3941,16 @@ Return ONLY the todo IDs, no explanation needed.`;
                       <div>
                         <p className="text-sm font-medium mb-2">Links</p>
                         <div className="space-y-1">
-                          {viewingTodo.links.split('\n').filter(link => link.trim()).map((link, idx) => (
+                          {parseLinks(viewingTodo.links).map((link, idx) => (
                             <a
                               key={idx}
-                              href={link.trim()}
+                              href={link.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="block text-sm text-blue-500 hover:text-blue-600 underline break-all"
+                              className="flex items-center gap-2 text-sm text-blue-500 hover:text-blue-600 underline"
                             >
-                              {link.trim()}
+                              <ExternalLink className="h-3 w-3 flex-shrink-0" />
+                              <span className="break-all">{link.name || link.url}</span>
                             </a>
                           ))}
                         </div>
@@ -3963,15 +3964,16 @@ Return ONLY the todo IDs, no explanation needed.`;
                   <div>
                     <p className="text-sm font-medium mb-2">Links</p>
                     <div className="space-y-1">
-                      {viewingTodo.links.split('\n').filter(link => link.trim()).map((link, idx) => (
+                      {parseLinks(viewingTodo.links).map((link, idx) => (
                         <a
                           key={idx}
-                          href={link.trim()}
+                          href={link.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="block text-sm text-blue-500 hover:text-blue-600 underline break-all"
+                          className="flex items-center gap-2 text-sm text-blue-500 hover:text-blue-600 underline"
                         >
-                          {link.trim()}
+                          <ExternalLink className="h-3 w-3 flex-shrink-0" />
+                          <span className="break-all">{link.name || link.url}</span>
                         </a>
                       ))}
                     </div>
