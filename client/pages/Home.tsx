@@ -2895,7 +2895,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                         />
                       </div>
                       <p className="text-xs text-muted-foreground">
-                        To-dos due today or marked as EOD • {getDailyTasksMetrics().percentage}% complete
+                        To-dos due today • {getDailyTasksMetrics().percentage}% complete
                       </p>
                     </div>
 
