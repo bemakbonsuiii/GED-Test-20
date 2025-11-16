@@ -221,6 +221,8 @@ const Home = () => {
   const [newTodoLinks, setNewTodoLinks] = useState("");
   const [newLinkName, setNewLinkName] = useState("");
   const [newLinkUrl, setNewLinkUrl] = useState("");
+  const [editLinkName, setEditLinkName] = useState("");
+  const [editLinkUrl, setEditLinkUrl] = useState("");
   const [newTodoParentId, setNewTodoParentId] = useState<string | undefined>(undefined);
   const [linkingTodoId, setLinkingTodoId] = useState<string | null>(null);
   const [creatingChildForId, setCreatingChildForId] = useState<string | null>(null);
