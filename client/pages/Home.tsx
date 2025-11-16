@@ -1058,18 +1058,23 @@ Return ONLY the todo IDs, no explanation needed.`;
 
   const getActionableTasksMetrics = () => {
     const now = Date.now();
-    const actionableTasks = todos.filter(t => {
-      if (t.completed) return false;
-      // No start date or start date has passed
+    // Actionable tasks are those that can be started now (no start date or start date has passed)
+    const actionableCompleted = todos.filter(t => {
+      if (!t.completed) return false;
       return !t.startDate || t.startDate <= now;
     });
 
-    const totalIncompleteTasks = todos.filter(t => !t.completed);
+    const actionableIncomplete = todos.filter(t => {
+      if (t.completed) return false;
+      return !t.startDate || t.startDate <= now;
+    });
+
+    const totalActionable = actionableCompleted.length + actionableIncomplete.length;
 
     return {
-      actionable: actionableTasks.length,
-      total: totalIncompleteTasks.length,
-      percentage: totalIncompleteTasks.length > 0 ? Math.round((actionableTasks.length / totalIncompleteTasks.length) * 100) : 0
+      actionable: actionableCompleted.length,
+      total: actionableIncomplete.length,
+      percentage: totalActionable > 0 ? Math.round((actionableCompleted.length / totalActionable) * 100) : 0
     };
   };
 
@@ -2916,7 +2921,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                         />
                       </div>
                       <p className="text-xs text-muted-foreground">
-                        To-dos ready to start now • {getActionableTasksMetrics().percentage}% of all to-dos
+                        To-dos ready to start now • {getActionableTasksMetrics().percentage}% complete
                       </p>
                     </div>
 
