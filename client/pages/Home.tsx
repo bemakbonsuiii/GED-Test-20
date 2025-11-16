@@ -605,6 +605,16 @@ const Home = () => {
       if (!todo) return prevTodos;
 
       const newIsPriority = !todo.isPriority;
+
+      // Check if this is a meeting with uncompleted children
+      if (newIsPriority && todo.type === "Meeting") {
+        const hasUncompletedChildren = prevTodos.some(t => t.parentId === todoId && !t.completed);
+        if (hasUncompletedChildren) {
+          alert("This meeting has uncompleted children. Please prioritize the children instead.");
+          return prevTodos;
+        }
+      }
+
       const priorityTodos = prevTodos.filter(t => t.isPriority && t.id !== todoId);
       const newPriorityOrder = newIsPriority ? priorityTodos.length : undefined;
 
@@ -1001,7 +1011,19 @@ Return ONLY the todo IDs, no explanation needed.`;
     return true;
   });
 
-  const meetingTodos = workspaceTodos
+  // Get all meetings (including children) for the Meetings widget
+  const allWorkspaceTodos = (workspace === "everything"
+    ? todos
+    : todos.filter((todo) => todo.workspace === workspace)
+  ).filter((todo) => {
+    // If viewing a specific project page, only show todos from that project
+    if (selectedProjectPage && todo.project !== selectedProjectPage) {
+      return false;
+    }
+    return true;
+  });
+
+  const meetingTodos = allWorkspaceTodos
     .filter((todo) => todo.type === "Meeting" && !todo.completed)
     .sort((a, b) => {
       // Sort meetings with dates first, then by date, then undated meetings
@@ -2690,21 +2712,27 @@ Return ONLY the todo IDs, no explanation needed.`;
                     <div className="flex gap-3 overflow-x-auto pb-2">
                       {meetingTodos.map((meeting) => {
                         const meetingConfig = TODO_TYPE_CONFIG["Meeting"];
+                        const hasUncompletedChildren = allWorkspaceTodos.some(t => t.parentId === meeting.id && !t.completed);
                         return (
                         <div
                           key={meeting.id}
-                          className={`flex-shrink-0 flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-800 transition-all min-w-[300px] bg-white dark:bg-slate-900 border-l-4 ${meetingConfig.borderLight} ${meetingConfig.borderDark} hover:shadow-md`}
+                          className={`flex-shrink-0 flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-800 transition-all min-w-[300px] bg-white dark:bg-slate-900 border-l-4 ${meetingConfig.borderLight} ${meetingConfig.borderDark} hover:shadow-md ${hasUncompletedChildren ? 'ring-2 ring-amber-500 dark:ring-amber-400' : ''}`}
                         >
                           <Checkbox
                             checked={meeting.completed}
                             onCheckedChange={() => toggleTodo(meeting.id)}
                           />
                           <div className="flex-1 min-w-0">
-                            <div
-                              className="font-medium text-sm break-words cursor-pointer hover:underline"
-                              onClick={() => openSummaryDialog(meeting)}
-                            >
-                              {meeting.text}
+                            <div className="flex items-start gap-2">
+                              <div
+                                className="font-medium text-sm break-words cursor-pointer hover:underline flex-1"
+                                onClick={() => openSummaryDialog(meeting)}
+                              >
+                                {meeting.text}
+                              </div>
+                              {hasUncompletedChildren && (
+                                <AlertTriangle className="h-4 w-4 text-amber-500 dark:text-amber-400 flex-shrink-0" title="Has uncompleted children" />
+                              )}
                             </div>
                             <div className="flex items-center gap-2 mt-1 flex-wrap">
                               <Badge variant="outline" className="text-xs gap-1">
@@ -2730,6 +2758,11 @@ Return ONLY the todo IDs, no explanation needed.`;
                               {workspace === "everything" && (
                                 <Badge variant="secondary" className="text-xs capitalize">
                                   {meeting.workspace}
+                                </Badge>
+                              )}
+                              {hasUncompletedChildren && (
+                                <Badge variant="outline" className="text-xs gap-1 border-amber-500 text-amber-600 dark:text-amber-400">
+                                  {allWorkspaceTodos.filter(t => t.parentId === meeting.id && !t.completed).length} pending
                                 </Badge>
                               )}
                             </div>
