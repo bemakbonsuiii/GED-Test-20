@@ -567,17 +567,27 @@ const Home = () => {
   const saveEditedTodo = () => {
     if (!editingTodo) return;
 
+    // Default to 11:59 PM if due date is set but no time specified for non-Meeting types
+    const updatedTodo = { ...editingTodo };
+    if (updatedTodo.type !== "Meeting" && updatedTodo.dueDate && !updatedTodo.dueTime) {
+      updatedTodo.dueTime = "23:59";
+      // Update the dueDate timestamp to include the time
+      const dateWithTime = new Date(updatedTodo.dueDate);
+      dateWithTime.setHours(23, 59);
+      updatedTodo.dueDate = dateWithTime.getTime();
+    }
+
     // Check if this is a new project that doesn't exist yet
-    if (editingTodo.project && editingTodo.project.trim()) {
+    if (updatedTodo.project && updatedTodo.project.trim()) {
       const existingProject = projects.find(
-        p => p.name === editingTodo.project!.trim() && p.workspace === editingTodo.workspace
+        p => p.name === updatedTodo.project!.trim() && p.workspace === updatedTodo.workspace
       );
 
       if (!existingProject) {
         // This is a new project - open project creation dialog
-        setPendingTodoData(editingTodo);
-        setNewProjectName(editingTodo.project.trim());
-        setNewProjectWorkspace(editingTodo.workspace);
+        setPendingTodoData(updatedTodo);
+        setNewProjectName(updatedTodo.project.trim());
+        setNewProjectWorkspace(updatedTodo.workspace);
         setNewProjectDescription("");
         setIsCreateProjectDialogOpen(true);
         setIsEditDialogOpen(false);
@@ -586,7 +596,7 @@ const Home = () => {
     }
 
     setTodos(todos.map((todo) =>
-      todo.id === editingTodo.id ? editingTodo : todo
+      todo.id === updatedTodo.id ? updatedTodo : todo
     ));
     setIsEditDialogOpen(false);
     setEditingTodo(null);
