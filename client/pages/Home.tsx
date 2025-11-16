@@ -824,7 +824,7 @@ PRIORITY ORDER (STRICT):
 5. Items due soon
 6. Everything else
 
-IMPORTANT: Do NOT suggest meetings that have uncompleted children. Instead, suggest their children.
+CRITICAL RULE: NEVER suggest meetings. Meetings cannot be priorities. If a meeting would be a priority, suggest its children instead.
 
 Return ONLY the todo IDs, no explanation needed.`;
 
