@@ -4358,12 +4358,62 @@ Return ONLY the todo IDs, no explanation needed.`;
 
                   <div className="space-y-2">
                     <label className="text-sm font-medium">Links</label>
-                    <Textarea
-                      value={editingTodo.links || ""}
-                      onChange={(e) => setEditingTodo({ ...editingTodo, links: e.target.value || undefined })}
-                      rows={2}
-                      placeholder="Add URLs, one per line (optional)"
-                    />
+                    {editingTodo.links && parseLinks(editingTodo.links).length > 0 && (
+                      <div className="space-y-2 mb-3">
+                        {parseLinks(editingTodo.links).map((link, idx) => (
+                          <div key={idx} className="flex items-center gap-2 p-2 border rounded-md bg-slate-50 dark:bg-slate-900">
+                            <ExternalLink className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                            <div className="flex-1 min-w-0">
+                              {link.name && (
+                                <div className="text-sm font-medium truncate">{link.name}</div>
+                              )}
+                              <div className="text-xs text-muted-foreground truncate">{link.url}</div>
+                            </div>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setEditingTodo({ ...editingTodo, links: removeLinkFromString(editingTodo.links || '', idx) || undefined })}
+                              className="h-6 w-6 p-0"
+                            >
+                              <X className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    <div className="space-y-2 p-3 border rounded-md">
+                      <Input
+                        type="text"
+                        placeholder="Link name (optional)"
+                        value={editLinkName}
+                        onChange={(e) => setEditLinkName(e.target.value)}
+                      />
+                      <div className="flex gap-2">
+                        <Input
+                          type="url"
+                          placeholder="https://..."
+                          value={editLinkUrl}
+                          onChange={(e) => setEditLinkUrl(e.target.value)}
+                          className="flex-1"
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            if (editLinkUrl.trim()) {
+                              setEditingTodo({ ...editingTodo, links: addLinkToString(editingTodo.links || '', editLinkName, editLinkUrl) });
+                              setEditLinkName('');
+                              setEditLinkUrl('');
+                            }
+                          }}
+                          disabled={!editLinkUrl.trim()}
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
