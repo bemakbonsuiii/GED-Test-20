@@ -408,7 +408,6 @@ const Home = () => {
     setNewTodoProject("");
     setIsCreatingNewProject(false);
     setNewTodoPriority("P2");
-    setNewTodoIsEOD(false);
     setNewTodoAgenda("");
     setNewTodoMeetingTime("");
     setNewTodoDueTime("");
@@ -472,13 +471,12 @@ const Home = () => {
     setNewTodoText("");
     setNewTodoType(allowedTypes[0]); // Default to first allowed type
 
-    // Inherit parent's due date, project, priority, and EOD flag
+    // Inherit parent's due date, project, and priority
     setNewTodoDueDate(parent.dueDate ? new Date(parent.dueDate) : undefined);
     setNewTodoDueTime(parent.dueTime || "");
     setNewTodoMeetingTime(parent.meetingTime || "");
     setNewTodoProject(parent.project || "");
     setNewTodoPriority(parent.priority);
-    setNewTodoIsEOD(parent.isEOD);
 
     setDialogStep("type");
     setIsCreateDialogOpen(true);
@@ -3294,8 +3292,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                       setNewTodoProject("");
                       setIsCreatingNewProject(false);
                       setNewTodoPriority("P2");
-                      setNewTodoIsEOD(false);
-                      setNewTodoAgenda("");
+    setNewTodoAgenda("");
                       setNewTodoMeetingTime("");
                       setNewTodoDueTime("");
                       setDueDatePopoverOpen(false);
@@ -3380,8 +3377,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                       setNewTodoProject("");
                       setIsCreatingNewProject(false);
                       setNewTodoPriority("P2");
-                      setNewTodoIsEOD(false);
-                      setNewTodoAgenda("");
+    setNewTodoAgenda("");
                       setNewTodoMeetingTime("");
                       setNewTodoDueTime("");
                       setDueDatePopoverOpen(false);
@@ -3776,8 +3772,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                       setNewTodoProject("");
                       setIsCreatingNewProject(false);
                       setNewTodoPriority("P2");
-                      setNewTodoIsEOD(false);
-                      setNewTodoAgenda("");
+    setNewTodoAgenda("");
                       setNewTodoMeetingTime("");
                       setNewTodoDueTime("");
                       setDueDatePopoverOpen(false);
