@@ -241,7 +241,6 @@ const Home = () => {
             ? todo.workspace
             : "personal",
           priority: todo.priority || "P2",
-          isEOD: todo.isEOD || false,
           agenda: todo.agenda,
           meetingTime: todo.meetingTime,
           dueTime: todo.dueTime,
