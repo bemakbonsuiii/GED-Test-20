@@ -3236,7 +3236,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                       <Button
                         key={type}
                         variant={newTodoType === type ? "default" : "outline"}
-                        className={`w-full justify-start h-auto py-4 border-2 ${newTodoType === type ? '' : `${typeConfig.borderLight} ${typeConfig.borderDark} ${typeConfig.bgLight} ${typeConfig.bgDark}`}`}
+                        className={`w-full justify-start h-auto py-4 ${newTodoType === type ? '' : `border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 border-l-4 ${typeConfig.borderLight} ${typeConfig.borderDark} hover:shadow-md`}`}
                         onClick={() => {
                           if (creatingChildForId && !newTodoText.trim()) {
                             return; // Don't proceed without text when creating a child
