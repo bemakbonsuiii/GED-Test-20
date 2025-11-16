@@ -3027,6 +3027,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                   </CardHeader>
                   {isTasksExpanded && (
                   <CardContent className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                    <div className="lg:col-span-3 space-y-6">
                         {selectedProjectPage && (() => {
                           const currentProject = projects.find(p => p.name === selectedProjectPage);
                           return (
@@ -3106,31 +3107,9 @@ Return ONLY the todo IDs, no explanation needed.`;
                             filteredTodos.map(renderTodoItem)
                           )}
                         </div>
-                  </CardContent>
-                  )}
-                </Card>
-              </div>
+                    </div>
 
-              <div className="space-y-6">
-                <Card className="border border-slate-200 dark:border-slate-800">
-                  <CardHeader className="cursor-pointer" onClick={() => setIsFiltersExpanded(!isFiltersExpanded)}>
-                    <CardTitle className="text-base font-medium flex items-center gap-2">
-                      Filters
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="ml-auto h-6 w-6 p-0"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setIsFiltersExpanded(!isFiltersExpanded);
-                        }}
-                      >
-                        {isFiltersExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
-                      </Button>
-                    </CardTitle>
-                  </CardHeader>
-                  {isFiltersExpanded && (
-                  <CardContent className="space-y-4">
+                    <div className="lg:col-span-1 space-y-4">
                     <div className="space-y-2">
                       <div className="text-sm font-medium">Type</div>
                       <div className="flex flex-col gap-1.5">
@@ -3203,6 +3182,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                         </div>
                       </div>
                     )}
+                    </div>
                   </CardContent>
                   )}
                 </Card>
