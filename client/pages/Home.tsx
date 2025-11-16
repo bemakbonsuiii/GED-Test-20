@@ -2992,9 +2992,7 @@ Return ONLY the todo IDs, no explanation needed.`;
               </Card>
             )}
 
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-              <div className="lg:col-span-3">
-                <Card className="border border-slate-200 dark:border-slate-800">
+            <Card className="border border-slate-200 dark:border-slate-800">
                   <CardHeader className="cursor-pointer" onClick={() => setIsTasksExpanded(!isTasksExpanded)}>
                     <CardTitle className="text-base font-medium flex items-center gap-2">
                       {selectedProjectPage ? (
@@ -3185,8 +3183,6 @@ Return ONLY the todo IDs, no explanation needed.`;
                   </CardContent>
                   )}
                 </Card>
-              </div>
-            </div>
           </TabsContent>
         </Tabs>
 
