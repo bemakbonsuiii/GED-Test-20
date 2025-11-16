@@ -13,7 +13,6 @@ interface Todo {
   project?: string;
   workspace: string;
   priority: string;
-  isEOD?: boolean;
 }
 
 interface SmartSuggestionsWidgetProps {
@@ -81,7 +80,7 @@ export const SmartSuggestionsWidget: React.FC<SmartSuggestionsWidgetProps> = ({
         const dueDate = new Date(dueTime);
         return isToday(dueDate);
       }
-      return t.isEOD;
+      return false;
     });
 
     if (todayTasks.length <= 2) {
