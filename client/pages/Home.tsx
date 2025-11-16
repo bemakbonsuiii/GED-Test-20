@@ -3580,19 +3580,6 @@ Return ONLY the todo IDs, no explanation needed.`;
                     </Select>
                   </div>
 
-                  <div className="flex items-center justify-between space-x-2">
-                    <div className="space-y-0.5">
-                      <label className="text-sm font-medium">Needs to be done today</label>
-                      <p className="text-xs text-muted-foreground">
-                        To-do will be marked as EOD (End of Day)
-                      </p>
-                    </div>
-                    <Switch
-                      checked={newTodoIsEOD}
-                      onCheckedChange={setNewTodoIsEOD}
-                    />
-                  </div>
-
                   {creatingChildForId && (
                     <div className="space-y-2 p-3 bg-accent/50 rounded-md border">
                       <div className="text-sm">
