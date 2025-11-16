@@ -1579,11 +1579,6 @@ Return ONLY the todo IDs, no explanation needed.`;
                   {format(new Date(todo.dueDate), "MMM d")}
                 </Badge>
               )}
-              {todo.isEOD && (
-                <Badge variant="default" className="text-xs bg-red-600">
-                  EOD
-                </Badge>
-              )}
             </div>
           </div>
         </div>
@@ -1636,11 +1631,6 @@ Return ONLY the todo IDs, no explanation needed.`;
                 >
                   {todo.priority}
                 </Badge>
-                {todo.isEOD && (
-                  <Badge variant="default" className="gap-1 text-xs bg-red-600">
-                    EOD
-                  </Badge>
-                )}
                 {workspace === "everything" && (
                   <Badge variant="secondary" className="text-xs capitalize">
                     {todo.workspace}
@@ -2733,11 +2723,6 @@ Return ONLY the todo IDs, no explanation needed.`;
                               >
                                 {meeting.priority}
                               </Badge>
-                              {meeting.isEOD && (
-                                <Badge variant="default" className="text-xs bg-red-600">
-                                  EOD
-                                </Badge>
-                              )}
                               {workspace === "everything" && (
                                 <Badge variant="secondary" className="text-xs capitalize">
                                   {meeting.workspace}
@@ -3814,9 +3799,6 @@ Return ONLY the todo IDs, no explanation needed.`;
                         <Badge variant={viewingTodo.priority === "P0" ? "destructive" : "default"}>
                           {viewingTodo.priority}
                         </Badge>
-                        {viewingTodo.isEOD && (
-                          <Badge variant="default" className="bg-red-600">EOD</Badge>
-                        )}
                       </div>
                     </div>
                   </div>
