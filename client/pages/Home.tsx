@@ -606,17 +606,40 @@ const Home = () => {
 
       const newIsPriority = !todo.isPriority;
 
-      // Check if this is a meeting with uncompleted children
+      // Meetings should never be priorities - add their children instead
       if (newIsPriority && todo.type === "Meeting") {
-        const hasUncompletedChildren = prevTodos.some(t => t.parentId === todoId && !t.completed);
-        if (hasUncompletedChildren) {
-          alert("This meeting has uncompleted children. Please prioritize the children instead.");
+        const children = prevTodos.filter(t => t.parentId === todoId && !t.completed);
+        if (children.length > 0) {
+          // Add all uncompleted children to priorities
+          const priorityTodos = prevTodos.filter(t => t.isPriority);
+          let nextOrder = priorityTodos.length;
+
+          return prevTodos.map(t => {
+            const childIndex = children.findIndex(c => c.id === t.id);
+            if (childIndex !== -1) {
+              const order = nextOrder + childIndex;
+              return { ...t, isPriority: true, priorityOrder: order };
+            }
+            return t;
+          });
+        } else {
+          alert("Meetings cannot be prioritized directly. Please add children to this meeting and prioritize them instead.");
           return prevTodos;
         }
       }
 
+      // Removing from priorities
+      if (!newIsPriority) {
+        return prevTodos.map(t =>
+          t.id === todoId
+            ? { ...t, isPriority: false, priorityOrder: undefined }
+            : t
+        );
+      }
+
+      // Adding non-meeting to priorities
       const priorityTodos = prevTodos.filter(t => t.isPriority && t.id !== todoId);
-      const newPriorityOrder = newIsPriority ? priorityTodos.length : undefined;
+      const newPriorityOrder = priorityTodos.length;
 
       return prevTodos.map(t =>
         t.id === todoId
@@ -701,13 +724,24 @@ const Home = () => {
       const todo = prevTodos.find(t => t.id === todoId);
       if (!todo || todo.isPriority) return prevTodos;
 
-      // Check if this is a meeting with uncompleted children
+      // Meetings should never be priorities - add their children instead
       if (todo.type === "Meeting") {
-        const hasUncompletedChildren = prevTodos.some(t => t.parentId === todoId && !t.completed);
-        if (hasUncompletedChildren) {
-          alert("This meeting has uncompleted children. Please prioritize the children instead.");
-          return prevTodos;
+        const children = prevTodos.filter(t => t.parentId === todoId && !t.completed);
+        if (children.length > 0) {
+          // Add all uncompleted children to priorities
+          const priorityTodos = prevTodos.filter(t => t.isPriority);
+          let nextOrder = priorityTodos.length;
+
+          return prevTodos.map(t => {
+            const childIndex = children.findIndex(c => c.id === t.id);
+            if (childIndex !== -1 && !t.isPriority) {
+              const order = nextOrder + childIndex;
+              return { ...t, isPriority: true, priorityOrder: order };
+            }
+            return t;
+          });
         }
+        return prevTodos;
       }
 
       const priorityTodos = prevTodos.filter(t => t.isPriority);
@@ -821,29 +855,26 @@ Return ONLY the todo IDs, no explanation needed.`;
         }))
       );
 
-      // Add suggested todos to priorities, but filter out meetings with uncompleted children
+      // Add suggested todos to priorities, but never add meetings - add their children instead
       if (data.suggestions && data.suggestions.length > 0) {
         const topSuggestions = data.suggestions.slice(0, 5);
         setTodos(prevTodos => {
           const validSuggestions: string[] = [];
 
-          // Filter out meetings with uncompleted children
+          // Replace meetings with their children
           for (const todoId of topSuggestions) {
             const todo = prevTodos.find(t => t.id === todoId);
             if (!todo) continue;
 
             if (todo.type === "Meeting") {
-              const hasUncompletedChildren = prevTodos.some(t => t.parentId === todoId && !t.completed);
-              if (hasUncompletedChildren) {
-                // Add the children instead
-                const children = prevTodos.filter(t => t.parentId === todoId && !t.completed);
-                children.forEach(child => {
-                  if (!validSuggestions.includes(child.id)) {
-                    validSuggestions.push(child.id);
-                  }
-                });
-                continue;
-              }
+              // Always add children instead of the meeting
+              const children = prevTodos.filter(t => t.parentId === todoId && !t.completed);
+              children.forEach(child => {
+                if (!validSuggestions.includes(child.id)) {
+                  validSuggestions.push(child.id);
+                }
+              });
+              continue;
             }
 
             validSuggestions.push(todoId);
