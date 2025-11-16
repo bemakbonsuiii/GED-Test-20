@@ -1301,7 +1301,6 @@ Return ONLY the todo IDs, no explanation needed.`;
 
     const tasksToday = relevantTodos.filter(t => {
       if (t.completed) return false;
-      if (t.isEOD) return true;
       if (t.dueDate) {
         const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
         return dueTime >= today.getTime() && dueTime <= todayEnd.getTime();
@@ -1358,7 +1357,7 @@ Return ONLY the todo IDs, no explanation needed.`;
         const dueDate = new Date(dueTime);
         return isToday(dueDate);
       }
-      return t.isEOD;
+      return false;
     });
 
     if (todayTasks.length <= 2) {
@@ -1403,7 +1402,6 @@ Return ONLY the todo IDs, no explanation needed.`;
 
     const dailyTasks = wsTodos.filter(t => {
       if (t.completed) return false;
-      if (t.isEOD) return true;
       if (t.dueDate) {
         const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
         return dueTime >= today.getTime() && dueTime <= todayEnd.getTime();
@@ -1467,7 +1465,6 @@ Return ONLY the todo IDs, no explanation needed.`;
     // Daily tasks for this project
     const dailyTasks = projectTodos.filter(t => {
       if (t.completed) return false;
-      if (t.isEOD) return true;
       if (t.dueDate) {
         const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
         return dueTime >= today.getTime() && dueTime <= todayEnd.getTime();
