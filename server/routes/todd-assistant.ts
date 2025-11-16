@@ -18,7 +18,6 @@ interface Todo {
   notes?: string;
   project?: string;
   workspace: string;
-  isEOD?: boolean;
   isPriority?: boolean;
   priorityOrder?: number;
   parentId?: string;
@@ -51,7 +50,6 @@ Current Context:
 When asked about priorities or reprioritization:
 - **ABSOLUTE TOP PRIORITY: OVERDUE ITEMS** - Items with past due dates MUST be prioritized FIRST above everything else
 - **CRITICAL PRIORITY: UPCOMING MEETINGS WITH INCOMPLETE PREP** - If a meeting is scheduled for today or tomorrow and has incomplete child to-dos, those child to-dos are CRITICAL and must be prioritized immediately after overdue items
-- **HIGHLY PRIORITIZE EOD (End of Day) items** - These must be completed today and should be at the top of priorities (after overdue items and urgent meeting prep)
 - **DEPRIORITIZE items with future start dates** - If an item has a startDate that hasn't arrived yet, the user CANNOT take action on it, so it should NOT be prioritized
 - **UNDERSTAND PARENT-CHILD RELATIONSHIPS** - Children must be completed before their parent can be completed
   - If a to-do has children (hasChildren: true), those children are BLOCKERS for the parent
@@ -69,10 +67,8 @@ Prioritization Order (STRICT):
 2. **OVERDUE ITEMS** (past due date) - CRITICAL
 3. **MEETING PREP - TODAY** (children of meetings happening TODAY) - EXTREMELY URGENT
 4. **MEETING PREP - TOMORROW** (children of meetings happening TOMORROW) - VERY URGENT
-5. EOD items that are CHILDREN (URGENT - blocking other work)
-6. Children of high-priority items (these block their parents)
-7. EOD items without children
-8. Items with today's due date that are children
+5. Children of high-priority items (these block their parents)
+6. Items with today's due date that are children
 9. Items with today's due date (and no future start date)
 10. P0 priority children (blockers)
 11. P0 priority items (that can be started today)
@@ -89,7 +85,6 @@ SUGGESTIONS: ["todo-id-1", "todo-id-2"]
 
 Be concise but friendly. Address the user's specific question.`;
 
-    const eodItems = incompleteTodos.filter(t => t.isEOD);
     const now = Date.now();
     const futureStartItems = incompleteTodos.filter(t => t.startDate && t.startDate > now);
 
@@ -127,7 +122,7 @@ Be concise but friendly. Address the user's specific question.`;
     );
     const childTodos = incompleteTodos.filter(t => t.parentId);
 
-    const userPrompt = `${overdueItems.length > 0 ? `🚨 OVERDUE ITEMS (CRITICAL - PAST DUE): ${overdueItems.length}\n` : ''}${upcomingMeetingsWithIncompletePrep.length > 0 ? `🔴 URGENT: ${upcomingMeetingsWithIncompletePrep.length} MEETING(S) TODAY/TOMORROW WITH INCOMPLETE PREP TASKS (${meetingPrepTasks.length} tasks)\n` : ''}${eodItems.length > 0 ? `⚠️ URGENT EOD ITEMS (must complete today): ${eodItems.length}\n` : ''}${futureStartItems.length > 0 ? `⏳ FUTURE START ITEMS (cannot start yet): ${futureStartItems.length}\n` : ''}${todosWithChildren.length > 0 ? `🔗 PARENT ITEMS (blocked by children): ${todosWithChildren.length}\n` : ''}${childTodos.length > 0 ? `👶 CHILD ITEMS (blockers for parents): ${childTodos.length}\n` : ''}
+    const userPrompt = `${overdueItems.length > 0 ? `🚨 OVERDUE ITEMS (CRITICAL - PAST DUE): ${overdueItems.length}\n` : ''}${upcomingMeetingsWithIncompletePrep.length > 0 ? `🔴 URGENT: ${upcomingMeetingsWithIncompletePrep.length} MEETING(S) TODAY/TOMORROW WITH INCOMPLETE PREP TASKS (${meetingPrepTasks.length} tasks)\n` : ''}${futureStartItems.length > 0 ? `⏳ FUTURE START ITEMS (cannot start yet): ${futureStartItems.length}\n` : ''}${todosWithChildren.length > 0 ? `🔗 PARENT ITEMS (blocked by children): ${todosWithChildren.length}\n` : ''}${childTodos.length > 0 ? `👶 CHILD ITEMS (blockers for parents): ${childTodos.length}\n` : ''}
 ${upcomingMeetingsWithIncompletePrep.length > 0 ? `\nUPCOMING MEETINGS WITH INCOMPLETE PREP:\n${upcomingMeetingsWithIncompletePrep.map(m => {
   const dueTime = typeof m.dueDate === 'string' ? new Date(m.dueDate).getTime() : m.dueDate!;
   const dueDate = new Date(dueTime);
