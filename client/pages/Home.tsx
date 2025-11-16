@@ -701,6 +701,15 @@ const Home = () => {
       const todo = prevTodos.find(t => t.id === todoId);
       if (!todo || todo.isPriority) return prevTodos;
 
+      // Check if this is a meeting with uncompleted children
+      if (todo.type === "Meeting") {
+        const hasUncompletedChildren = prevTodos.some(t => t.parentId === todoId && !t.completed);
+        if (hasUncompletedChildren) {
+          alert("This meeting has uncompleted children. Please prioritize the children instead.");
+          return prevTodos;
+        }
+      }
+
       const priorityTodos = prevTodos.filter(t => t.isPriority);
       const newPriorityOrder = priorityTodos.length;
 
@@ -781,6 +790,8 @@ PRIORITY ORDER (STRICT):
 5. Items due soon
 6. Everything else
 
+IMPORTANT: Do NOT suggest meetings that have uncompleted children. Instead, suggest their children.
+
 Return ONLY the todo IDs, no explanation needed.`;
 
       const response = await fetch('/api/todd-assistant', {
@@ -810,12 +821,36 @@ Return ONLY the todo IDs, no explanation needed.`;
         }))
       );
 
-      // Add suggested todos to priorities
+      // Add suggested todos to priorities, but filter out meetings with uncompleted children
       if (data.suggestions && data.suggestions.length > 0) {
         const topSuggestions = data.suggestions.slice(0, 5);
-        setTodos(prevTodos =>
-          prevTodos.map(t => {
-            const suggestionIndex = topSuggestions.indexOf(t.id);
+        setTodos(prevTodos => {
+          const validSuggestions: string[] = [];
+
+          // Filter out meetings with uncompleted children
+          for (const todoId of topSuggestions) {
+            const todo = prevTodos.find(t => t.id === todoId);
+            if (!todo) continue;
+
+            if (todo.type === "Meeting") {
+              const hasUncompletedChildren = prevTodos.some(t => t.parentId === todoId && !t.completed);
+              if (hasUncompletedChildren) {
+                // Add the children instead
+                const children = prevTodos.filter(t => t.parentId === todoId && !t.completed);
+                children.forEach(child => {
+                  if (!validSuggestions.includes(child.id)) {
+                    validSuggestions.push(child.id);
+                  }
+                });
+                continue;
+              }
+            }
+
+            validSuggestions.push(todoId);
+          }
+
+          return prevTodos.map(t => {
+            const suggestionIndex = validSuggestions.indexOf(t.id);
             if (suggestionIndex !== -1) {
               return {
                 ...t,
@@ -824,8 +859,8 @@ Return ONLY the todo IDs, no explanation needed.`;
               };
             }
             return t;
-          })
-        );
+          });
+        });
       }
     } catch (error: any) {
       console.error('Error auto-prioritizing:', error);
