@@ -3685,12 +3685,62 @@ Return ONLY the todo IDs, no explanation needed.`;
 
                   <div className="space-y-2">
                     <label className="text-sm font-medium">Links</label>
-                    <Textarea
-                      placeholder="Add URLs to related artifacts, one per line (optional)"
-                      value={newTodoLinks}
-                      onChange={(e) => setNewTodoLinks(e.target.value)}
-                      rows={2}
-                    />
+                    {parseLinks(newTodoLinks).length > 0 && (
+                      <div className="space-y-2 mb-3">
+                        {parseLinks(newTodoLinks).map((link, idx) => (
+                          <div key={idx} className="flex items-center gap-2 p-2 border rounded-md bg-slate-50 dark:bg-slate-900">
+                            <ExternalLink className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                            <div className="flex-1 min-w-0">
+                              {link.name && (
+                                <div className="text-sm font-medium truncate">{link.name}</div>
+                              )}
+                              <div className="text-xs text-muted-foreground truncate">{link.url}</div>
+                            </div>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setNewTodoLinks(removeLinkFromString(newTodoLinks, idx))}
+                              className="h-6 w-6 p-0"
+                            >
+                              <X className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    <div className="space-y-2 p-3 border rounded-md">
+                      <Input
+                        type="text"
+                        placeholder="Link name (optional)"
+                        value={newLinkName}
+                        onChange={(e) => setNewLinkName(e.target.value)}
+                      />
+                      <div className="flex gap-2">
+                        <Input
+                          type="url"
+                          placeholder="https://..."
+                          value={newLinkUrl}
+                          onChange={(e) => setNewLinkUrl(e.target.value)}
+                          className="flex-1"
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            if (newLinkUrl.trim()) {
+                              setNewTodoLinks(addLinkToString(newTodoLinks, newLinkName, newLinkUrl));
+                              setNewLinkName('');
+                              setNewLinkUrl('');
+                            }
+                          }}
+                          disabled={!newLinkUrl.trim()}
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
                   </div>
 
                   {newTodoType === "Meeting" && (
