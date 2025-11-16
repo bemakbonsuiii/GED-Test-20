@@ -3294,7 +3294,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                 <div className="space-y-3 py-4">
                   <Button
                     variant={newTodoWorkspace === "personal" ? "default" : "outline"}
-                    className="w-full justify-start h-auto py-4"
+                    className={`w-full justify-start h-auto py-4 ${newTodoWorkspace !== "personal" ? "border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:shadow-md" : ""}`}
                     onClick={() => {
                       setNewTodoWorkspace("personal");
                       setDialogStep("details");
@@ -3309,7 +3309,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                   </Button>
                   <Button
                     variant={newTodoWorkspace === "work" ? "default" : "outline"}
-                    className="w-full justify-start h-auto py-4"
+                    className={`w-full justify-start h-auto py-4 ${newTodoWorkspace !== "work" ? "border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:shadow-md" : ""}`}
                     onClick={() => {
                       setNewTodoWorkspace("work");
                       setDialogStep("details");
@@ -3324,7 +3324,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                   </Button>
                   <Button
                     variant={newTodoWorkspace === "creative" ? "default" : "outline"}
-                    className="w-full justify-start h-auto py-4"
+                    className={`w-full justify-start h-auto py-4 ${newTodoWorkspace !== "creative" ? "border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:shadow-md" : ""}`}
                     onClick={() => {
                       setNewTodoWorkspace("creative");
                       setDialogStep("details");
