@@ -825,13 +825,16 @@ Return ONLY the todo IDs, no explanation needed.`;
     const startDateTime = newTodoStartDate ? newTodoStartDate.getTime() : Date.now();
     let dueDateTime = newTodoDueDate ? newTodoDueDate.getTime() : undefined;
 
+    // Default to 11:59 PM if due date is set but no time specified for non-Meeting types
+    const effectiveDueTime = newTodoType !== "Meeting" && newTodoDueDate && !newTodoDueTime ? "23:59" : newTodoDueTime;
+
     if (newTodoType === "Meeting" && newTodoDueDate && newTodoMeetingTime) {
       const [hours, minutes] = newTodoMeetingTime.split(":");
       const dateWithTime = new Date(newTodoDueDate);
       dateWithTime.setHours(parseInt(hours), parseInt(minutes));
       dueDateTime = dateWithTime.getTime();
-    } else if (newTodoType !== "Meeting" && newTodoDueDate && newTodoDueTime) {
-      const [hours, minutes] = newTodoDueTime.split(":");
+    } else if (newTodoType !== "Meeting" && newTodoDueDate && effectiveDueTime) {
+      const [hours, minutes] = effectiveDueTime.split(":");
       const dateWithTime = new Date(newTodoDueDate);
       dateWithTime.setHours(parseInt(hours), parseInt(minutes));
       dueDateTime = dateWithTime.getTime();
@@ -856,7 +859,7 @@ Return ONLY the todo IDs, no explanation needed.`;
           workspace: todoWorkspace,
           startDate: newTodoType !== "Meeting" ? startDateTime : undefined,
           dueDate: dueDateTime,
-          dueTime: newTodoType !== "Meeting" ? (newTodoDueTime || undefined) : undefined,
+          dueTime: newTodoType !== "Meeting" ? (effectiveDueTime || undefined) : undefined,
           project: undefined, // Will be set after project creation
           priority: newTodoPriority,
           isEOD: newTodoIsEOD,
@@ -885,7 +888,7 @@ Return ONLY the todo IDs, no explanation needed.`;
       workspace: todoWorkspace,
       startDate: newTodoType !== "Meeting" ? startDateTime : undefined,
       dueDate: dueDateTime,
-      dueTime: newTodoType !== "Meeting" ? (newTodoDueTime || undefined) : undefined,
+      dueTime: newTodoType !== "Meeting" ? (effectiveDueTime || undefined) : undefined,
       project: newTodoProject || undefined,
       priority: newTodoPriority,
       isEOD: newTodoIsEOD,
