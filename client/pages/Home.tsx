@@ -589,6 +589,8 @@ const Home = () => {
     ));
     setIsEditDialogOpen(false);
     setEditingTodo(null);
+    setEditLinkName("");
+    setEditLinkUrl("");
   };
 
   const togglePriority = (todoId: string) => {
