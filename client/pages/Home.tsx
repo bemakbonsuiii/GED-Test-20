@@ -767,8 +767,7 @@ const Home = () => {
 
 PRIORITY ORDER (STRICT):
 1. OVERDUE items MUST be prioritized FIRST above everything else
-2. Items with EOD (End of Day) flag
-3. Items due today
+2. Items due today
 4. High priority (P0) items
 5. Items due soon
 6. Everything else
@@ -868,7 +867,6 @@ Return ONLY the todo IDs, no explanation needed.`;
           dueTime: newTodoType !== "Meeting" ? (effectiveDueTime || undefined) : undefined,
           project: undefined, // Will be set after project creation
           priority: newTodoPriority,
-          isEOD: newTodoIsEOD,
           agenda: newTodoType === "Meeting" ? newTodoAgenda : undefined,
           meetingTime: newTodoType === "Meeting" ? newTodoMeetingTime : undefined,
           notes: newTodoNotes || undefined,
@@ -897,7 +895,6 @@ Return ONLY the todo IDs, no explanation needed.`;
       dueTime: newTodoType !== "Meeting" ? (effectiveDueTime || undefined) : undefined,
       project: newTodoProject || undefined,
       priority: newTodoPriority,
-      isEOD: newTodoIsEOD,
       agenda: newTodoType === "Meeting" ? newTodoAgenda : undefined,
       meetingTime: newTodoType === "Meeting" ? newTodoMeetingTime : undefined,
       notes: newTodoNotes || undefined,
