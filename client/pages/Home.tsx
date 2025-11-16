@@ -418,6 +418,8 @@ const Home = () => {
     setDueDatePopoverOpen(false);
     setNewTodoNotes("");
     setNewTodoLinks("");
+    setNewLinkName("");
+    setNewLinkUrl("");
     setNewTodoParentId(undefined);
     setCreatingChildForId(null);
   };
