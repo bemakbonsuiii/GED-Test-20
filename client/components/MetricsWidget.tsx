@@ -5,7 +5,6 @@ import { ChevronUp, ChevronDown, Target, CalendarIcon, Zap, Briefcase } from "lu
 interface Todo {
   id: string;
   completed: boolean;
-  isEOD?: boolean;
   dueDate?: number | string;
   startDate?: number;
   project?: string;
@@ -47,7 +46,6 @@ export function MetricsWidget({
     const dailyTasks = filteredTodos.filter(t => {
       if (t.completed) return false;
       if (t.isPriority) return true;
-      if (t.isEOD) return true;
       if (t.dueDate) {
         const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
         return dueTime >= today.getTime() && dueTime <= todayEnd.getTime();
@@ -65,7 +63,6 @@ export function MetricsWidget({
     const completedToday = filteredTodos.filter(t => {
       if (!t.completed) return false;
       if (t.isPriority) return true;
-      if (t.isEOD) return true;
       if (t.dueDate) {
         const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
         return dueTime >= today.getTime() && dueTime <= todayEnd.getTime();
@@ -326,7 +323,7 @@ export function MetricsWidget({
             />
           </div>
           <p className="text-xs text-muted-foreground">
-            Tasks due today, overdue, or marked as EOD • {dailyMetrics.percentage}% complete
+            Tasks due today or overdue • {dailyMetrics.percentage}% complete
           </p>
         </div>
 
