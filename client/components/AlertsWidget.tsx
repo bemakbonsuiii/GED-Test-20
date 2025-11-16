@@ -14,7 +14,6 @@ interface Todo {
   project?: string;
   workspace: string;
   priority: string;
-  isEOD: boolean;
   agenda?: string;
   meetingTime?: string;
   notes?: string;
@@ -197,7 +196,6 @@ export const AlertsWidget: React.FC<AlertsWidgetProps> = ({ todos, workspace, se
 
     const tasksToday = relevantTodos.filter(t => {
       if (t.completed) return false;
-      if (t.isEOD) return true;
       if (t.dueDate) {
         const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
         return dueTime >= today.getTime() && dueTime <= todayEnd.getTime();
