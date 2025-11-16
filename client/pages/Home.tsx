@@ -3311,6 +3311,8 @@ Return ONLY the todo IDs, no explanation needed.`;
                       setDueDatePopoverOpen(false);
                       setNewTodoNotes("");
                       setNewTodoLinks("");
+                      setNewLinkName("");
+                      setNewLinkUrl("");
                       setNewTodoParentId(undefined);
                       setCreatingChildForId(null);
                     }}
@@ -3395,6 +3397,8 @@ Return ONLY the todo IDs, no explanation needed.`;
                       setDueDatePopoverOpen(false);
                       setNewTodoNotes("");
                       setNewTodoLinks("");
+                      setNewLinkName("");
+                      setNewLinkUrl("");
                       setNewTodoParentId(undefined);
                       setCreatingChildForId(null);
                     }}
@@ -3789,6 +3793,8 @@ Return ONLY the todo IDs, no explanation needed.`;
                       setDueDatePopoverOpen(false);
                       setNewTodoNotes("");
                       setNewTodoLinks("");
+                      setNewLinkName("");
+                      setNewLinkUrl("");
                       setNewTodoParentId(undefined);
                       setCreatingChildForId(null);
                     }}
