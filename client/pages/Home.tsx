@@ -496,6 +496,30 @@ const Home = () => {
     return todos.filter((todo) => todo.parentId === parentId);
   };
 
+  // Helper functions for link management
+  const parseLinks = (linksString: string): Array<{name: string, url: string}> => {
+    if (!linksString) return [];
+    return linksString.split('\n').filter(link => link.trim()).map(link => {
+      const parts = link.split('|');
+      if (parts.length === 2) {
+        return { name: parts[0].trim(), url: parts[1].trim() };
+      }
+      // Backward compatibility: if no pipe, treat as URL only
+      return { name: '', url: link.trim() };
+    });
+  };
+
+  const addLinkToString = (currentLinks: string, name: string, url: string): string => {
+    const linkEntry = name.trim() ? `${name.trim()}|${url.trim()}` : url.trim();
+    return currentLinks ? `${currentLinks}\n${linkEntry}` : linkEntry;
+  };
+
+  const removeLinkFromString = (currentLinks: string, index: number): string => {
+    const links = currentLinks.split('\n').filter(link => link.trim());
+    links.splice(index, 1);
+    return links.join('\n');
+  };
+
   const unlinkTodo = (todoId: string) => {
     setTodos(todos.map((todo) =>
       todo.id === todoId ? { ...todo, parentId: undefined } : todo
