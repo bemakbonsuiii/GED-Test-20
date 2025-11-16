@@ -90,17 +90,23 @@ export function MetricsWidget({
 
   const getActionableTasksMetrics = (filteredTodos: Todo[]) => {
     const now = Date.now();
-    const actionableTasks = filteredTodos.filter(t => {
+    // Actionable tasks are those that can be started now (no start date or start date has passed)
+    const actionableCompleted = filteredTodos.filter(t => {
+      if (!t.completed) return false;
+      return !t.startDate || t.startDate <= now;
+    });
+
+    const actionableIncomplete = filteredTodos.filter(t => {
       if (t.completed) return false;
       return !t.startDate || t.startDate <= now;
     });
 
-    const totalIncompleteTasks = filteredTodos.filter(t => !t.completed);
+    const totalActionable = actionableCompleted.length + actionableIncomplete.length;
 
     return {
-      actionable: actionableTasks.length,
-      total: totalIncompleteTasks.length,
-      percentage: totalIncompleteTasks.length > 0 ? Math.round((actionableTasks.length / totalIncompleteTasks.length) * 100) : 0
+      actionable: actionableCompleted.length,
+      total: actionableIncomplete.length,
+      percentage: totalActionable > 0 ? Math.round((actionableCompleted.length / totalActionable) * 100) : 0
     };
   };
 
@@ -162,7 +168,7 @@ export function MetricsWidget({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Zap className="h-4 w-4 text-green-600 dark:text-green-400" />
-              <span className="text-sm font-medium">Actionable Tasks</span>
+              <span className="text-sm font-medium">Actionable To-dos</span>
             </div>
             <span className="text-sm text-muted-foreground">
               {actionableMetrics.actionable} / {actionableMetrics.total}
@@ -227,7 +233,7 @@ export function MetricsWidget({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Zap className="h-4 w-4 text-green-600 dark:text-green-400" />
-              <span className="text-sm font-medium">Actionable Tasks</span>
+              <span className="text-sm font-medium">Actionable To-dos</span>
             </div>
             <span className="text-sm text-muted-foreground">
               {actionableMetrics.actionable} / {actionableMetrics.total}
@@ -331,7 +337,7 @@ export function MetricsWidget({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Zap className="h-4 w-4 text-green-600 dark:text-green-400" />
-              <span className="text-sm font-medium">Actionable Tasks</span>
+              <span className="text-sm font-medium">Actionable To-dos</span>
             </div>
             <span className="text-sm text-muted-foreground">
               {actionableMetrics.actionable} / {actionableMetrics.total}
@@ -344,7 +350,7 @@ export function MetricsWidget({
             />
           </div>
           <p className="text-xs text-muted-foreground">
-            Tasks ready to start now • {actionableMetrics.percentage}% of all tasks
+            To-dos ready to start now • {actionableMetrics.percentage}% complete
           </p>
         </div>
 
