@@ -1802,15 +1802,16 @@ Return ONLY the todo IDs, no explanation needed.`;
                   <div className="text-muted-foreground">
                     <span className="font-medium">Links:</span>
                     <div className="mt-1 space-y-1">
-                      {todo.links.split('\n').filter(link => link.trim()).map((link, idx) => (
+                      {parseLinks(todo.links).map((link, idx) => (
                         <a
                           key={idx}
-                          href={link.trim()}
+                          href={link.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="block text-blue-500 hover:text-blue-600 underline break-all"
+                          className="flex items-center gap-2 text-blue-500 hover:text-blue-600 underline"
                         >
-                          {link.trim()}
+                          <ExternalLink className="h-3 w-3 flex-shrink-0" />
+                          <span className="break-all">{link.name || link.url}</span>
                         </a>
                       ))}
                     </div>
