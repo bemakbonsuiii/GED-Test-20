@@ -4281,19 +4281,6 @@ Return ONLY the todo IDs, no explanation needed.`;
                     </>
                   )}
 
-                  <div className="flex items-center justify-between space-x-2">
-                    <div className="space-y-0.5">
-                      <label className="text-sm font-medium">End of Day</label>
-                      <p className="text-xs text-muted-foreground">
-                        Must be done today
-                      </p>
-                    </div>
-                    <Switch
-                      checked={editingTodo.isEOD}
-                      onCheckedChange={(checked) => setEditingTodo({ ...editingTodo, isEOD: checked })}
-                    />
-                  </div>
-
                   <div className="space-y-2">
                     <label className="text-sm font-medium">Notes</label>
                     <Textarea
