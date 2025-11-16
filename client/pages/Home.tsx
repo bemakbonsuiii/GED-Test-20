@@ -97,7 +97,6 @@ interface Todo {
   project?: string;
   workspace: WorkspaceType;
   priority: Priority;
-  isEOD: boolean;
   agenda?: string;
   meetingTime?: string;
   notes?: string;
@@ -211,7 +210,6 @@ const Home = () => {
   const [newTodoProject, setNewTodoProject] = useState("");
   const [isCreatingNewProject, setIsCreatingNewProject] = useState(false);
   const [newTodoPriority, setNewTodoPriority] = useState<Priority>("P2");
-  const [newTodoIsEOD, setNewTodoIsEOD] = useState(false);
   const [newTodoAgenda, setNewTodoAgenda] = useState("");
   const [newTodoMeetingTime, setNewTodoMeetingTime] = useState("");
   const [newTodoDueTime, setNewTodoDueTime] = useState("");
