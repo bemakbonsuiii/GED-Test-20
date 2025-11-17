@@ -71,6 +71,7 @@ import { MetricsWidget } from "../components/MetricsWidget";
 import { CircularScore } from "../components/CircularScore";
 import { AlertsWidget } from "../components/AlertsWidget";
 import { SmartSuggestionsWidget } from "../components/SmartSuggestionsWidget";
+import { loadTestData } from "../utils/loadTestData";
 
 type TodoType = "Task" | "Deliverable" | "Quick Win" | "Meeting";
 type WorkspaceType = "personal" | "work" | "creative";
@@ -2297,6 +2298,19 @@ Return ONLY the todo IDs, no explanation needed.`;
                   </div>
                 </div>
               </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  if (confirm("Load 30 test todos? This will replace existing data.")) {
+                    loadTestData();
+                    window.location.reload();
+                  }
+                }}
+                className="text-xs"
+              >
+                Load Test Data
+              </Button>
               <Button
                 variant="ghost"
                 size="icon"
