@@ -2303,8 +2303,9 @@ Return ONLY the todo IDs, no explanation needed.`;
                 size="sm"
                 onClick={() => {
                   if (confirm("Load 30 test todos? This will replace existing data.")) {
-                    loadTestData();
-                    window.location.reload();
+                    const { todos: testTodos, projects: testProjects } = loadTestData();
+                    setTodos(testTodos);
+                    setProjects(testProjects);
                   }
                 }}
                 className="text-xs"
