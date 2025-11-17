@@ -449,12 +449,5 @@ export function loadTestData() {
     }
   ];
 
-  // Save to localStorage
-  localStorage.setItem("todos", JSON.stringify(todos));
-  localStorage.setItem("projects", JSON.stringify(projects));
-  
-  console.log("✅ Test data loaded successfully!");
-  console.log(`📝 ${todos.length} todos created`);
-  console.log(`📁 ${projects.length} projects created`);
-  console.log("🔄 Reload the page to see the test data");
+  return { todos, projects };
 }
