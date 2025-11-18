@@ -912,19 +912,22 @@ Return ONLY the todo IDs, no explanation needed.`;
         }))
       );
 
-      // Add suggested todos to priorities, but never add meetings - add their children instead
+      // Add suggested todos to priorities, but never add parents with uncompleted children - add their children instead
       if (data.suggestions && data.suggestions.length > 0) {
         const topSuggestions = data.suggestions.slice(0, 5);
         setTodos(prevTodos => {
           const validSuggestions: string[] = [];
 
-          // Replace meetings with their children
+          // Replace parents with uncompleted children with those children
           for (const todoId of topSuggestions) {
             const todo = prevTodos.find(t => t.id === todoId);
             if (!todo) continue;
 
-            if (todo.type === "Meeting") {
-              // Always add children instead of the meeting
+            // Check if this todo has uncompleted children
+            const hasUncompletedChildren = prevTodos.some(t => t.parentId === todoId && !t.completed);
+
+            if (hasUncompletedChildren) {
+              // Always add children instead of the parent
               const children = prevTodos.filter(t => t.parentId === todoId && !t.completed);
               children.forEach(child => {
                 if (!validSuggestions.includes(child.id)) {
@@ -934,7 +937,16 @@ Return ONLY the todo IDs, no explanation needed.`;
               continue;
             }
 
-            validSuggestions.push(todoId);
+            // Only add this todo if it's not already someone's child in the suggestions
+            // This prevents adding a parent when its child is already prioritized
+            const isChildOfPrioritizedParent = todo.parentId && validSuggestions.some(suggId => {
+              const suggTodo = prevTodos.find(t => t.id === suggId);
+              return suggTodo && prevTodos.some(t => t.parentId === suggId && t.id === todo.id);
+            });
+
+            if (!isChildOfPrioritizedParent) {
+              validSuggestions.push(todoId);
+            }
           }
 
           return prevTodos.map(t => {
