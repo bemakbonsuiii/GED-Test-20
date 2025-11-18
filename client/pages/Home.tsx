@@ -770,7 +770,7 @@ const Home = () => {
     setToddLoading(true);
 
     try {
-      const response = await fetch('/api/todd-assistant', {
+      const response = await fetch(`/api/todd-assistant?_cb=${Date.now()}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -900,7 +900,7 @@ const Home = () => {
     setToddLoading(true);
 
     try {
-      const response = await fetch('/api/todd-assistant', {
+      const response = await fetch(`/api/todd-assistant?_cb=${Date.now()}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
