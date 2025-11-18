@@ -583,7 +583,11 @@ export function MetricsWidget({
             {(() => {
               const actionableMetrics = getActionableTasksMetrics(wsTodos);
               const blockedMetrics = getBlockedTasksMetrics(wsTodos);
-              return `${actionableMetrics.total} Actionable • ${blockedMetrics.total} Blocked`;
+              return (
+                <>
+                  {actionableMetrics.total} Actionable {' • '} {blockedMetrics.total} Blocked
+                </>
+              );
             })()}
           </p>
         </div>
@@ -821,7 +825,11 @@ export function MetricsWidget({
             {(() => {
               const actionableMetrics = getActionableTasksMetrics(todos);
               const blockedMetrics = getBlockedTasksMetrics(todos);
-              return `${actionableMetrics.total} Actionable ��� ${blockedMetrics.total} Blocked`;
+              return (
+                <>
+                  {actionableMetrics.total} Actionable {' • '} {blockedMetrics.total} Blocked
+                </>
+              );
             })()}
           </p>
         </div>
