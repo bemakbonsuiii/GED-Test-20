@@ -942,18 +942,30 @@ Return ONLY the todo IDs, no explanation needed.`;
             const todo = prevTodos.find(t => t.id === todoId);
             if (!todo) continue;
 
+            // Skip Blockers and Meetings entirely - they should never be in priorities
+            if (todo.type === 'Blocker' || todo.type === 'Meeting') {
+              // But add their children if they have any
+              const children = prevTodos.filter(t => t.parentId === todoId && !t.completed);
+              children.forEach(child => {
+                if (!validSuggestions.includes(child.id) && child.type !== 'Blocker') {
+                  validSuggestions.push(child.id);
+                }
+              });
+              continue;
+            }
+
             // Check if this todo has uncompleted children
             const children = prevTodos.filter(t => t.parentId === todoId && !t.completed);
             const hasUncompletedChildren = children.length > 0;
 
             if (hasUncompletedChildren) {
-              // Add children first
+              // Add children first (excluding Blockers)
               children.forEach(child => {
-                if (!validSuggestions.includes(child.id)) {
+                if (!validSuggestions.includes(child.id) && child.type !== 'Blocker') {
                   validSuggestions.push(child.id);
                 }
               });
-              // Then add the parent (Todd can suggest it, but children must come first)
+              // Then add the parent (it will show in "Blocked Priorities" if it has blockers)
               if (!validSuggestions.includes(todoId)) {
                 validSuggestions.push(todoId);
               }
