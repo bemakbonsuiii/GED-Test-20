@@ -2984,7 +2984,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                 </CardHeader>
                 <CardContent className="pt-6">
                   <AlertsWidget
-                    todos={todos}
+                    todos={autoAlerts ? todos : cachedAlertsTodos}
                     workspace={workspace}
                     selectedProjectPage={selectedProjectPage}
                     onTodoClick={handleTodoClick}
@@ -3005,7 +3005,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                 </CardHeader>
                 <CardContent className="pt-6">
                   <SmartSuggestionsWidget
-                    todos={todos}
+                    todos={autoAlerts ? todos : cachedAlertsTodos}
                     workspace={workspace}
                     selectedProjectPage={selectedProjectPage}
                     onTodoClick={handleTodoClick}
