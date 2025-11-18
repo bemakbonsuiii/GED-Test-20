@@ -3342,6 +3342,10 @@ Return ONLY the todo IDs, no explanation needed.`;
                           const incompleteDeps = workspaceTodos.filter(t => t.parentId === todo.id && !t.completed);
                           const hasBlockers = incompleteDeps.some(t => t.type === 'Blocker');
 
+                          if (incompleteDeps.length > 0) {
+                            console.log(`Todo "${todo.text}" has ${incompleteDeps.length} incomplete deps:`, incompleteDeps);
+                          }
+
                           return (
                             <div
                               key={todo.id}
