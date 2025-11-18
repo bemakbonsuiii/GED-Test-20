@@ -1,5 +1,7 @@
 // HOME.TSX VERSION: 2024-01-20-v8-RATE-LIMIT-FIX
-console.log("✅ Home.tsx LOADED - Version v8 - Proper rate limit error messages");
+console.log(
+  "✅ Home.tsx LOADED - Version v8 - Proper rate limit error messages",
+);
 
 import React, { useState, useEffect, useRef } from "react";
 import {
@@ -908,29 +910,36 @@ const Home = () => {
           console.error("Could not parse error response:", e);
         }
 
-        console.error("Todd error (status " + response.status + "):", errorData);
+        console.error(
+          "Todd error (status " + response.status + "):",
+          errorData,
+        );
 
         // Handle rate limit errors
         if (response.status === 429) {
           const retryTime = errorData.retryAfter || 20;
           const details = errorData.details || "";
 
-          if (details.includes("35h") || details.includes("36h") || details.includes("hour")) {
+          if (
+            details.includes("35h") ||
+            details.includes("36h") ||
+            details.includes("hour")
+          ) {
             throw new Error(
               "⚠️ OpenAI DAILY token limit reached (100,000 tokens used).\\n\\n" +
-              "Options:\\n" +
-              "1. Wait ~36 hours for the limit to reset\\n" +
-              "2. Add a payment method at: https://platform.openai.com/account/billing"
+                "Options:\\n" +
+                "1. Wait ~36 hours for the limit to reset\\n" +
+                "2. Add a payment method at: https://platform.openai.com/account/billing",
             );
           } else {
             throw new Error(
-              `⏳ OpenAI rate limit reached. Please wait ${retryTime} seconds.`
+              `⏳ OpenAI rate limit reached. Please wait ${retryTime} seconds.`,
             );
           }
         }
 
         throw new Error(
-          errorData.error || errorData.details || "Failed to get Todd response"
+          errorData.error || errorData.details || "Failed to get Todd response",
         );
       }
 
@@ -1079,29 +1088,36 @@ const Home = () => {
           console.error("Could not parse error response:", e);
         }
 
-        console.error("Suggest prioritization error (status " + response.status + "):", errorData);
+        console.error(
+          "Suggest prioritization error (status " + response.status + "):",
+          errorData,
+        );
 
         // Handle rate limit errors
         if (response.status === 429) {
           const retryTime = errorData.retryAfter || 20;
           const details = errorData.details || "";
 
-          if (details.includes("35h") || details.includes("36h") || details.includes("hour")) {
+          if (
+            details.includes("35h") ||
+            details.includes("36h") ||
+            details.includes("hour")
+          ) {
             throw new Error(
               "⚠️ OpenAI DAILY token limit reached (100,000 tokens used).\\n\\n" +
-              "Options:\\n" +
-              "1. Wait ~36 hours for the limit to reset\\n" +
-              "2. Add a payment method at: https://platform.openai.com/account/billing"
+                "Options:\\n" +
+                "1. Wait ~36 hours for the limit to reset\\n" +
+                "2. Add a payment method at: https://platform.openai.com/account/billing",
             );
           } else {
             throw new Error(
-              `⏳ OpenAI rate limit reached. Please wait ${retryTime} seconds.`
+              `⏳ OpenAI rate limit reached. Please wait ${retryTime} seconds.`,
             );
           }
         }
 
         throw new Error(
-          errorData.error || errorData.details || "Failed to get Todd response"
+          errorData.error || errorData.details || "Failed to get Todd response",
         );
       }
 
@@ -1202,7 +1218,10 @@ Return ONLY the todo IDs, no explanation needed.`;
           console.error("Could not parse error response:", e);
         }
 
-        console.error("Auto-prioritize error (status " + response.status + "):", errorData);
+        console.error(
+          "Auto-prioritize error (status " + response.status + "):",
+          errorData,
+        );
 
         // Handle rate limit errors with clear message
         if (response.status === 429) {
@@ -1210,22 +1229,26 @@ Return ONLY the todo IDs, no explanation needed.`;
           const details = errorData.details || "";
 
           // Check if it's a daily limit (shows hours in retry time)
-          if (details.includes("35h") || details.includes("36h") || details.includes("hour")) {
+          if (
+            details.includes("35h") ||
+            details.includes("36h") ||
+            details.includes("hour")
+          ) {
             throw new Error(
               "⚠️ OpenAI DAILY token limit reached (100,000 tokens used).\\n\\n" +
-              "Options:\\n" +
-              "1. Wait ~36 hours for the limit to reset\\n" +
-              "2. Add a payment method at: https://platform.openai.com/account/billing"
+                "Options:\\n" +
+                "1. Wait ~36 hours for the limit to reset\\n" +
+                "2. Add a payment method at: https://platform.openai.com/account/billing",
             );
           } else {
             throw new Error(
-              `⏳ OpenAI rate limit reached. Please wait ${retryTime} seconds and try again.`
+              `⏳ OpenAI rate limit reached. Please wait ${retryTime} seconds and try again.`,
             );
           }
         }
 
         throw new Error(
-          errorData.error || errorData.details || "Failed to auto-prioritize"
+          errorData.error || errorData.details || "Failed to auto-prioritize",
         );
       }
 
