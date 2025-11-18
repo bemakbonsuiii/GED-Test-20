@@ -992,19 +992,21 @@ Return ONLY the todo IDs, no explanation needed.`;
         }),
       });
 
+      // Parse response body once
+      const responseText = await response.text();
+
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Auto-prioritize error response:', errorText);
+        console.error('Auto-prioritize error response:', responseText);
         let errorData;
         try {
-          errorData = JSON.parse(errorText);
+          errorData = JSON.parse(responseText);
         } catch (e) {
-          errorData = { error: `Server error: ${errorText || 'Unknown error'}` };
+          errorData = { error: `Server error: ${responseText || 'Unknown error'}` };
         }
         throw new Error(errorData.error || errorData.details || 'Failed to auto-prioritize');
       }
 
-      const data = await response.json();
+      const data = JSON.parse(responseText);
 
       // Clear existing priorities first
       setTodos(prevTodos =>
