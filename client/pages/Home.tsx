@@ -2845,6 +2845,17 @@ Return ONLY the todo IDs, no explanation needed.`;
                       })
                       .sort((a, b) => (a.priorityOrder || 0) - (b.priorityOrder || 0));
 
+                    // Separate actionable from blocked priorities
+                    const actionablePriorities = priorityTodos.filter(t => {
+                      const hasBlockerChild = todos.some(child => child.parentId === t.id && child.type === 'Blocker' && !child.completed);
+                      return !hasBlockerChild;
+                    });
+
+                    const blockedPriorities = priorityTodos.filter(t => {
+                      const hasBlockerChild = todos.some(child => child.parentId === t.id && child.type === 'Blocker' && !child.completed);
+                      return hasBlockerChild;
+                    });
+
                     if (priorityTodos.length === 0) {
                       return (
                         <div className="text-center py-8 text-muted-foreground text-sm">
@@ -2854,22 +2865,115 @@ Return ONLY the todo IDs, no explanation needed.`;
                     }
 
                     return (
-                      <DndContext
-                        sensors={sensors}
-                        collisionDetection={closestCenter}
-                        onDragEnd={handleDragEnd}
-                      >
-                        <SortableContext
-                          items={priorityTodos.map(t => t.id)}
-                          strategy={verticalListSortingStrategy}
-                        >
-                          <div className="space-y-3">
-                            {priorityTodos.map((todo) => (
-                              <SortablePriorityItem key={todo.id} todo={todo} />
-                            ))}
+                      <div className="space-y-6">
+                        {/* Actionable Priorities */}
+                        {actionablePriorities.length > 0 && (
+                          <div>
+                            <h3 className="text-sm font-medium text-muted-foreground mb-3">Actionable</h3>
+                            <DndContext
+                              sensors={sensors}
+                              collisionDetection={closestCenter}
+                              onDragEnd={handleDragEnd}
+                            >
+                              <SortableContext
+                                items={actionablePriorities.map(t => t.id)}
+                                strategy={verticalListSortingStrategy}
+                              >
+                                <div className="space-y-3">
+                                  {actionablePriorities.map((todo) => (
+                                    <SortablePriorityItem key={todo.id} todo={todo} />
+                                  ))}
+                                </div>
+                              </SortableContext>
+                            </DndContext>
                           </div>
-                        </SortableContext>
-                      </DndContext>
+                        )}
+
+                        {/* Blocked Priorities */}
+                        {blockedPriorities.length > 0 && (
+                          <div>
+                            <h3 className="text-sm font-medium text-muted-foreground mb-3 flex items-center gap-2">
+                              <FileWarning className="h-4 w-4 text-amber-500" />
+                              Blocked Priorities
+                            </h3>
+                            <div className="space-y-3">
+                              {blockedPriorities.map((todo) => {
+                                const blockers = todos.filter(child => child.parentId === todo.id && child.type === 'Blocker' && !child.completed);
+                                const typeConfig = TODO_TYPE_CONFIG[todo.type];
+                                return (
+                                  <div
+                                    key={todo.id}
+                                    className={`p-4 rounded-lg border border-amber-200 dark:border-amber-800 transition-all bg-amber-50 dark:bg-amber-950/30 border-l-4 ${typeConfig.borderLight} ${typeConfig.borderDark}`}
+                                  >
+                                    <div className="flex items-start gap-2">
+                                      <Checkbox
+                                        checked={todo.completed}
+                                        onCheckedChange={() => toggleTodo(todo.id)}
+                                        className="mt-1"
+                                        disabled
+                                      />
+                                      <div className="flex-1 min-w-0">
+                                        <div className="flex items-start gap-2 flex-wrap">
+                                          <span
+                                            className="font-medium break-words cursor-pointer hover:underline flex-1 text-muted-foreground"
+                                            onClick={() => openSummaryDialog(todo)}
+                                          >
+                                            {todo.text}
+                                          </span>
+                                          <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-6 w-6"
+                                            onClick={() => togglePriority(todo.id)}
+                                            title="Remove from priorities"
+                                          >
+                                            <StarOff className="h-4 w-4 text-yellow-500" />
+                                          </Button>
+                                        </div>
+                                        <div className="flex items-center gap-2 mt-1 flex-wrap">
+                                          <Badge
+                                            variant="outline"
+                                            className={`text-xs ${typeConfig.textLight} ${typeConfig.textDark}`}
+                                          >
+                                            {todo.type}
+                                          </Badge>
+                                          <Badge
+                                            variant={todo.priority === "P0" ? "destructive" : "outline"}
+                                            className={`text-xs ${
+                                              todo.priority === "P1" ? "border-orange-500 text-orange-500" : ""
+                                            }`}
+                                          >
+                                            {todo.priority}
+                                          </Badge>
+                                          {todo.dueDate && (
+                                            <Badge variant="outline" className="text-xs gap-1">
+                                              <CalendarIcon className="h-3 w-3" />
+                                              {format(new Date(todo.dueDate), "MMM d")}
+                                            </Badge>
+                                          )}
+                                        </div>
+                                        <div className="mt-2 space-y-1">
+                                          <p className="text-xs font-medium text-amber-700 dark:text-amber-400">Blocked by:</p>
+                                          {blockers.map(blocker => (
+                                            <div
+                                              key={blocker.id}
+                                              className="flex items-center gap-2 text-xs cursor-pointer hover:underline"
+                                              onClick={() => openSummaryDialog(blocker)}
+                                            >
+                                              <AlertTriangle className="h-3 w-3 text-red-500" />
+                                              <span className="text-red-600 dark:text-red-400">{blocker.text}</span>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     );
                   })()}
                 </CardContent>
