@@ -3347,7 +3347,10 @@ Return ONLY the todo IDs, no explanation needed.`;
                       <div className="flex gap-3 overflow-x-auto pb-2">
                         {upcomingDeadlines.map((todo) => {
                           const typeConfig = TODO_TYPE_CONFIG[todo.type];
-                          const daysUntil = Math.ceil((new Date(todo.dueDate!).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+                          const dueDate = new Date(todo.dueDate!);
+                          const today = new Date();
+                          today.setHours(0, 0, 0, 0);
+                          const daysUntil = differenceInDays(dueDate, today);
                           const isOverdue = daysUntil < 0;
                           const isToday = daysUntil === 0;
 
