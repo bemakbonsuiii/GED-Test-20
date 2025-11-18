@@ -3437,6 +3437,8 @@ Return ONLY the todo IDs, no explanation needed.`;
                   )}
                   {(Object.keys(TODO_TYPE_CONFIG) as TodoType[])
                     .filter((type) => {
+                      // Blockers can only be created as children
+                      if (type === 'Blocker' && !creatingChildForId) return false;
                       if (!creatingChildForId) return true;
                       const parent = todos.find(t => t.id === creatingChildForId);
                       if (!parent) return true;
