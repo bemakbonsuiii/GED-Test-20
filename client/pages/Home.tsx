@@ -1181,39 +1181,43 @@ Return ONLY the todo IDs, no explanation needed.`;
       });
 
       let data;
-      try {
-        // Clone response to avoid body stream issues
-        const responseClone = response.clone();
 
-        if (!response.ok) {
-          let errorText = "Unknown error";
-          try {
-            errorText = await response.text();
-          } catch (streamErr) {
-            console.error("Could not read error response:", streamErr);
-          }
-
-          console.error("Auto-prioritize error response:", errorText);
-          let errorData;
-          try {
-            errorData = JSON.parse(errorText);
-          } catch (e) {
-            errorData = { error: `Server error: ${errorText}` };
-          }
-          throw new Error(
-            errorData.error || errorData.details || "Failed to auto-prioritize",
-          );
+      if (!response.ok) {
+        let errorData: any = { error: "Unknown error" };
+        try {
+          errorData = await response.json();
+        } catch (e) {
+          console.error("Could not parse error response:", e);
         }
 
-        data = await responseClone.json();
-      } catch (parseError: any) {
-        if (parseError.message?.includes("body stream")) {
-          console.error("Body stream error - retrying with clone");
-          // If body stream error, the response was already consumed
-          throw new Error("Response already consumed. Please try again.");
+        console.error("Auto-prioritize error (status " + response.status + "):", errorData);
+
+        // Handle rate limit errors with clear message
+        if (response.status === 429) {
+          const retryTime = errorData.retryAfter || 20;
+          const details = errorData.details || "";
+
+          // Check if it's a daily limit (shows hours in retry time)
+          if (details.includes("35h") || details.includes("36h") || details.includes("hour")) {
+            throw new Error(
+              "⚠️ OpenAI DAILY token limit reached (100,000 tokens used).\\n\\n" +
+              "Options:\\n" +
+              "1. Wait ~36 hours for the limit to reset\\n" +
+              "2. Add a payment method at: https://platform.openai.com/account/billing"
+            );
+          } else {
+            throw new Error(
+              `⏳ OpenAI rate limit reached. Please wait ${retryTime} seconds and try again.`
+            );
+          }
         }
-        throw parseError;
+
+        throw new Error(
+          errorData.error || errorData.details || "Failed to auto-prioritize"
+        );
       }
+
+      data = await response.json();
 
       console.log(
         "Auto-prioritize received suggestions:",
