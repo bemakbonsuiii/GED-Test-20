@@ -380,7 +380,11 @@ export function MetricsWidget({
             {(() => {
               const actionableMetrics = getActionableTasksMetrics(projectTodos);
               const blockedMetrics = getBlockedTasksMetrics(projectTodos);
-              return `${actionableMetrics.total} Actionable • ${blockedMetrics.total} Blocked`;
+              return (
+                <>
+                  {actionableMetrics.total} Actionable {' • '} {blockedMetrics.total} Blocked
+                </>
+              );
             })()}
           </p>
         </div>
