@@ -1238,8 +1238,8 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
         if (response.status === 401) {
           throw new Error(
             "🔑 Invalid OpenAI API key.\\n\\n" +
-            "Please verify your API key at: https://platform.openai.com/api-keys\\n" +
-            "Then update it in Settings → Environment Variables"
+              "Please verify your API key at: https://platform.openai.com/api-keys\\n" +
+              "Then update it in Settings → Environment Variables",
           );
         }
 
