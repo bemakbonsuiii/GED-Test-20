@@ -1346,6 +1346,34 @@ Return ONLY the todo IDs, no explanation needed.`;
     };
   };
 
+  const getBlockedTasksMetrics = () => {
+    // All todos that are currently blocked by either a blocker child or an unfinished child
+    const blockedTodos = todos.filter(t => {
+      if (t.completed) return false; // Don't count completed todos
+
+      // Check if this todo has any uncompleted children
+      const hasUncompletedChildren = todos.some(child => child.parentId === t.id && !child.completed);
+
+      return hasUncompletedChildren;
+    });
+
+    // Separate by blocker type for detail
+    const blockedByBlocker = blockedTodos.filter(t =>
+      todos.some(child => child.parentId === t.id && child.type === 'Blocker' && !child.completed)
+    );
+
+    const blockedByOtherChildren = blockedTodos.filter(t => {
+      const hasBlocker = todos.some(child => child.parentId === t.id && child.type === 'Blocker' && !child.completed);
+      return !hasBlocker; // Has other children but not blockers
+    });
+
+    return {
+      total: blockedTodos.length,
+      byBlocker: blockedByBlocker.length,
+      byChildren: blockedByOtherChildren.length
+    };
+  };
+
   const getProjectsMetrics = () => {
     const workspaceTypes: WorkspaceType[] = ['personal', 'work', 'creative'];
     return workspaceTypes.map(ws => {
