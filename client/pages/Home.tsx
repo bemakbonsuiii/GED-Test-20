@@ -1,6 +1,6 @@
 // HOME.TSX VERSION: 2024-01-20-v8-RATE-LIMIT-FIX
 console.log(
-  "✅ Home.tsx LOADED - Version v8 - Proper rate limit error messages",
+  "✅ Home.tsx LOADED - Version v9 - Fixed body stream + auth error messages",
 );
 
 import React, { useState, useEffect, useRef } from "react";
