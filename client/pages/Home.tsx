@@ -1229,13 +1229,18 @@ Return ONLY the todo IDs, no explanation needed.`;
   const getActionableTasksMetrics = () => {
     const now = Date.now();
     // Actionable tasks are those that can be started now (no start date or start date has passed)
+    // AND do not have incomplete blocker children (blockers make parents non-actionable)
     const actionableCompleted = todos.filter(t => {
       if (!t.completed) return false;
+      const hasBlockerChild = todos.some(child => child.parentId === t.id && child.type === 'Blocker' && !child.completed);
+      if (hasBlockerChild) return false;
       return !t.startDate || t.startDate <= now;
     });
 
     const actionableIncomplete = todos.filter(t => {
       if (t.completed) return false;
+      const hasBlockerChild = todos.some(child => child.parentId === t.id && child.type === 'Blocker' && !child.completed);
+      if (hasBlockerChild) return false;
       return !t.startDate || t.startDate <= now;
     });
 
