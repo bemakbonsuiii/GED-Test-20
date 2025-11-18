@@ -7,7 +7,7 @@ interface Todo {
   text: string;
   completed: boolean;
   createdAt: number;
-  type: "Task" | "Deliverable" | "Quick Win" | "Meeting";
+  type: "Task" | "Deliverable" | "Quick Win" | "Meeting" | "Blocker";
   startDate?: number;
   dueDate?: number;
   dueTime?: string;
@@ -32,7 +32,7 @@ interface AlertsWidgetProps {
 
 interface Alert {
   id: string;
-  type: "meeting-incomplete" | "imminent-deadline" | "overdue" | "unscheduled-critical" | "blocked-priority" | "workload-overload" | "deliverable-not-started" | "multiple-overdue";
+  type: "meeting-incomplete" | "imminent-deadline" | "overdue" | "unscheduled-critical" | "blocked-priority" | "workload-overload" | "deliverable-not-started" | "multiple-overdue" | "blocker-overdue" | "high-priority-blocked";
   priority: number;
   message: string;
   icon: React.ComponentType<{ className?: string }>;
