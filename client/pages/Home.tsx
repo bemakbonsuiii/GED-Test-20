@@ -1,5 +1,5 @@
-// HOME.TSX VERSION: 2024-01-20-v7-CLONE-FIX
-console.log("✅ Home.tsx LOADED - Version v7 - Using response.clone() to prevent stream errors");
+// HOME.TSX VERSION: 2024-01-20-v8-RATE-LIMIT-FIX
+console.log("✅ Home.tsx LOADED - Version v8 - Proper rate limit error messages");
 
 import React, { useState, useEffect, useRef } from "react";
 import {
@@ -1139,7 +1139,7 @@ const Home = () => {
 
   const autoPrioritize = async () => {
     console.log("========================================");
-    console.log("autoPrioritize VERSION v7 - Clone fix");
+    console.log("autoPrioritize VERSION v8 - Rate limit fix");
     console.log("Timestamp:", new Date().toISOString());
     console.log("========================================");
     setToddLoading(true);
