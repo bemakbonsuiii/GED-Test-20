@@ -3338,6 +3338,10 @@ Return ONLY the todo IDs, no explanation needed.`;
                           const isOverdue = daysUntil < 0;
                           const isToday = daysUntil === 0;
 
+                          // Check for incomplete dependencies
+                          const incompleteDeps = workspaceTodos.filter(t => t.parentId === todo.id && !t.completed);
+                          const hasBlockers = incompleteDeps.some(t => t.type === 'Blocker');
+
                           return (
                             <div
                               key={todo.id}
@@ -3377,6 +3381,18 @@ Return ONLY the todo IDs, no explanation needed.`;
                                   <Badge variant="outline" className="text-xs">
                                     {todo.priority}
                                   </Badge>
+                                  {incompleteDeps.length > 0 && hasBlockers && (
+                                    <Badge variant="destructive" className="text-xs gap-1">
+                                      <FileWarning className="h-3 w-3" />
+                                      {incompleteDeps.filter(t => t.type === 'Blocker').length} Blocker{incompleteDeps.filter(t => t.type === 'Blocker').length !== 1 ? 's' : ''}
+                                    </Badge>
+                                  )}
+                                  {incompleteDeps.length > 0 && !hasBlockers && (
+                                    <Badge variant="outline" className="text-xs gap-1 text-orange-600 border-orange-300">
+                                      <AlertTriangle className="h-3 w-3" />
+                                      {incompleteDeps.length} Dep{incompleteDeps.length !== 1 ? 's' : ''}
+                                    </Badge>
+                                  )}
                                 </div>
                               </div>
                             </div>
