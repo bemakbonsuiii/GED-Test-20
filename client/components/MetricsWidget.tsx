@@ -29,15 +29,63 @@ interface MetricsWidgetProps {
   setIsExpanded: (expanded: boolean) => void;
 }
 
-export function MetricsWidget({ 
-  workspace, 
-  selectedProjectPage, 
-  todos, 
-  projects, 
-  isExpanded, 
-  setIsExpanded 
+export function MetricsWidget({
+  workspace,
+  selectedProjectPage,
+  todos,
+  projects,
+  isExpanded,
+  setIsExpanded
 }: MetricsWidgetProps) {
-  
+
+  const createPieChart = (segments: Array<{ value: number; color: string; label: string }>, size: number = 120) => {
+    const total = segments.reduce((sum, seg) => sum + seg.value, 0);
+    if (total === 0) return null;
+
+    let currentAngle = -90; // Start at top
+    const paths: JSX.Element[] = [];
+
+    segments.forEach((segment, index) => {
+      if (segment.value === 0) return;
+
+      const percentage = segment.value / total;
+      const angle = percentage * 360;
+      const endAngle = currentAngle + angle;
+
+      const startRad = (currentAngle * Math.PI) / 180;
+      const endRad = (endAngle * Math.PI) / 180;
+
+      const radius = size / 2;
+      const x1 = radius + radius * Math.cos(startRad);
+      const y1 = radius + radius * Math.sin(startRad);
+      const x2 = radius + radius * Math.cos(endRad);
+      const y2 = radius + radius * Math.sin(endRad);
+
+      const largeArcFlag = angle > 180 ? 1 : 0;
+
+      const pathData = `M ${radius} ${radius} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2} Z`;
+
+      paths.push(
+        <path
+          key={index}
+          d={pathData}
+          fill={segment.color}
+          className="transition-all duration-500"
+        >
+          <title>{`${segment.label}: ${segment.value}`}</title>
+        </path>
+      );
+
+      currentAngle = endAngle;
+    });
+
+    return (
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+        {paths}
+      </svg>
+    );
+  };
+
   const getDailyTasksMetrics = (filteredTodos: Todo[]) => {
     const now = Date.now();
     const today = new Date();
