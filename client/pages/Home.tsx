@@ -345,6 +345,14 @@ const Home = () => {
     localStorage.setItem("projects", JSON.stringify(projects));
   }, [projects]);
 
+  // Update cached alerts when auto alerts is enabled
+  useEffect(() => {
+    if (autoAlerts) {
+      setCachedAlertsTodos([...todos]);
+      setLastAlertsUpdate(Date.now());
+    }
+  }, [todos, autoAlerts]);
+
   // Auto-minimize empty widgets
   useEffect(() => {
     const filteredTodos = (workspace === "everything"
