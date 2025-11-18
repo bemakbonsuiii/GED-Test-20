@@ -273,10 +273,17 @@ export function MetricsWidget({
                     <div
                       className="h-full bg-gradient-to-r from-red-500 to-red-600 transition-all duration-500"
                       style={{ width: `${blockedMetrics.total > 0 ? (blockedMetrics.byBlocker / blockedMetrics.total) * 100 : 0}%` }}
+                      title={`${blockedMetrics.byBlocker} blocked by Blockers`}
                     />
                     <div
                       className="h-full bg-gradient-to-r from-amber-500 to-amber-600 transition-all duration-500"
                       style={{ width: `${blockedMetrics.total > 0 ? (blockedMetrics.byChildren / blockedMetrics.total) * 100 : 0}%` }}
+                      title={`${blockedMetrics.byChildren} blocked by other children`}
+                    />
+                    <div
+                      className="h-full bg-gradient-to-r from-slate-500 to-slate-600 transition-all duration-500"
+                      style={{ width: `${blockedMetrics.total > 0 ? (blockedMetrics.notStarted / blockedMetrics.total) * 100 : 0}%` }}
+                      title={`${blockedMetrics.notStarted} not started yet`}
                     />
                   </>
                 );
@@ -286,7 +293,7 @@ export function MetricsWidget({
           <p className="text-xs text-muted-foreground">
             {(() => {
               const blockedMetrics = getBlockedTasksMetrics(projectTodos);
-              return `${blockedMetrics.byBlocker} by Blockers • ${blockedMetrics.byChildren} by other children`;
+              return `${blockedMetrics.byBlocker} by Blockers • ${blockedMetrics.byChildren} by other children • ${blockedMetrics.notStarted} not started`;
             })()}
           </p>
         </div>
@@ -419,10 +426,17 @@ export function MetricsWidget({
                     <div
                       className="h-full bg-gradient-to-r from-red-500 to-red-600 transition-all duration-500"
                       style={{ width: `${blockedMetrics.total > 0 ? (blockedMetrics.byBlocker / blockedMetrics.total) * 100 : 0}%` }}
+                      title={`${blockedMetrics.byBlocker} blocked by Blockers`}
                     />
                     <div
                       className="h-full bg-gradient-to-r from-amber-500 to-amber-600 transition-all duration-500"
                       style={{ width: `${blockedMetrics.total > 0 ? (blockedMetrics.byChildren / blockedMetrics.total) * 100 : 0}%` }}
+                      title={`${blockedMetrics.byChildren} blocked by other children`}
+                    />
+                    <div
+                      className="h-full bg-gradient-to-r from-slate-500 to-slate-600 transition-all duration-500"
+                      style={{ width: `${blockedMetrics.total > 0 ? (blockedMetrics.notStarted / blockedMetrics.total) * 100 : 0}%` }}
+                      title={`${blockedMetrics.notStarted} not started yet`}
                     />
                   </>
                 );
@@ -432,7 +446,7 @@ export function MetricsWidget({
           <p className="text-xs text-muted-foreground">
             {(() => {
               const blockedMetrics = getBlockedTasksMetrics(wsTodos);
-              return `${blockedMetrics.byBlocker} by Blockers • ${blockedMetrics.byChildren} by other children`;
+              return `${blockedMetrics.byBlocker} by Blockers • ${blockedMetrics.byChildren} by other children • ${blockedMetrics.notStarted} not started`;
             })()}
           </p>
         </div>
@@ -611,6 +625,11 @@ export function MetricsWidget({
                       style={{ width: `${blockedMetrics.total > 0 ? (blockedMetrics.byChildren / blockedMetrics.total) * 100 : 0}%` }}
                       title={`${blockedMetrics.byChildren} blocked by other children`}
                     />
+                    <div
+                      className="h-full bg-gradient-to-r from-slate-500 to-slate-600 transition-all duration-500"
+                      style={{ width: `${blockedMetrics.total > 0 ? (blockedMetrics.notStarted / blockedMetrics.total) * 100 : 0}%` }}
+                      title={`${blockedMetrics.notStarted} not started yet`}
+                    />
                   </>
                 );
               })()}
@@ -619,7 +638,7 @@ export function MetricsWidget({
           <p className="text-xs text-muted-foreground">
             {(() => {
               const blockedMetrics = getBlockedTasksMetrics(todos);
-              return `${blockedMetrics.byBlocker} by Blockers • ${blockedMetrics.byChildren} by other children`;
+              return `${blockedMetrics.byBlocker} by Blockers • ${blockedMetrics.byChildren} by other children • ${blockedMetrics.notStarted} not started`;
             })()}
           </p>
         </div>
