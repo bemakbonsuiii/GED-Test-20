@@ -1171,7 +1171,7 @@ const Home = () => {
         workspace === "everything"
           ? "all workspaces"
           : `the ${workspace} workspace`;
-      const autoPrioritizePrompt = `Analyze all my to-dos in ${workspaceLabel} and automatically select the top 5-10 most important items I should focus on today.
+      const autoPrioritizePrompt = `Analyze all my to-dos in ${workspaceLabel} and automatically select 3-5 most important items I should focus on today. You MUST suggest at least 3 items and no more than 5 items.
 
 PRIORITY ORDER (STRICT):
 1. OVERDUE items MUST be prioritized FIRST above everything else
@@ -1192,7 +1192,7 @@ CRITICAL EXCLUSIONS:
 - Suggest important work even if it's blocked - blocked items will be shown separately
 - Children must always be prioritized before their parents in the list
 
-Return ONLY the todo IDs, no explanation needed.`;
+IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no explanation needed.`;
 
       const response = await fetch(`/api/todd-assistant?_cb=${Date.now()}`, {
         method: "POST",
