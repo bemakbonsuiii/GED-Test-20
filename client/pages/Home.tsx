@@ -2962,7 +2962,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                 </CardHeader>
                 <CardContent className="pt-6">
                   {(() => {
-                    const priorityTodos = todos
+                    const basePriorityTodos = todos
                       .filter(t => {
                         if (!t.isPriority || t.completed) return false;
                         // Never show Meetings or Blockers in priorities panel
@@ -2973,6 +2973,26 @@ Return ONLY the todo IDs, no explanation needed.`;
                         if (selectedProjectPage && t.project !== selectedProjectPage) return false;
                         return true;
                       })
+                      .sort((a, b) => (a.priorityOrder || 0) - (b.priorityOrder || 0));
+
+                    // Find all blockers that are blocking priority items
+                    const blockersOfPriorities = todos.filter(blocker => {
+                      if (blocker.completed || blocker.type !== 'Blocker') return false;
+                      // Check if this blocker's parent is in priorities
+                      return basePriorityTodos.some(p => p.id === blocker.parentId);
+                    });
+
+                    // Get children of these blockers and add them to priorities
+                    const childrenOfBlockers = todos.filter(child => {
+                      if (child.completed) return false;
+                      // Check if this is a child of a blocker that's blocking a priority item
+                      return blockersOfPriorities.some(blocker => blocker.id === child.parentId);
+                    });
+
+                    // Combine base priorities with children of blockers (remove duplicates)
+                    const allPriorityIds = new Set([...basePriorityTodos.map(t => t.id), ...childrenOfBlockers.map(t => t.id)]);
+                    const priorityTodos = todos
+                      .filter(t => allPriorityIds.has(t.id))
                       .sort((a, b) => (a.priorityOrder || 0) - (b.priorityOrder || 0));
 
                     // Separate actionable from blocked priorities
