@@ -663,26 +663,24 @@ const Home = () => {
 
       const newIsPriority = !todo.isPriority;
 
-      // Meetings should never be priorities - add their children instead
-      if (newIsPriority && todo.type === "Meeting") {
-        const children = prevTodos.filter(t => t.parentId === todoId && !t.completed);
-        if (children.length > 0) {
-          // Add all uncompleted children to priorities
-          const priorityTodos = prevTodos.filter(t => t.isPriority);
-          let nextOrder = priorityTodos.length;
+      // Check if this todo has uncompleted children
+      const children = prevTodos.filter(t => t.parentId === todoId && !t.completed);
+      const hasUncompletedChildren = children.length > 0;
 
-          return prevTodos.map(t => {
-            const childIndex = children.findIndex(c => c.id === t.id);
-            if (childIndex !== -1) {
-              const order = nextOrder + childIndex;
-              return { ...t, isPriority: true, priorityOrder: order };
-            }
-            return t;
-          });
-        } else {
-          alert("Meetings cannot be prioritized directly. Please add children to this meeting and prioritize them instead.");
-          return prevTodos;
-        }
+      // If adding to priorities and has uncompleted children, add children instead
+      if (newIsPriority && hasUncompletedChildren) {
+        // Add all uncompleted children to priorities
+        const priorityTodos = prevTodos.filter(t => t.isPriority);
+        let nextOrder = priorityTodos.length;
+
+        return prevTodos.map(t => {
+          const childIndex = children.findIndex(c => c.id === t.id);
+          if (childIndex !== -1) {
+            const order = nextOrder + childIndex;
+            return { ...t, isPriority: true, priorityOrder: order };
+          }
+          return t;
+        });
       }
 
       // Removing from priorities
@@ -694,7 +692,7 @@ const Home = () => {
         );
       }
 
-      // Adding non-meeting to priorities
+      // Adding to priorities (no children case)
       const priorityTodos = prevTodos.filter(t => t.isPriority && t.id !== todoId);
       const newPriorityOrder = priorityTodos.length;
 
