@@ -1152,23 +1152,40 @@ Return ONLY the todo IDs, no explanation needed.`;
         }),
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Auto-prioritize error response:", errorText);
-        let errorData;
-        try {
-          errorData = JSON.parse(errorText);
-        } catch (e) {
-          errorData = {
-            error: `Server error: ${errorText || "Unknown error"}`,
-          };
-        }
-        throw new Error(
-          errorData.error || errorData.details || "Failed to auto-prioritize",
-        );
-      }
+      let data;
+      try {
+        // Clone response to avoid body stream issues
+        const responseClone = response.clone();
 
-      const data = await response.json();
+        if (!response.ok) {
+          let errorText = "Unknown error";
+          try {
+            errorText = await response.text();
+          } catch (streamErr) {
+            console.error("Could not read error response:", streamErr);
+          }
+
+          console.error("Auto-prioritize error response:", errorText);
+          let errorData;
+          try {
+            errorData = JSON.parse(errorText);
+          } catch (e) {
+            errorData = { error: `Server error: ${errorText}` };
+          }
+          throw new Error(
+            errorData.error || errorData.details || "Failed to auto-prioritize",
+          );
+        }
+
+        data = await responseClone.json();
+      } catch (parseError: any) {
+        if (parseError.message?.includes("body stream")) {
+          console.error("Body stream error - retrying with clone");
+          // If body stream error, the response was already consumed
+          throw new Error("Response already consumed. Please try again.");
+        }
+        throw parseError;
+      }
 
       console.log(
         "Auto-prioritize received suggestions:",
