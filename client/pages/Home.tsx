@@ -1386,7 +1386,7 @@ Return ONLY the todo IDs, no explanation needed.`;
           meetingTime:
             newTodoType === "Meeting" ? newTodoMeetingTime : undefined,
           notes: newTodoNotes || undefined,
-          links: newTodoLinks || undefined,
+          links: inheritedLinks || undefined,
           parentId: newTodoParentId,
         };
 
@@ -1424,7 +1424,7 @@ Return ONLY the todo IDs, no explanation needed.`;
       agenda: newTodoType === "Meeting" ? newTodoAgenda : undefined,
       meetingTime: newTodoType === "Meeting" ? newTodoMeetingTime : undefined,
       notes: newTodoNotes || undefined,
-      links: newTodoLinks || undefined,
+      links: inheritedLinks || undefined,
       parentId: newTodoParentId,
     };
 
