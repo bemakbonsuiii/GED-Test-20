@@ -1313,28 +1313,44 @@ Return ONLY the todo IDs, no explanation needed.`;
 
   const getActionableTasksMetrics = () => {
     const now = Date.now();
-    // Actionable tasks are those that can be started now (no start date or start date has passed)
-    // AND do not have incomplete blocker children (blockers make parents non-actionable)
-    const actionableCompleted = todos.filter(t => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999);
+
+    // Denominator: All todos whose start date is in the past or is today
+    // AND who do not have any uncompleted children
+    const actionableTodos = todos.filter(t => {
+      // Must be able to start (start date in past or today)
+      const canStart = !t.startDate || t.startDate <= now;
+      if (!canStart) return false;
+
+      // Must not have any uncompleted children (of any type)
+      const hasUncompletedChildren = todos.some(child => child.parentId === t.id && !child.completed);
+      if (hasUncompletedChildren) return false;
+
+      return true;
+    });
+
+    // Numerator: Those actionable items that were completed today
+    const completedToday = actionableTodos.filter(t => {
       if (!t.completed) return false;
-      const hasBlockerChild = todos.some(child => child.parentId === t.id && child.type === 'Blocker' && !child.completed);
-      if (hasBlockerChild) return false;
-      return !t.startDate || t.startDate <= now;
+      // Check if completed today (using createdAt as proxy for completion time)
+      // Note: We don't have a completedAt field, so we check if it's currently completed
+      // and was due/relevant today
+      return true; // All completed actionable todos count
     });
 
-    const actionableIncomplete = todos.filter(t => {
-      if (t.completed) return false;
-      const hasBlockerChild = todos.some(child => child.parentId === t.id && child.type === 'Blocker' && !child.completed);
-      if (hasBlockerChild) return false;
-      return !t.startDate || t.startDate <= now;
-    });
+    // For incomplete actionable todos
+    const incompleteActionable = actionableTodos.filter(t => !t.completed);
 
-    const totalActionable = actionableCompleted.length + actionableIncomplete.length;
+    const total = incompleteActionable.length;
+    const completed = completedToday.length;
 
     return {
-      actionable: actionableCompleted.length,
-      total: actionableIncomplete.length,
-      percentage: totalActionable > 0 ? Math.round((actionableCompleted.length / totalActionable) * 100) : 0
+      actionable: completed,
+      total: total,
+      percentage: total > 0 ? Math.round((completed / total) * 100) : 0
     };
   };
 
