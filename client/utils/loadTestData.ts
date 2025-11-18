@@ -446,6 +446,82 @@ export function loadTestData() {
       workspace: "personal",
       priority: "P1",
       notes: "Use external hard drive and cloud backup"
+    },
+    // Deliverable with incomplete blocker (to test deadline widget indicators)
+    {
+      id: "todo-31",
+      text: "Finalize TurboScan Proposal w/ Anuj and andrii",
+      completed: false,
+      createdAt: now - 86400000 * 5,
+      type: "Deliverable",
+      dueDate: todayMs + 86400000, // Tomorrow
+      dueTime: "17:00",
+      project: "Website Redesign",
+      workspace: "work",
+      priority: "P1",
+      notes: "Need all approvals before submission"
+    },
+    {
+      id: "todo-32",
+      text: "Get legal approval for contract terms",
+      completed: false,
+      createdAt: now - 86400000 * 4,
+      type: "Blocker",
+      dueDate: todayMs,
+      dueTime: "15:00",
+      workspace: "work",
+      priority: "P0",
+      parentId: "todo-31",
+      notes: "Waiting on legal team review"
+    },
+    {
+      id: "todo-33",
+      text: "Create first draft of TS Proposal",
+      completed: false,
+      createdAt: now - 86400000 * 4,
+      type: "Task",
+      workspace: "work",
+      priority: "P1",
+      parentId: "todo-32",
+      notes: "Need to complete before legal review"
+    },
+    // Deliverable with regular dependencies (not blockers)
+    {
+      id: "todo-34",
+      text: "Launch new marketing campaign",
+      completed: false,
+      createdAt: now - 86400000 * 6,
+      type: "Deliverable",
+      dueDate: todayMs + 86400000 * 2, // 2 days from now
+      dueTime: "09:00",
+      project: "Q1 Marketing Campaign",
+      workspace: "work",
+      priority: "P0",
+      notes: "All materials must be ready before launch"
+    },
+    {
+      id: "todo-35",
+      text: "Finalize email copy",
+      completed: false,
+      createdAt: now - 86400000 * 5,
+      type: "Task",
+      dueDate: todayMs + 86400000,
+      dueTime: "12:00",
+      workspace: "work",
+      priority: "P1",
+      parentId: "todo-34"
+    },
+    {
+      id: "todo-36",
+      text: "Design social media graphics",
+      completed: false,
+      createdAt: now - 86400000 * 5,
+      type: "Task",
+      dueDate: todayMs + 86400000,
+      dueTime: "14:00",
+      workspace: "work",
+      priority: "P1",
+      parentId: "todo-34"
     }
   ];
 
