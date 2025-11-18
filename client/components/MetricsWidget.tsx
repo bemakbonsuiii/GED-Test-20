@@ -786,44 +786,91 @@ export function MetricsWidget({
         </div>
 
         <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Target className="h-4 w-4 text-slate-600 dark:text-slate-400" />
-              <span className="text-sm font-medium">Total To-dos</span>
-            </div>
-            <span className="text-sm text-muted-foreground">
-              {(() => {
-                const typeMetrics = getTodosByType(todos);
-                return typeMetrics.total;
-              })()}
-            </span>
+          <div className="flex items-center gap-2 mb-3">
+            <Target className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+            <span className="text-sm font-medium">To-dos Overview</span>
           </div>
-          <div className="relative h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-            <div className="flex h-full">
-              {(() => {
-                const typeMetrics = getTodosByType(todos);
-                return typeMetrics.types.map((typeData, index) => (
-                  typeData.count > 0 && (
-                    <div
-                      key={index}
-                      className={`h-full bg-gradient-to-r ${typeData.color} transition-all duration-500`}
-                      style={{ width: `${typeMetrics.total > 0 ? (typeData.count / typeMetrics.total) * 100 : 0}%` }}
-                      title={`${typeData.count} ${typeData.type}`}
-                    />
-                  )
-                ));
-              })()}
+          <div className="grid grid-cols-2 gap-4">
+            {/* Total To-dos Pie Chart */}
+            <div className="space-y-2">
+              <div className="text-xs font-medium text-muted-foreground text-center">By Type</div>
+              <div className="flex justify-center">
+                {(() => {
+                  const typeMetrics = getTodosByType(todos);
+                  const colorMap: Record<string, string> = {
+                    "Blocker": "#ef4444",
+                    "Task": "#3b82f6",
+                    "Deliverable": "#a855f7",
+                    "Quick Win": "#22c55e",
+                    "Meeting": "#f97316"
+                  };
+                  return createPieChart(
+                    typeMetrics.types.map(t => ({
+                      value: t.count,
+                      color: colorMap[t.type] || "#6b7280",
+                      label: t.type
+                    })),
+                    120
+                  );
+                })()}
+              </div>
+              <div className="text-xs text-muted-foreground space-y-1">
+                {(() => {
+                  const typeMetrics = getTodosByType(todos);
+                  return typeMetrics.types
+                    .filter(t => t.count > 0)
+                    .map((t, i) => (
+                      <div key={i} className="flex items-center gap-2">
+                        <div className={`w-2 h-2 rounded-full ${
+                          t.type === "Blocker" ? "bg-red-500" :
+                          t.type === "Task" ? "bg-blue-500" :
+                          t.type === "Deliverable" ? "bg-purple-500" :
+                          t.type === "Quick Win" ? "bg-green-500" :
+                          "bg-orange-500"
+                        }`}></div>
+                        <span>{t.count} {t.type}{t.count !== 1 ? 's' : ''}</span>
+                      </div>
+                    ));
+                })()}
+              </div>
+            </div>
+
+            {/* Actionable vs Blocked Pie Chart */}
+            <div className="space-y-2">
+              <div className="text-xs font-medium text-muted-foreground text-center">Actionable vs Blocked</div>
+              <div className="flex justify-center">
+                {(() => {
+                  const actionableMetrics = getActionableTasksMetrics(todos);
+                  const blockedMetrics = getBlockedTasksMetrics(todos);
+                  return createPieChart(
+                    [
+                      { value: actionableMetrics.total, color: "#22c55e", label: "Actionable" },
+                      { value: blockedMetrics.total, color: "#ef4444", label: "Blocked" }
+                    ],
+                    120
+                  );
+                })()}
+              </div>
+              <div className="text-xs text-muted-foreground space-y-1">
+                {(() => {
+                  const actionableMetrics = getActionableTasksMetrics(todos);
+                  const blockedMetrics = getBlockedTasksMetrics(todos);
+                  return (
+                    <>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                        <span>{actionableMetrics.total} Actionable</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                        <span>{blockedMetrics.total} Blocked</span>
+                      </div>
+                    </>
+                  );
+                })()}
+              </div>
             </div>
           </div>
-          <p className="text-xs text-muted-foreground">
-            {(() => {
-              const typeMetrics = getTodosByType(todos);
-              return typeMetrics.types
-                .filter(t => t.count > 0)
-                .map(t => `${t.count} ${t.type}${t.count !== 1 ? 's' : ''}`)
-                .join(' • ');
-            })()}
-          </p>
         </div>
 
         <div className="space-y-4">
