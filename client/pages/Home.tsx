@@ -1371,11 +1371,14 @@ Return ONLY the todo IDs, no explanation needed.`;
       ? relevantTodos.filter(t => t.project === selectedProjectPage)
       : relevantTodos;
 
-    // All incomplete actionable tasks (excluding those with future start dates)
+    // All incomplete actionable tasks (excluding those with future start dates and blocker children)
     const actionableTasks = filteredByProject.filter(t => {
       if (t.completed) return false;
       // Exclude tasks with future start dates
       if (t.startDate && t.startDate > now) return false;
+      // Exclude tasks with incomplete blocker children
+      const hasBlockerChild = todos.some(child => child.parentId === t.id && child.type === 'Blocker' && !child.completed);
+      if (hasBlockerChild) return false;
       return true;
     });
 
