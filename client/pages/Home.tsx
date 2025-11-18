@@ -985,7 +985,7 @@ CRITICAL EXCLUSIONS:
 
 Return ONLY the todo IDs, no explanation needed.`;
 
-      const response = await fetch('/api/todd-assistant', {
+      const response = await fetch(`/api/todd-assistant?_cb=${Date.now()}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
