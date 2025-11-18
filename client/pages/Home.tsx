@@ -1038,7 +1038,7 @@ Return ONLY the todo IDs, no explanation needed.`;
       }
     } catch (error: any) {
       console.error('Error auto-prioritizing:', error);
-      alert('Failed to auto-prioritize. Please try again.');
+      alert(`Failed to auto-prioritize: ${error.message || 'Please try again.'}`);
     } finally {
       setToddLoading(false);
     }
