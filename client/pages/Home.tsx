@@ -238,6 +238,14 @@ const Home = () => {
   const [selectedProjectFilter, setSelectedProjectFilter] = useState<string | null>(null);
   const [projectInput, setProjectInput] = useState("");
   const [editingProject, setEditingProject] = useState<string | null>(null);
+
+  // Auto alerts setting
+  const [autoAlerts, setAutoAlerts] = useState(() => {
+    const saved = localStorage.getItem('autoAlerts');
+    return saved !== null ? JSON.parse(saved) : true;
+  });
+  const [cachedAlertsTodos, setCachedAlertsTodos] = useState<Todo[]>([]);
+  const [lastAlertsUpdate, setLastAlertsUpdate] = useState<number>(Date.now());
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [dialogStep, setDialogStep] = useState<"type" | "workspace" | "details">("type");
   const [newTodoText, setNewTodoText] = useState("");
