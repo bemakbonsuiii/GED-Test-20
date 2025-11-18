@@ -374,13 +374,55 @@ export function MetricsWidget({
             </span>
           </div>
           <div className="relative h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-            <div 
+            <div
               className="absolute top-0 left-0 h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-500"
               style={{ width: `${actionableMetrics.percentage}%` }}
             />
           </div>
           <p className="text-xs text-muted-foreground">
             To-dos ready to start now • {actionableMetrics.percentage}% complete
+          </p>
+        </div>
+
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+              <span className="text-sm font-medium">Blocked To-dos</span>
+            </div>
+            <span className="text-sm text-muted-foreground">
+              {(() => {
+                const blockedMetrics = getBlockedTasksMetrics(todos);
+                return blockedMetrics.total;
+              })()}
+            </span>
+          </div>
+          <div className="relative h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+            <div className="flex h-full">
+              {(() => {
+                const blockedMetrics = getBlockedTasksMetrics(todos);
+                return (
+                  <>
+                    <div
+                      className="h-full bg-gradient-to-r from-red-500 to-red-600 transition-all duration-500"
+                      style={{ width: `${blockedMetrics.total > 0 ? (blockedMetrics.byBlocker / blockedMetrics.total) * 100 : 0}%` }}
+                      title={`${blockedMetrics.byBlocker} blocked by Blockers`}
+                    />
+                    <div
+                      className="h-full bg-gradient-to-r from-amber-500 to-amber-600 transition-all duration-500"
+                      style={{ width: `${blockedMetrics.total > 0 ? (blockedMetrics.byChildren / blockedMetrics.total) * 100 : 0}%` }}
+                      title={`${blockedMetrics.byChildren} blocked by other children`}
+                    />
+                  </>
+                );
+              })()}
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            {(() => {
+              const blockedMetrics = getBlockedTasksMetrics(todos);
+              return `${blockedMetrics.byBlocker} by Blockers • ${blockedMetrics.byChildren} by other children`;
+            })()}
           </p>
         </div>
 
