@@ -93,8 +93,10 @@ Prioritization Order (STRICT):
 16. P1 priority children
 17. P1 priority items (that can be started today AND have no blocker children)
 18. Everything else that can be started today
-19. EXCLUDE: Items with future start dates (user cannot work on them yet)
-20. IMPORTANT: When suggesting a parent with incomplete children, ALWAYS suggest the children BEFORE the parent in the list
+19. Important blocked work (has Blocker children) - will appear in "Blocked Priorities" section
+20. EXCLUDE ONLY: Items with future start dates (user cannot work on them yet)
+21. IMPORTANT: When suggesting a parent with incomplete children, ALWAYS suggest the children BEFORE the parent in the list
+22. DO NOT EXCLUDE: Parents with Blocker children - these should be suggested and will appear in "Blocked Priorities"
 
 When responding with suggestions, format them as a JSON array of todo IDs at the end of your response, like this:
 SUGGESTIONS: ["todo-id-1", "todo-id-2"]
