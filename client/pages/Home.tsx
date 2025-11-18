@@ -870,7 +870,7 @@ const Home = () => {
         : todos.filter((todo) => todo.workspace === workspace);
 
       const workspaceLabel = workspace === "everything" ? "all workspaces" : `the ${workspace} workspace`;
-      const autoPrioritizePrompt = `Analyze all my to-dos in ${workspaceLabel} and automatically select the top 5 most important items I should focus on today.
+      const autoPrioritizePrompt = `Analyze all my to-dos in ${workspaceLabel} and automatically select the top 5-10 most important items I should focus on today.
 
 PRIORITY ORDER (STRICT):
 1. OVERDUE items MUST be prioritized FIRST above everything else
@@ -879,11 +879,16 @@ PRIORITY ORDER (STRICT):
 4. Items due soon
 5. Everything else
 
+IMPORTANT CONTEXT:
+- The priority panel has TWO sections: "Actionable" and "Blocked Priorities"
+- Todos with Blocker children will automatically appear in "Blocked Priorities" section
+- You CAN and SHOULD suggest important todos even if they have Blocker children - they'll show in the blocked section
+- If suggesting a parent with children, include the children first, then the parent
+
 CRITICAL RULES:
-- You CAN suggest a parent that has uncompleted children, BUT you MUST suggest the children BEFORE the parent in the list.
-- Children must always be prioritized before their parents.
-- If suggesting a parent with children, include the children first, then the parent.
-- Prioritize children over their parents in all cases.
+- Suggest important work even if it's blocked - blocked items will be shown separately
+- Children must always be prioritized before their parents in the list
+- Blocker children are the most critical to prioritize (they unblock other work)
 
 Return ONLY the todo IDs, no explanation needed.`;
 
