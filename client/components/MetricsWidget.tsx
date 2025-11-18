@@ -140,6 +140,26 @@ export function MetricsWidget({
     };
   };
 
+  const getTodosByType = (filteredTodos: Todo[]) => {
+    const types: Array<{ type: "Task" | "Deliverable" | "Quick Win" | "Meeting" | "Blocker"; color: string; count: number }> = [
+      { type: "Task", color: "from-blue-500 to-blue-600", count: 0 },
+      { type: "Deliverable", color: "from-purple-500 to-purple-600", count: 0 },
+      { type: "Quick Win", color: "from-green-500 to-green-600", count: 0 },
+      { type: "Meeting", color: "from-orange-500 to-orange-600", count: 0 },
+      { type: "Blocker", color: "from-red-500 to-red-600", count: 0 }
+    ];
+
+    filteredTodos.forEach(todo => {
+      const typeData = types.find(t => t.type === todo.type);
+      if (typeData) {
+        typeData.count++;
+      }
+    });
+
+    const total = filteredTodos.length;
+    return { types, total };
+  };
+
   const renderProjectPageMetrics = () => {
     if (!selectedProjectPage) return null;
 
