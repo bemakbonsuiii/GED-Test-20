@@ -1,3 +1,6 @@
+// HOME.TSX VERSION: 2024-01-20-v5-STREAM-FIX
+console.log("✅ Home.tsx LOADED - Version 2024-01-20-v5-STREAM-FIX - autoPrioritize fix applied");
+
 import React, { useState, useEffect, useRef } from "react";
 import {
   DndContext,
