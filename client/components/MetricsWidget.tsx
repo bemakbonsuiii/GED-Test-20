@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
-import { ChevronUp, ChevronDown, Target, CalendarIcon, Zap, Briefcase } from "lucide-react";
+import { ChevronUp, ChevronDown, Target, CalendarIcon, Zap, Briefcase, AlertTriangle } from "lucide-react";
 
 interface Todo {
   id: string;
@@ -10,6 +10,8 @@ interface Todo {
   project?: string;
   workspace: string;
   isPriority?: boolean;
+  parentId?: string;
+  type: "Task" | "Deliverable" | "Quick Win" | "Meeting" | "Blocker";
 }
 
 interface Project {
@@ -107,6 +109,34 @@ export function MetricsWidget({
       actionable: actionableCompleted.length,
       total: actionableIncomplete.length,
       percentage: totalActionable > 0 ? Math.round((actionableCompleted.length / totalActionable) * 100) : 0
+    };
+  };
+
+  const getBlockedTasksMetrics = (filteredTodos: Todo[]) => {
+    // All todos that are currently blocked by either a blocker child or an unfinished child
+    const blockedTodos = filteredTodos.filter(t => {
+      if (t.completed) return false; // Don't count completed todos
+
+      // Check if this todo has any uncompleted children
+      const hasUncompletedChildren = todos.some(child => child.parentId === t.id && !child.completed);
+
+      return hasUncompletedChildren;
+    });
+
+    // Separate by blocker type for detail
+    const blockedByBlocker = blockedTodos.filter(t =>
+      todos.some(child => child.parentId === t.id && child.type === 'Blocker' && !child.completed)
+    );
+
+    const blockedByOtherChildren = blockedTodos.filter(t => {
+      const hasBlocker = todos.some(child => child.parentId === t.id && child.type === 'Blocker' && !child.completed);
+      return !hasBlocker; // Has other children but not blockers
+    });
+
+    return {
+      total: blockedTodos.length,
+      byBlocker: blockedByBlocker.length,
+      byChildren: blockedByOtherChildren.length
     };
   };
 
