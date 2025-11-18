@@ -508,8 +508,9 @@ const Home = () => {
   };
 
   const getAllowedChildTypes = (parentType: TodoType): TodoType[] => {
-    // Allow any type to be a child of any type
-    return ["Task", "Deliverable", "Quick Win", "Meeting"];
+    // Allow any type to be a child of any type, including Blocker
+    // Blockers can have actionable children
+    return ["Task", "Deliverable", "Quick Win", "Meeting", "Blocker"];
   };
 
   const startCreatingChild = (parentId: string) => {
@@ -525,7 +526,8 @@ const Home = () => {
     setNewTodoText("");
     setNewTodoType(allowedTypes[0]); // Default to first allowed type
 
-    // Inherit parent's due date, project, and priority
+    // Inherit parent's dates, project, and priority
+    setNewTodoStartDate(parent.startDate ? new Date(parent.startDate) : undefined);
     setNewTodoDueDate(parent.dueDate ? new Date(parent.dueDate) : undefined);
     setNewTodoDueTime(parent.dueTime || "");
     setNewTodoMeetingTime(parent.meetingTime || "");
