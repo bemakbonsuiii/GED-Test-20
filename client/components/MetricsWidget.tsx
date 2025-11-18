@@ -129,11 +129,17 @@ export function MetricsWidget({
       return hasUncompletedChildren;
     });
 
-    // Not started todos (start date hasn't elapsed yet)
+    // Not started todos (start date hasn't elapsed yet) - but NOT if they're already counted as blocked
     const notStartedTodos = filteredTodos.filter(t => {
       if (t.completed) return false;
       if (!t.startDate) return false; // Only count todos with a start date
-      return t.startDate > now;
+      if (t.startDate <= now) return false; // Start date has passed
+
+      // Don't count if already blocked by children
+      const hasUncompletedChildren = todos.some(child => child.parentId === t.id && !child.completed);
+      if (hasUncompletedChildren) return false;
+
+      return true;
     });
 
     // Separate by blocker type for detail
