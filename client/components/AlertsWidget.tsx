@@ -65,7 +65,26 @@ export const AlertsWidget: React.FC<AlertsWidgetProps> = ({ todos, workspace, se
       return isPast(dueDate) && !isToday(dueDate);
     });
 
-    overdueTodos.forEach(todo => {
+    // Separate overdue blockers (highest priority)
+    const overdueBlockers = overdueTodos.filter(t => t.type === "Blocker");
+    const otherOverdue = overdueTodos.filter(t => t.type !== "Blocker");
+
+    overdueBlockers.forEach(todo => {
+      const dueTime = typeof todo.dueDate === 'string' ? new Date(todo.dueDate).getTime() : todo.dueDate!;
+      const daysOverdue = Math.abs(differenceInDays(new Date(dueTime), new Date()));
+      const parent = relevantTodos.find(t => t.id === todo.parentId);
+      alerts.push({
+        id: `overdue-blocker-${todo.id}`,
+        type: "blocker-overdue",
+        priority: 0, // Highest priority
+        message: `BLOCKER OVERDUE: "${todo.text}" (${daysOverdue} day${daysOverdue !== 1 ? 's' : ''} ago)${parent ? ` - blocking "${parent.text}"` : ''}`,
+        icon: FileWarning,
+        color: "text-red-600 dark:text-red-400",
+        todoId: todo.id,
+      });
+    });
+
+    otherOverdue.forEach(todo => {
       const dueTime = typeof todo.dueDate === 'string' ? new Date(todo.dueDate).getTime() : todo.dueDate!;
       const daysOverdue = Math.abs(differenceInDays(new Date(dueTime), new Date()));
       alerts.push({
