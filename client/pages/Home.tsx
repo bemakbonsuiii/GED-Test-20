@@ -898,23 +898,37 @@ const Home = () => {
 
       console.log("askTodd: Response received, status:", response.status);
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Todd error response:", errorText);
-        let errorData;
-        try {
-          errorData = JSON.parse(errorText);
-        } catch (e) {
-          errorData = {
-            error: `Server error: ${errorText || "Unknown error"}`,
-          };
-        }
-        throw new Error(
-          errorData.error || errorData.details || "Failed to get Todd response",
-        );
-      }
+      let data;
+      try {
+        const responseClone = response.clone();
 
-      const data = await response.json();
+        if (!response.ok) {
+          let errorText = "Unknown error";
+          try {
+            errorText = await response.text();
+          } catch (streamErr) {
+            console.error("Could not read error response:", streamErr);
+          }
+
+          console.error("Todd error response:", errorText);
+          let errorData;
+          try {
+            errorData = JSON.parse(errorText);
+          } catch (e) {
+            errorData = { error: `Server error: ${errorText}` };
+          }
+          throw new Error(
+            errorData.error || errorData.details || "Failed to get Todd response",
+          );
+        }
+
+        data = await responseClone.json();
+      } catch (parseError: any) {
+        if (parseError.message?.includes("body stream")) {
+          throw new Error("Response already consumed. Please try again.");
+        }
+        throw parseError;
+      }
       setToddMessages((prev) => [
         ...prev,
         {
@@ -1049,23 +1063,37 @@ const Home = () => {
         }),
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Todd error response:", errorText);
-        let errorData;
-        try {
-          errorData = JSON.parse(errorText);
-        } catch (e) {
-          errorData = {
-            error: `Server error: ${errorText || "Unknown error"}`,
-          };
-        }
-        throw new Error(
-          errorData.error || errorData.details || "Failed to get Todd response",
-        );
-      }
+      let data;
+      try {
+        const responseClone = response.clone();
 
-      const data = await response.json();
+        if (!response.ok) {
+          let errorText = "Unknown error";
+          try {
+            errorText = await response.text();
+          } catch (streamErr) {
+            console.error("Could not read error response:", streamErr);
+          }
+
+          console.error("Todd error response:", errorText);
+          let errorData;
+          try {
+            errorData = JSON.parse(errorText);
+          } catch (e) {
+            errorData = { error: `Server error: ${errorText}` };
+          }
+          throw new Error(
+            errorData.error || errorData.details || "Failed to get Todd response",
+          );
+        }
+
+        data = await responseClone.json();
+      } catch (parseError: any) {
+        if (parseError.message?.includes("body stream")) {
+          throw new Error("Response already consumed. Please try again.");
+        }
+        throw parseError;
+      }
       setToddMessages((prev) => [
         ...prev,
         {
