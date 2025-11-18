@@ -47,6 +47,13 @@ Current Context:
 - Total incomplete todos: ${incompleteTodos.length}
 - Current priority items: ${priorityTodos.length}
 
+IMPORTANT CONTEXT ABOUT PRIORITY PANEL:
+- The "Today's Priorities" panel has TWO sections:
+  1. "Actionable" - todos that can be worked on immediately (no blocker children)
+  2. "Blocked Priorities" - important todos that have incomplete Blocker children
+- When you suggest a todo with Blocker children, it will automatically appear in the "Blocked Priorities" section
+- You SHOULD suggest important todos even if they're blocked - users need to see what's important but blocked
+
 When asked about priorities or reprioritization:
 - **ABSOLUTE TOP PRIORITY: OVERDUE ITEMS** - Items with past due dates MUST be prioritized FIRST above everything else
 - **CRITICAL PRIORITY: UPCOMING MEETINGS WITH INCOMPLETE PREP** - If a meeting is scheduled for today or tomorrow and has incomplete child to-dos, those child to-dos are CRITICAL and must be prioritized immediately after overdue items
