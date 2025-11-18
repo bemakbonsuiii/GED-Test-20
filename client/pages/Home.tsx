@@ -2098,7 +2098,7 @@ Return ONLY the todo IDs, no explanation needed.`;
                     <ul className="mt-1 ml-4 space-y-0.5">
                       {todo.agenda.split('\n').filter(item => item.trim()).map((item, idx) => (
                         <li key={idx} className="flex gap-2">
-                          <span className="text-orange-500 dark:text-orange-400 flex-shrink-0">�����</span>
+                          <span className="text-orange-500 dark:text-orange-400 flex-shrink-0">������</span>
                           <span className="flex-1">{item.trim()}</span>
                         </li>
                       ))}
@@ -2985,6 +2985,10 @@ Return ONLY the todo IDs, no explanation needed.`;
                     // Get children of these blockers and add them to priorities
                     const childrenOfBlockers = todos.filter(child => {
                       if (child.completed) return false;
+                      // Filter by workspace
+                      if (workspace !== "everything" && child.workspace !== workspace) return false;
+                      // Filter by project if on a project page
+                      if (selectedProjectPage && child.project !== selectedProjectPage) return false;
                       // Check if this is a child of a blocker that's blocking a priority item
                       return blockersOfPriorities.some(blocker => blocker.id === child.parentId);
                     });
