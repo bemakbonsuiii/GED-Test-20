@@ -3290,7 +3290,13 @@ Return ONLY the todo IDs, no explanation needed.`;
                     <CalendarIcon className="h-4 w-4" />
                     Deadlines
                     {(() => {
-                      const deadlineCount = workspaceTodos.filter(t => !t.completed && t.dueDate && t.type !== "Meeting").length;
+                      // Include ALL todos (parents and children) for deadline count
+                      const allTodos = todos.filter(t => {
+                        if (workspace !== "everything" && t.workspace !== workspace) return false;
+                        if (selectedProjectPage && t.project !== selectedProjectPage) return false;
+                        return true;
+                      });
+                      const deadlineCount = allTodos.filter(t => !t.completed && t.dueDate && t.type !== "Meeting").length;
                       return deadlineCount > 0 ? (
                         <Badge variant="secondary" className="text-xs">
                           {deadlineCount}
