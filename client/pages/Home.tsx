@@ -867,7 +867,7 @@ const Home = () => {
   };
 
   const askTodd = async () => {
-    console.log('askTodd v2024-FIXED - Latest version loaded');
+    console.log("askTodd v2024-FIXED - Latest version loaded");
     if (!toddInput.trim()) return;
 
     const userMessage = toddInput.trim();
@@ -895,7 +895,7 @@ const Home = () => {
 
       // Read response body once and store it
       const responseText = await response.text();
-      console.log('askTodd: Response received, status:', response.status);
+      console.log("askTodd: Response received, status:", response.status);
 
       if (!response.ok) {
         console.error("Todd error response:", responseText);
