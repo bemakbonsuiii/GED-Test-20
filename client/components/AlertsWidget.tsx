@@ -125,6 +125,47 @@ export const AlertsWidget: React.FC<AlertsWidgetProps> = ({ todos, workspace, se
       }
     });
 
+    // Check for upcoming deliverables (today or tomorrow) with incomplete dependencies
+    const upcomingDeliverablesWithDeps = relevantTodos.filter(t => {
+      if (t.completed || t.type !== "Deliverable") return false;
+      if (!t.dueDate) return false;
+      const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+      const dueDate = new Date(dueTime);
+      return isToday(dueDate) || isTomorrow(dueDate);
+    });
+
+    upcomingDeliverablesWithDeps.forEach(deliverable => {
+      const childTodos = relevantTodos.filter(t => t.parentId === deliverable.id && !t.completed);
+      if (childTodos.length > 0) {
+        const dueTime = typeof deliverable.dueDate === 'string' ? new Date(deliverable.dueDate).getTime() : deliverable.dueDate!;
+        const dueDate = new Date(dueTime);
+        const when = isToday(dueDate) ? "today" : "tomorrow";
+        const blockerCount = childTodos.filter(c => c.type === "Blocker").length;
+
+        if (blockerCount > 0) {
+          alerts.push({
+            id: `deliverable-blocked-${deliverable.id}`,
+            type: "meeting-incomplete",
+            priority: 1, // Higher priority for blocked deliverables
+            message: `Deliverable "${deliverable.text}" due ${when} is BLOCKED by ${blockerCount} incomplete blocker${blockerCount !== 1 ? 's' : ''}`,
+            icon: FileWarning,
+            color: "text-red-600 dark:text-red-400",
+            todoId: deliverable.id,
+          });
+        } else {
+          alerts.push({
+            id: `deliverable-deps-${deliverable.id}`,
+            type: "meeting-incomplete",
+            priority: 2,
+            message: `Deliverable "${deliverable.text}" due ${when} has ${childTodos.length} incomplete dependency${childTodos.length !== 1 ? 'ies' : 'y'}`,
+            icon: Target,
+            color: "text-orange-600 dark:text-orange-400",
+            todoId: deliverable.id,
+          });
+        }
+      }
+    });
+
     // Check for imminent deadlines (due today or tomorrow)
     const imminentDeadlines = relevantTodos.filter(t => {
       if (t.completed || t.type === "Meeting") return false;
