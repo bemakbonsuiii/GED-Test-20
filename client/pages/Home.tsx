@@ -877,11 +877,15 @@ const Home = () => {
 PRIORITY ORDER (STRICT):
 1. OVERDUE items MUST be prioritized FIRST above everything else
 2. Items due today
-4. High priority (P0) items
-5. Items due soon
-6. Everything else
+3. High priority (P0) items
+4. Items due soon
+5. Everything else
 
-CRITICAL RULE: NEVER suggest meetings. Meetings cannot be priorities. If a meeting would be a priority, suggest its children instead.
+CRITICAL RULES:
+- NEVER suggest a parent that has uncompleted children. ALWAYS suggest the children instead.
+- Children must be prioritized before their parents.
+- If a todo has incomplete children, it is NOT actionable and should NOT be suggested.
+- Prioritize children over their parents in all cases.
 
 Return ONLY the todo IDs, no explanation needed.`;
 
