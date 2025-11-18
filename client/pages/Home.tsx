@@ -1313,14 +1313,9 @@ Return ONLY the todo IDs, no explanation needed.`;
 
   const getActionableTasksMetrics = () => {
     const now = Date.now();
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const todayEnd = new Date();
-    todayEnd.setHours(23, 59, 59, 999);
 
-    // Denominator: All todos whose start date is in the past or is today
-    // AND who do not have any uncompleted children
-    const actionableTodos = todos.filter(t => {
+    // Helper function to check if a todo is actionable
+    const isActionable = (t: Todo) => {
       // Must be able to start (start date in past or today)
       const canStart = !t.startDate || t.startDate <= now;
       if (!canStart) return false;
@@ -1330,22 +1325,19 @@ Return ONLY the todo IDs, no explanation needed.`;
       if (hasUncompletedChildren) return false;
 
       return true;
-    });
+    };
 
-    // Numerator: Those actionable items that were completed today
-    const completedToday = actionableTodos.filter(t => {
-      if (!t.completed) return false;
-      // Check if completed today (using createdAt as proxy for completion time)
-      // Note: We don't have a completedAt field, so we check if it's currently completed
-      // and was due/relevant today
-      return true; // All completed actionable todos count
-    });
+    // Get all actionable todos (completed and incomplete)
+    const allActionableTodos = todos.filter(isActionable);
 
-    // For incomplete actionable todos
-    const incompleteActionable = actionableTodos.filter(t => !t.completed);
+    // Numerator: Completed actionable todos (completed today, but we don't track completion time)
+    const completedActionable = allActionableTodos.filter(t => t.completed);
+
+    // Denominator: Incomplete actionable todos
+    const incompleteActionable = allActionableTodos.filter(t => !t.completed);
 
     const total = incompleteActionable.length;
-    const completed = completedToday.length;
+    const completed = completedActionable.length;
 
     return {
       actionable: completed,
