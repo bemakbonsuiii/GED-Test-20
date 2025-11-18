@@ -3313,7 +3313,14 @@ Return ONLY the todo IDs, no explanation needed.`;
                 {isDeadlinesExpanded && (
                 <CardContent>
                   {(() => {
-                    const upcomingDeadlines = workspaceTodos
+                    // Include ALL todos (parents and children) for deadlines
+                    const allWorkspaceTodosWithChildren = todos.filter(t => {
+                      if (workspace !== "everything" && t.workspace !== workspace) return false;
+                      if (selectedProjectPage && t.project !== selectedProjectPage) return false;
+                      return true;
+                    });
+
+                    const upcomingDeadlines = allWorkspaceTodosWithChildren
                       .filter(t => !t.completed && t.dueDate && t.type !== "Meeting")
                       .sort((a, b) => {
                         const dateA = new Date(a.dueDate!);
