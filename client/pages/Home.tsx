@@ -667,17 +667,22 @@ const Home = () => {
       const children = prevTodos.filter(t => t.parentId === todoId && !t.completed);
       const hasUncompletedChildren = children.length > 0;
 
-      // If adding to priorities and has uncompleted children, add children instead
+      // If adding to priorities and has uncompleted children, add children first, then parent
       if (newIsPriority && hasUncompletedChildren) {
-        // Add all uncompleted children to priorities
         const priorityTodos = prevTodos.filter(t => t.isPriority);
         let nextOrder = priorityTodos.length;
 
         return prevTodos.map(t => {
+          // Add children first
           const childIndex = children.findIndex(c => c.id === t.id);
           if (childIndex !== -1) {
             const order = nextOrder + childIndex;
             return { ...t, isPriority: true, priorityOrder: order };
+          }
+          // Then add the parent (it will show in "Blocked Priorities")
+          if (t.id === todoId) {
+            const parentOrder = nextOrder + children.length;
+            return { ...t, isPriority: true, priorityOrder: parentOrder };
           }
           return t;
         });
