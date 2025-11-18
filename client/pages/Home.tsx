@@ -989,24 +989,25 @@ Return ONLY the todo IDs, no explanation needed.`;
     // Default to 11:59 PM if due date is set but no time specified for non-Meeting types
     const effectiveDueTime = newTodoType !== "Meeting" && inheritedDueDate && !inheritedDueTime ? "23:59" : inheritedDueTime;
 
-    if (newTodoType === "Meeting" && newTodoDueDate && newTodoMeetingTime) {
+    if (newTodoType === "Meeting" && inheritedDueDate && newTodoMeetingTime) {
       const [hours, minutes] = newTodoMeetingTime.split(":");
-      const dateWithTime = new Date(newTodoDueDate);
+      const dateWithTime = new Date(inheritedDueDate);
       dateWithTime.setHours(parseInt(hours), parseInt(minutes));
       dueDateTime = dateWithTime.getTime();
-    } else if (newTodoType !== "Meeting" && newTodoDueDate && effectiveDueTime) {
+    } else if (newTodoType !== "Meeting" && inheritedDueDate && effectiveDueTime) {
       const [hours, minutes] = effectiveDueTime.split(":");
-      const dateWithTime = new Date(newTodoDueDate);
+      const dateWithTime = new Date(inheritedDueDate);
       dateWithTime.setHours(parseInt(hours), parseInt(minutes));
       dueDateTime = dateWithTime.getTime();
     }
 
     const todoWorkspace = getActualWorkspace();
 
-    // Check if this is a new project that doesn't exist yet
-    if (newTodoProject && newTodoProject.trim()) {
+    // Check if this is a new project that doesn't exist yet (use inherited project for Blockers)
+    const effectiveProject = newTodoType === "Blocker" ? inheritedProject : newTodoProject;
+    if (effectiveProject && effectiveProject.trim()) {
       const existingProject = projects.find(
-        p => p.name === newTodoProject.trim() && p.workspace === todoWorkspace
+        p => p.name === effectiveProject.trim() && p.workspace === todoWorkspace
       );
 
       if (!existingProject) {
@@ -1018,11 +1019,11 @@ Return ONLY the todo IDs, no explanation needed.`;
           createdAt: Date.now(),
           type: newTodoType,
           workspace: todoWorkspace,
-          startDate: newTodoType !== "Meeting" ? startDateTime : undefined,
+          startDate: newTodoType !== "Meeting" && newTodoType !== "Blocker" ? startDateTime : (newTodoType === "Blocker" ? startDateTime : undefined),
           dueDate: dueDateTime,
-          dueTime: newTodoType !== "Meeting" ? (effectiveDueTime || undefined) : undefined,
+          dueTime: newTodoType !== "Meeting" && newTodoType !== "Blocker" ? (effectiveDueTime || undefined) : (newTodoType === "Blocker" ? (effectiveDueTime || undefined) : undefined),
           project: undefined, // Will be set after project creation
-          priority: newTodoPriority,
+          priority: newTodoType === "Blocker" ? inheritedPriority : newTodoPriority,
           agenda: newTodoType === "Meeting" ? newTodoAgenda : undefined,
           meetingTime: newTodoType === "Meeting" ? newTodoMeetingTime : undefined,
           notes: newTodoNotes || undefined,
@@ -1031,7 +1032,7 @@ Return ONLY the todo IDs, no explanation needed.`;
         };
 
         setPendingTodoData(newTodo);
-        setNewProjectName(newTodoProject.trim());
+        setNewProjectName(effectiveProject.trim());
         setNewProjectWorkspace(todoWorkspace);
         setNewProjectDescription("");
         setIsCreateProjectDialogOpen(true);
@@ -1046,11 +1047,11 @@ Return ONLY the todo IDs, no explanation needed.`;
       createdAt: Date.now(),
       type: newTodoType,
       workspace: todoWorkspace,
-      startDate: newTodoType !== "Meeting" ? startDateTime : undefined,
+      startDate: newTodoType !== "Meeting" && newTodoType !== "Blocker" ? startDateTime : (newTodoType === "Blocker" ? startDateTime : undefined),
       dueDate: dueDateTime,
-      dueTime: newTodoType !== "Meeting" ? (effectiveDueTime || undefined) : undefined,
-      project: newTodoProject || undefined,
-      priority: newTodoPriority,
+      dueTime: newTodoType !== "Meeting" && newTodoType !== "Blocker" ? (effectiveDueTime || undefined) : (newTodoType === "Blocker" ? (effectiveDueTime || undefined) : undefined),
+      project: effectiveProject || undefined,
+      priority: newTodoType === "Blocker" ? inheritedPriority : newTodoPriority,
       agenda: newTodoType === "Meeting" ? newTodoAgenda : undefined,
       meetingTime: newTodoType === "Meeting" ? newTodoMeetingTime : undefined,
       notes: newTodoNotes || undefined,
