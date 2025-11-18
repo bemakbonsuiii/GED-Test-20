@@ -1851,6 +1851,24 @@ Return ONLY the todo IDs, no explanation needed.`;
                 </Badge>
               )}
             </div>
+            {todo.parentId && (() => {
+              const parent = todos.find(t => t.id === todo.parentId);
+              if (parent) {
+                return (
+                  <div className="mt-2">
+                    <p className="text-xs font-medium text-blue-700 dark:text-blue-400">Unblocking:</p>
+                    <div
+                      className="flex items-center gap-2 text-xs cursor-pointer hover:underline"
+                      onClick={() => openSummaryDialog(parent)}
+                    >
+                      <Target className="h-3 w-3 text-blue-500" />
+                      <span className="text-blue-600 dark:text-blue-400">{parent.text}</span>
+                    </div>
+                  </div>
+                );
+              }
+              return null;
+            })()}
           </div>
         </div>
       </div>
