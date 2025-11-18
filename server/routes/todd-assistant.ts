@@ -156,7 +156,7 @@ ${upcomingMeetingsWithIncompletePrep.length > 0 ? `\nUPCOMING MEETINGS WITH INCO
   return `  📅 ${isToday ? 'TODAY' : 'TOMORROW'}: "${m.text}" - ${incompletePrepTasks.length} prep task(s) not done: ${incompletePrepTasks.map(t => `"${t.text}"`).join(', ')}`;
 }).join('\n')}\n` : ''}
 Current todos:
-${JSON.stringify(incompleteTodos.slice(0, 50).map(t => {
+${JSON.stringify(incompleteTodos.slice(0, 100).map(t => {
   const canStart = !t.startDate || t.startDate <= now;
   const hasChildren = todos.some(child => child.parentId === t.id && !child.completed);
   const hasBlockerChildren = todos.some(child => child.parentId === t.id && child.type === 'Blocker' && !child.completed);
@@ -232,15 +232,21 @@ User question: ${message}`;
     if (suggestionsMatch) {
       try {
         suggestions = JSON.parse(suggestionsMatch[1]);
+        console.log('AI returned suggestions:', suggestions.length, suggestions);
         cleanResponse = responseText.replace(/SUGGESTIONS:\s*\[.*?\]/s, '').trim();
       } catch (e) {
         console.error("Failed to parse suggestions:", e);
       }
+    } else {
+      console.log('No suggestions found in AI response');
     }
 
-    res.json({ 
+    const filteredSuggestions = suggestions.filter(id => todos.some(t => t.id === id));
+    console.log('Filtered suggestions:', filteredSuggestions.length, filteredSuggestions);
+
+    res.json({
       response: cleanResponse,
-      suggestions: suggestions.filter(id => todos.some(t => t.id === id))
+      suggestions: filteredSuggestions
     });
   } catch (error: any) {
     console.error("Todd assistant error:", error);

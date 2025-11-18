@@ -1029,6 +1029,8 @@ Return ONLY the todo IDs, no explanation needed.`;
 
       const data = JSON.parse(responseText);
 
+      console.log('Auto-prioritize received suggestions:', data.suggestions?.length || 0, data.suggestions);
+
       // Clear existing priorities first
       setTodos(prevTodos =>
         prevTodos.map(t => ({
@@ -1042,6 +1044,7 @@ Return ONLY the todo IDs, no explanation needed.`;
       // If a parent with uncompleted children is suggested, add children first, then the parent
       if (data.suggestions && data.suggestions.length > 0) {
         const topSuggestions = data.suggestions;
+        console.log('Processing', topSuggestions.length, 'suggestions');
         setTodos(prevTodos => {
           const validSuggestions: string[] = [];
 
