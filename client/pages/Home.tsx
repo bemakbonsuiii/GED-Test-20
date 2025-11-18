@@ -783,7 +783,15 @@ const Home = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get Todd response');
+        const errorText = await response.text();
+        console.error('Todd error response:', errorText);
+        let errorData;
+        try {
+          errorData = JSON.parse(errorText);
+        } catch (e) {
+          errorData = { error: `Server error: ${errorText || 'Unknown error'}` };
+        }
+        throw new Error(errorData.error || errorData.details || 'Failed to get Todd response');
       }
 
       const data = await response.json();
@@ -794,9 +802,17 @@ const Home = () => {
       }]);
     } catch (error: any) {
       console.error('Error talking to Todd:', error);
+
+      let errorMessage = 'Sorry, I encountered an error. Please try again.';
+      if (error.message && error.message.includes('rate limit')) {
+        errorMessage = '⏳ I\'ve hit my rate limit. Please wait about 20 seconds and try again.\n\nThe free OpenAI tier limits me to 3 requests per minute.';
+      } else if (error.message) {
+        errorMessage = `Sorry, I encountered an error: ${error.message}`;
+      }
+
       setToddMessages(prev => [...prev, {
         role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again.'
+        content: errorMessage
       }]);
     } finally {
       setToddLoading(false);
@@ -895,7 +911,15 @@ const Home = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get Todd response');
+        const errorText = await response.text();
+        console.error('Todd error response:', errorText);
+        let errorData;
+        try {
+          errorData = JSON.parse(errorText);
+        } catch (e) {
+          errorData = { error: `Server error: ${errorText || 'Unknown error'}` };
+        }
+        throw new Error(errorData.error || errorData.details || 'Failed to get Todd response');
       }
 
       const data = await response.json();
@@ -906,9 +930,17 @@ const Home = () => {
       }]);
     } catch (error: any) {
       console.error('Error talking to Todd:', error);
+
+      let errorMessage = 'Sorry, I encountered an error. Please try again.';
+      if (error.message && error.message.includes('rate limit')) {
+        errorMessage = '⏳ I\'ve hit my rate limit. Please wait about 20 seconds and try again.\n\nThe free OpenAI tier limits me to 3 requests per minute.';
+      } else if (error.message) {
+        errorMessage = `Sorry, I encountered an error: ${error.message}`;
+      }
+
       setToddMessages(prev => [...prev, {
         role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again.'
+        content: errorMessage
       }]);
     } finally {
       setToddLoading(false);
