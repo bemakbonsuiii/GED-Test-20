@@ -1,5 +1,5 @@
-// HOME.TSX VERSION: 2024-01-20-v5-STREAM-FIX
-console.log("✅ Home.tsx LOADED - Version 2024-01-20-v5-STREAM-FIX - autoPrioritize fix applied");
+// HOME.TSX VERSION: 2024-01-20-v6-JSON-DIRECT
+console.log("✅ Home.tsx LOADED - Version v6 - Using response.json() directly");
 
 import React, { useState, useEffect, useRef } from "react";
 import {
@@ -1099,8 +1099,8 @@ const Home = () => {
 
   const autoPrioritize = async () => {
     console.log("========================================");
-    console.log("autoPrioritize FIXED VERSION v5 LOADED");
-    console.log("File timestamp:", new Date().toISOString());
+    console.log("autoPrioritize VERSION v6 - Using response.json()");
+    console.log("Timestamp:", new Date().toISOString());
     console.log("========================================");
     setToddLoading(true);
     // Auto-prioritize todos based on importance
