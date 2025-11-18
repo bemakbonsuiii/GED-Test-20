@@ -244,6 +244,24 @@ User question: ${message}`;
     });
   } catch (error: any) {
     console.error("Todd assistant error:", error);
+
+    // Handle OpenAI rate limit errors
+    if (error.status === 429) {
+      return res.status(429).json({
+        error: "OpenAI rate limit reached. Please wait a moment and try again.",
+        details: error.message,
+        retryAfter: error.headers?.['retry-after'] || 20
+      });
+    }
+
+    // Handle other OpenAI API errors
+    if (error.status) {
+      return res.status(error.status).json({
+        error: `OpenAI API error: ${error.message}`,
+        details: error.message,
+      });
+    }
+
     res.status(500).json({
       error: "Failed to get response from Todd",
       details: error.message,
