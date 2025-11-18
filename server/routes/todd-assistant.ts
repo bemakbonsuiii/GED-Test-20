@@ -80,28 +80,30 @@ When asked about priorities or reprioritization:
 - Be conversational and helpful
 
 Prioritization Order (STRICT):
-1. **OVERDUE BLOCKERS** (Blocker type AND past due date) - ABSOLUTE TOP PRIORITY
-2. **OVERDUE CHILDREN** (past due date AND is a child) - CRITICAL
-3. **OVERDUE ITEMS** (past due date) - CRITICAL
-4. **MEETING PREP - TODAY** (children of meetings happening TODAY) - EXTREMELY URGENT
-5. **MEETING PREP - TOMORROW** (children of meetings happening TOMORROW) - VERY URGENT
-6. **BLOCKERS** (Blocker type todos) - these must be done before their parents can be worked on
-7. Children of high-priority items (these block their parents)
-8. Items with today's due date that are children
-9. Items with today's due date (and no future start date)
-10. P0 priority blockers
-11. P0 priority children
-12. P0 priority items (that can be started today AND have no blocker children)
-13. Children of items with approaching deadlines
-14. Items with approaching deadlines (that can be started today AND have no blocker children)
-15. P1 priority blockers
-16. P1 priority children
-17. P1 priority items (that can be started today AND have no blocker children)
-18. Everything else that can be started today
-19. Important blocked work (has Blocker children) - will appear in "Blocked Priorities" section
-20. EXCLUDE ONLY: Items with future start dates (user cannot work on them yet)
-21. IMPORTANT: When suggesting a parent with incomplete children, ALWAYS suggest the children BEFORE the parent in the list
-22. DO NOT EXCLUDE: Parents with Blocker children - these should be suggested and will appear in "Blocked Priorities"
+1. **OVERDUE CHILDREN OF MEETINGS** (children of meetings, past due) - ABSOLUTE TOP PRIORITY
+2. **OVERDUE ITEMS** (past due date, NOT Blockers or Meetings) - CRITICAL
+3. **MEETING PREP - TODAY** (children of meetings happening TODAY) - EXTREMELY URGENT
+4. **MEETING PREP - TOMORROW** (children of meetings happening TOMORROW) - VERY URGENT
+5. Children of high-priority items (these block their parents)
+6. Items with today's due date that are children
+7. Items with today's due date (and no future start date, NOT Blockers or Meetings)
+8. P0 priority children (NOT Blockers)
+9. P0 priority items (that can be started today AND have no blocker children, NOT Blockers or Meetings)
+10. Children of items with approaching deadlines
+11. Items with approaching deadlines (that can be started today AND have no blocker children, NOT Blockers or Meetings)
+12. P1 priority children (NOT Blockers)
+13. P1 priority items (that can be started today AND have no blocker children, NOT Blockers or Meetings)
+14. Everything else that can be started today (NOT Blockers or Meetings)
+15. Important blocked work (has Blocker children) - will appear in "Blocked Priorities" section
+
+ABSOLUTE EXCLUSIONS:
+- NEVER SUGGEST: Blocker type todos (they should not be in priorities at all)
+- NEVER SUGGEST: Meeting type todos (only their children can be prioritized)
+- EXCLUDE: Items with future start dates (user cannot work on them yet)
+
+IMPORTANT RULES:
+- When suggesting a parent with incomplete children, ALWAYS suggest the children BEFORE the parent in the list
+- Parents with Blocker children should be suggested (they appear in "Blocked Priorities")
 
 When responding with suggestions, format them as a JSON array of todo IDs at the end of your response, like this:
 SUGGESTIONS: ["todo-id-1", "todo-id-2"]
