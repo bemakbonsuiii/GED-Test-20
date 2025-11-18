@@ -2520,7 +2520,8 @@ Return ONLY the todo IDs, no explanation needed.`;
                       setCachedAlertsTodos([...todos]);
                       setLastAlertsUpdate(Date.now());
                     }}
-                    className="text-sm"
+                    className="text-sm relative"
+                    title={`Last updated: ${new Date(lastAlertsUpdate).toLocaleTimeString()}`}
                   >
                     <AlertTriangle className="h-4 w-4 mr-1" />
                     Update Alerts
