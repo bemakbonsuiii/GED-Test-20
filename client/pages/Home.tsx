@@ -914,40 +914,38 @@ Return ONLY the todo IDs, no explanation needed.`;
         }))
       );
 
-      // Add suggested todos to priorities, but never add parents with uncompleted children - add their children instead
+      // Add suggested todos to priorities
+      // If a parent with uncompleted children is suggested, add children first, then the parent
       if (data.suggestions && data.suggestions.length > 0) {
-        const topSuggestions = data.suggestions.slice(0, 5);
+        const topSuggestions = data.suggestions;
         setTodos(prevTodos => {
           const validSuggestions: string[] = [];
 
-          // Replace parents with uncompleted children with those children
+          // Process each suggestion
           for (const todoId of topSuggestions) {
             const todo = prevTodos.find(t => t.id === todoId);
             if (!todo) continue;
 
             // Check if this todo has uncompleted children
-            const hasUncompletedChildren = prevTodos.some(t => t.parentId === todoId && !t.completed);
+            const children = prevTodos.filter(t => t.parentId === todoId && !t.completed);
+            const hasUncompletedChildren = children.length > 0;
 
             if (hasUncompletedChildren) {
-              // Always add children instead of the parent
-              const children = prevTodos.filter(t => t.parentId === todoId && !t.completed);
+              // Add children first
               children.forEach(child => {
                 if (!validSuggestions.includes(child.id)) {
                   validSuggestions.push(child.id);
                 }
               });
-              continue;
-            }
-
-            // Only add this todo if it's not already someone's child in the suggestions
-            // This prevents adding a parent when its child is already prioritized
-            const isChildOfPrioritizedParent = todo.parentId && validSuggestions.some(suggId => {
-              const suggTodo = prevTodos.find(t => t.id === suggId);
-              return suggTodo && prevTodos.some(t => t.parentId === suggId && t.id === todo.id);
-            });
-
-            if (!isChildOfPrioritizedParent) {
-              validSuggestions.push(todoId);
+              // Then add the parent (Todd can suggest it, but children must come first)
+              if (!validSuggestions.includes(todoId)) {
+                validSuggestions.push(todoId);
+              }
+            } else {
+              // No children, just add the todo
+              if (!validSuggestions.includes(todoId)) {
+                validSuggestions.push(todoId);
+              }
             }
           }
 
