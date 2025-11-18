@@ -1212,16 +1212,36 @@ Return ONLY the todo IDs, no explanation needed.`;
 
       if (!response.ok) {
         let errorData: any = { error: "Unknown error" };
+        let errorText = "";
+
         try {
-          errorData = await response.json();
+          // Clone response to avoid body stream issues
+          const responseClone = response.clone();
+          errorData = await responseClone.json();
         } catch (e) {
-          console.error("Could not parse error response:", e);
+          // If JSON parsing fails, try reading as text from original
+          try {
+            errorText = await response.text();
+            console.error("Error response text:", errorText);
+            errorData = { error: errorText || "Unknown error" };
+          } catch (textErr) {
+            console.error("Could not read error response at all:", textErr);
+          }
         }
 
         console.error(
           "Auto-prioritize error (status " + response.status + "):",
           errorData,
         );
+
+        // Handle authentication errors (401)
+        if (response.status === 401) {
+          throw new Error(
+            "🔑 Invalid OpenAI API key.\\n\\n" +
+            "Please verify your API key at: https://platform.openai.com/api-keys\\n" +
+            "Then update it in Settings → Environment Variables"
+          );
+        }
 
         // Handle rate limit errors with clear message
         if (response.status === 429) {
