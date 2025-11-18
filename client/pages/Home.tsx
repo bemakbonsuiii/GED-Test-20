@@ -1051,15 +1051,20 @@ Return ONLY the todo IDs, no explanation needed.`;
           // Process each suggestion
           for (const todoId of topSuggestions) {
             const todo = prevTodos.find(t => t.id === todoId);
-            if (!todo) continue;
+            if (!todo) {
+              console.log('Suggestion skipped - todo not found:', todoId);
+              continue;
+            }
 
             // Skip Blockers and Meetings entirely - they should never be in priorities
             if (todo.type === 'Blocker' || todo.type === 'Meeting') {
+              console.log('Suggestion is Blocker/Meeting, adding children instead:', todo.text, todo.type);
               // But add their children if they have any
               const children = prevTodos.filter(t => t.parentId === todoId && !t.completed);
               children.forEach(child => {
                 if (!validSuggestions.includes(child.id) && child.type !== 'Blocker') {
                   validSuggestions.push(child.id);
+                  console.log('  Added child:', child.text);
                 }
               });
               continue;
@@ -1087,6 +1092,8 @@ Return ONLY the todo IDs, no explanation needed.`;
               }
             }
           }
+
+          console.log('Final valid suggestions:', validSuggestions.length, validSuggestions);
 
           return prevTodos.map(t => {
             const suggestionIndex = validSuggestions.indexOf(t.id);
