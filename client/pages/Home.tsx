@@ -82,7 +82,7 @@ import { AlertsWidget } from "../components/AlertsWidget";
 import { SmartSuggestionsWidget } from "../components/SmartSuggestionsWidget";
 import { loadTestData } from "../utils/loadTestData";
 
-type TodoType = "Task" | "Deliverable" | "Quick Win" | "Meeting";
+type TodoType = "Task" | "Deliverable" | "Quick Win" | "Meeting" | "Blocker";
 type WorkspaceType = "personal" | "work" | "creative";
 type Workspace = WorkspaceType | "everything";
 type Priority = "P0" | "P1" | "P2";
@@ -170,6 +170,16 @@ const TODO_TYPE_CONFIG: Record<
     borderDark: "dark:border-l-orange-500",
     textLight: "text-orange-700",
     textDark: "dark:text-orange-300"
+  },
+  Blocker: {
+    icon: AlertTriangle,
+    color: "bg-red-500",
+    bgLight: "bg-red-50",
+    bgDark: "dark:bg-red-950/30",
+    borderLight: "border-l-red-500",
+    borderDark: "dark:border-l-red-500",
+    textLight: "text-red-700",
+    textDark: "dark:text-red-300"
   },
 };
 
