@@ -1,4 +1,4 @@
-type TodoType = "Task" | "Deliverable" | "Quick Win" | "Meeting";
+type TodoType = "Task" | "Deliverable" | "Quick Win" | "Meeting" | "Blocker";
 type WorkspaceType = "personal" | "work" | "creative";
 type Priority = "P0" | "P1" | "P2";
 
