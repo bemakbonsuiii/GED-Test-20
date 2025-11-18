@@ -196,15 +196,30 @@ export const AlertsWidget: React.FC<AlertsWidgetProps> = ({ todos, workspace, se
       const incompleteChildren = relevantTodos.filter(child =>
         child.parentId === todo.id && !child.completed
       );
-      alerts.push({
-        id: `blocked-${todo.id}`,
-        type: "blocked-priority",
-        priority: 2,
-        message: `High-priority "${todo.text}" is blocked by ${incompleteChildren.length} incomplete subtask${incompleteChildren.length !== 1 ? 's' : ''}`,
-        icon: AlertTriangle,
-        color: "text-orange-600 dark:text-orange-400",
-        todoId: todo.id,
-      });
+      const blockerChildren = incompleteChildren.filter(c => c.type === "Blocker");
+      const hasBlockers = blockerChildren.length > 0;
+
+      if (hasBlockers) {
+        alerts.push({
+          id: `blocked-${todo.id}`,
+          type: "high-priority-blocked",
+          priority: 1, // Higher priority for blocker-blocked items
+          message: `High-priority "${todo.text}" is BLOCKED by ${blockerChildren.length} incomplete blocker${blockerChildren.length !== 1 ? 's' : ''}`,
+          icon: FileWarning,
+          color: "text-red-600 dark:text-red-400",
+          todoId: todo.id,
+        });
+      } else {
+        alerts.push({
+          id: `blocked-${todo.id}`,
+          type: "blocked-priority",
+          priority: 2,
+          message: `High-priority "${todo.text}" is blocked by ${incompleteChildren.length} incomplete subtask${incompleteChildren.length !== 1 ? 's' : ''}`,
+          icon: AlertTriangle,
+          color: "text-orange-600 dark:text-orange-400",
+          todoId: todo.id,
+        });
+      }
     });
 
     // Check for workload overload (too many tasks due today)
