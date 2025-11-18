@@ -2501,6 +2501,20 @@ Return ONLY the todo IDs, no explanation needed.`;
                   <Briefcase className="h-4 w-4 mr-1" />
                   New Project
                 </Button>
+                {!autoAlerts && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setCachedAlertsTodos([...todos]);
+                      setLastAlertsUpdate(Date.now());
+                    }}
+                    className="text-sm"
+                  >
+                    <AlertTriangle className="h-4 w-4 mr-1" />
+                    Update Alerts
+                  </Button>
+                )}
                 <Button
                   variant="ghost"
                   size="sm"
