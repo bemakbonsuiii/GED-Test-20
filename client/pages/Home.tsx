@@ -3339,24 +3339,29 @@ Return ONLY the todo IDs, no explanation needed.`;
                           const isToday = daysUntil === 0;
 
                           // Check for incomplete dependencies
+                          const hasUncompletedChildren = workspaceTodos.some(t => t.parentId === todo.id && !t.completed);
                           const incompleteDeps = workspaceTodos.filter(t => t.parentId === todo.id && !t.completed);
-                          const hasBlockers = incompleteDeps.some(t => t.type === 'Blocker');
 
                           return (
                             <div
                               key={todo.id}
-                              className={`flex-shrink-0 flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-800 transition-all min-w-[300px] bg-white dark:bg-slate-900 border-l-4 ${typeConfig.borderLight} ${typeConfig.borderDark} hover:shadow-md`}
+                              className={`flex-shrink-0 flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-800 transition-all min-w-[300px] bg-white dark:bg-slate-900 border-l-4 ${typeConfig.borderLight} ${typeConfig.borderDark} hover:shadow-md ${hasUncompletedChildren ? 'ring-2 ring-amber-500 dark:ring-amber-400' : ''}`}
                             >
                               <Checkbox
                                 checked={todo.completed}
                                 onCheckedChange={() => toggleTodo(todo.id)}
                               />
                               <div className="flex-1 min-w-0">
-                                <div
-                                  className="font-medium text-sm break-words cursor-pointer hover:underline"
-                                  onClick={() => openSummaryDialog(todo)}
-                                >
-                                  {todo.text}
+                                <div className="flex items-start gap-2">
+                                  <div
+                                    className="font-medium text-sm break-words cursor-pointer hover:underline flex-1"
+                                    onClick={() => openSummaryDialog(todo)}
+                                  >
+                                    {todo.text}
+                                  </div>
+                                  {hasUncompletedChildren && (
+                                    <AlertTriangle className="h-4 w-4 text-amber-500 dark:text-amber-400 flex-shrink-0" title="Has uncompleted children" />
+                                  )}
                                 </div>
                                 <div className="flex items-center gap-2 mt-1 flex-wrap">
                                   <Badge variant="outline" className="text-xs gap-1">
@@ -3381,16 +3386,9 @@ Return ONLY the todo IDs, no explanation needed.`;
                                   <Badge variant="outline" className="text-xs">
                                     {todo.priority}
                                   </Badge>
-                                  {incompleteDeps.length > 0 && hasBlockers && (
-                                    <Badge variant="destructive" className="text-xs gap-1">
-                                      <FileWarning className="h-3 w-3" />
-                                      {incompleteDeps.filter(t => t.type === 'Blocker').length} Blocker{incompleteDeps.filter(t => t.type === 'Blocker').length !== 1 ? 's' : ''}
-                                    </Badge>
-                                  )}
-                                  {incompleteDeps.length > 0 && !hasBlockers && (
-                                    <Badge variant="outline" className="text-xs gap-1 text-orange-600 border-orange-300">
-                                      <AlertTriangle className="h-3 w-3" />
-                                      {incompleteDeps.length} Dep{incompleteDeps.length !== 1 ? 's' : ''}
+                                  {hasUncompletedChildren && (
+                                    <Badge variant="outline" className="text-xs gap-1 border-amber-500 text-amber-600 dark:text-amber-400">
+                                      {incompleteDeps.length} pending
                                     </Badge>
                                   )}
                                 </div>
