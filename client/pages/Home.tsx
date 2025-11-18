@@ -952,9 +952,9 @@ const Home = () => {
   };
 
   const autoPrioritize = async () => {
-    console.log('autoPrioritize v2024-11-18-003 - response body read fix active');
+    console.log('autoPrioritize v2024-11-18-004 - FIXED VERSION LOADED');
     setToddLoading(true);
-    // Auto-prioritize todos based on importance [VERSION: 2024-11-18-003]
+    // Auto-prioritize todos based on importance [VERSION: 2024-11-18-004-FINAL]
     try {
       // Get all todos from the current workspace (not filtered by project/type)
       const currentWorkspaceTodos = workspace === "everything"
