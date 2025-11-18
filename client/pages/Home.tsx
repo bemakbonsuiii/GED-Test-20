@@ -42,6 +42,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   Trash2,
   Plus,
   X,
@@ -65,6 +73,7 @@ import {
   AlertTriangle,
   Lightbulb,
   ExternalLink,
+  Settings,
 } from "lucide-react";
 import { format, isPast, isToday, isTomorrow, differenceInDays } from "date-fns";
 import { MetricsWidget } from "../components/MetricsWidget";
@@ -2333,20 +2342,32 @@ Return ONLY the todo IDs, no explanation needed.`;
                   </div>
                 </div>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  if (confirm("Load 30 test todos? This will replace existing data.")) {
-                    const { todos: testTodos, projects: testProjects } = loadTestData();
-                    setTodos(testTodos);
-                    setProjects(testProjects);
-                  }
-                }}
-                className="text-xs"
-              >
-                Load Test Data
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-9 w-9"
+                  >
+                    <Settings className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>Settings</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => {
+                      if (confirm("Load 30 test todos? This will replace existing data.")) {
+                        const { todos: testTodos, projects: testProjects } = loadTestData();
+                        setTodos(testTodos);
+                        setProjects(testProjects);
+                      }
+                    }}
+                  >
+                    Load Test Data
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <Button
                 variant="ghost"
                 size="icon"
