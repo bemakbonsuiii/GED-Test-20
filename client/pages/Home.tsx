@@ -1603,6 +1603,8 @@ Return ONLY the todo IDs, no explanation needed.`;
     // Actionable tasks for this workspace
     const actionableTasks = wsTodos.filter(t => {
       if (t.completed) return false;
+      const hasBlockerChild = todos.some(child => child.parentId === t.id && child.type === 'Blocker' && !child.completed);
+      if (hasBlockerChild) return false;
       return !t.startDate || t.startDate <= now;
     });
 
