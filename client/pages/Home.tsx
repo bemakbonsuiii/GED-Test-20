@@ -1045,7 +1045,13 @@ Return ONLY the todo IDs, no explanation needed.`;
       }
     } catch (error: any) {
       console.error('Error auto-prioritizing:', error);
-      alert(`Failed to auto-prioritize: ${error.message || 'Please try again.'}`);
+
+      // Check if it's a rate limit error
+      if (error.message && error.message.includes('rate limit')) {
+        alert('⏳ OpenAI rate limit reached. Please wait about 20 seconds and try again.\n\nTip: The free tier has a limit of 3 requests per minute.');
+      } else {
+        alert(`Failed to auto-prioritize: ${error.message || 'Please try again.'}`);
+      }
     } finally {
       setToddLoading(false);
     }
