@@ -664,6 +664,28 @@ const Home = () => {
 
       const newIsPriority = !todo.isPriority;
 
+      // Meetings and Blockers can never be priorities - add their children instead
+      if (newIsPriority && (todo.type === 'Meeting' || todo.type === 'Blocker')) {
+        const children = prevTodos.filter(t => t.parentId === todoId && !t.completed);
+        if (children.length > 0) {
+          // Add all uncompleted children (except Blockers) to priorities
+          const priorityTodos = prevTodos.filter(t => t.isPriority);
+          let nextOrder = priorityTodos.length;
+
+          return prevTodos.map(t => {
+            const childIndex = children.findIndex(c => c.id === t.id);
+            if (childIndex !== -1 && t.type !== 'Blocker') {
+              const order = nextOrder + childIndex;
+              return { ...t, isPriority: true, priorityOrder: order };
+            }
+            return t;
+          });
+        } else {
+          alert(`${todo.type}s cannot be prioritized directly. Please add children to prioritize instead.`);
+          return prevTodos;
+        }
+      }
+
       // Check if this todo has uncompleted children
       const children = prevTodos.filter(t => t.parentId === todoId && !t.completed);
       const hasUncompletedChildren = children.length > 0;
@@ -674,15 +696,16 @@ const Home = () => {
         let nextOrder = priorityTodos.length;
 
         return prevTodos.map(t => {
-          // Add children first
+          // Add children first (except Blockers)
           const childIndex = children.findIndex(c => c.id === t.id);
-          if (childIndex !== -1) {
+          if (childIndex !== -1 && t.type !== 'Blocker') {
             const order = nextOrder + childIndex;
             return { ...t, isPriority: true, priorityOrder: order };
           }
-          // Then add the parent (it will show in "Blocked Priorities")
+          // Then add the parent (it will show in "Blocked Priorities" if it has blockers)
           if (t.id === todoId) {
-            const parentOrder = nextOrder + children.length;
+            const nonBlockerChildren = children.filter(c => c.type !== 'Blocker');
+            const parentOrder = nextOrder + nonBlockerChildren.length;
             return { ...t, isPriority: true, priorityOrder: parentOrder };
           }
           return t;
