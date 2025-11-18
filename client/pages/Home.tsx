@@ -1366,7 +1366,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
           );
 
           return prevTodos.map((t) => {
-            const suggestionIndex = validSuggestions.indexOf(t.id);
+            const suggestionIndex = limitedSuggestions.indexOf(t.id);
             if (suggestionIndex !== -1) {
               return {
                 ...t,
