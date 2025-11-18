@@ -2865,6 +2865,8 @@ Return ONLY the todo IDs, no explanation needed.`;
                     const priorityTodos = todos
                       .filter(t => {
                         if (!t.isPriority || t.completed) return false;
+                        // Never show Meetings or Blockers in priorities panel
+                        if (t.type === 'Meeting' || t.type === 'Blocker') return false;
                         // Filter by workspace
                         if (workspace !== "everything" && t.workspace !== workspace) return false;
                         // Filter by project if on a project page
