@@ -2356,6 +2356,14 @@ Return ONLY the todo IDs, no explanation needed.`;
                   <DropdownMenuLabel>Settings</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
+                    onClick={() => setDarkMode(!darkMode)}
+                  >
+                    <div className="flex items-center gap-2">
+                      {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                      <span>{darkMode ? "Light Mode" : "Dark Mode"}</span>
+                    </div>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
                     onClick={() => {
                       if (confirm("Load 30 test todos? This will replace existing data.")) {
                         const { todos: testTodos, projects: testProjects } = loadTestData();
@@ -2368,14 +2376,6 @@ Return ONLY the todo IDs, no explanation needed.`;
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setDarkMode(!darkMode)}
-                className="h-9 w-9"
-              >
-                {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-              </Button>
             </div>
           </div>
         </div>
