@@ -2614,6 +2614,23 @@ Return ONLY the todo IDs, no explanation needed.`;
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
+                      const newValue = !autoAlerts;
+                      setAutoAlerts(newValue);
+                      localStorage.setItem('autoAlerts', JSON.stringify(newValue));
+                      if (newValue) {
+                        // When switching to auto alerts, update cache immediately
+                        setCachedAlertsTodos([...todos]);
+                        setLastAlertsUpdate(Date.now());
+                      }
+                    }}
+                  >
+                    <div className="flex items-center gap-2">
+                      <AlertTriangle className="h-4 w-4" />
+                      <span>{autoAlerts ? "Manual Alerts" : "Auto Alerts"}</span>
+                    </div>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
                       if (confirm("Load 30 test todos? This will replace existing data.")) {
                         const { todos: testTodos, projects: testProjects } = loadTestData();
                         setTodos(testTodos);
