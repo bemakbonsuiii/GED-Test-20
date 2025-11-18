@@ -1301,6 +1301,7 @@ Return ONLY the todo IDs, no explanation needed.`;
     let inheritedDueTime = newTodoDueTime;
     let inheritedProject = newTodoProject;
     let inheritedPriority = newTodoPriority;
+    let inheritedLinks = newTodoLinks;
 
     if (newTodoType === "Blocker" && newTodoParentId) {
       const parent = todos.find((t) => t.id === newTodoParentId);
@@ -1314,6 +1315,7 @@ Return ONLY the todo IDs, no explanation needed.`;
         inheritedDueTime = parent.dueTime || "";
         inheritedProject = parent.project || "";
         inheritedPriority = parent.priority;
+        inheritedLinks = parent.links || "";
       }
     }
 
