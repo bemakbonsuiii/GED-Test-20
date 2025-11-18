@@ -274,6 +274,47 @@ export function MetricsWidget({
             })()}
           </p>
         </div>
+
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Target className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+              <span className="text-sm font-medium">Total To-dos</span>
+            </div>
+            <span className="text-sm text-muted-foreground">
+              {(() => {
+                const typeMetrics = getTodosByType(projectTodos);
+                return typeMetrics.total;
+              })()}
+            </span>
+          </div>
+          <div className="relative h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+            <div className="flex h-full">
+              {(() => {
+                const typeMetrics = getTodosByType(projectTodos);
+                return typeMetrics.types.map((typeData, index) => (
+                  typeData.count > 0 && (
+                    <div
+                      key={index}
+                      className={`h-full bg-gradient-to-r ${typeData.color} transition-all duration-500`}
+                      style={{ width: `${typeMetrics.total > 0 ? (typeData.count / typeMetrics.total) * 100 : 0}%` }}
+                      title={`${typeData.count} ${typeData.type}`}
+                    />
+                  )
+                ));
+              })()}
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            {(() => {
+              const typeMetrics = getTodosByType(projectTodos);
+              return typeMetrics.types
+                .filter(t => t.count > 0)
+                .map(t => `${t.count} ${t.type}${t.count !== 1 ? 's' : ''}`)
+                .join(' • ');
+            })()}
+          </p>
+        </div>
       </>
     );
   };
