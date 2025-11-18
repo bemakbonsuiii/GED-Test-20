@@ -880,9 +880,9 @@ PRIORITY ORDER (STRICT):
 5. Everything else
 
 CRITICAL RULES:
-- NEVER suggest a parent that has uncompleted children. ALWAYS suggest the children instead.
-- Children must be prioritized before their parents.
-- If a todo has incomplete children, it is NOT actionable and should NOT be suggested.
+- You CAN suggest a parent that has uncompleted children, BUT you MUST suggest the children BEFORE the parent in the list.
+- Children must always be prioritized before their parents.
+- If suggesting a parent with children, include the children first, then the parent.
 - Prioritize children over their parents in all cases.
 
 Return ONLY the todo IDs, no explanation needed.`;
