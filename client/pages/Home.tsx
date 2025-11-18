@@ -953,7 +953,7 @@ const Home = () => {
 
   const autoPrioritize = async () => {
     setToddLoading(true);
-    // Auto-prioritize todos based on importance
+    // Auto-prioritize todos based on importance [v2024-11-18]
     try {
       // Get all todos from the current workspace (not filtered by project/type)
       const currentWorkspaceTodos = workspace === "everything"
