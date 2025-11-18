@@ -92,14 +92,18 @@ export function MetricsWidget({
 
   const getActionableTasksMetrics = (filteredTodos: Todo[]) => {
     const now = Date.now();
-    // Actionable tasks are those that can be started now (no start date or start date has passed)
+    // Actionable tasks are those that can be started now (no start date or start date has passed) AND are not blocked
     const actionableCompleted = filteredTodos.filter(t => {
       if (!t.completed) return false;
+      const hasUncompletedChildren = todos.some(child => child.parentId === t.id && !child.completed);
+      if (hasUncompletedChildren) return false; // Exclude blocked todos
       return !t.startDate || t.startDate <= now;
     });
 
     const actionableIncomplete = filteredTodos.filter(t => {
       if (t.completed) return false;
+      const hasUncompletedChildren = todos.some(child => child.parentId === t.id && !child.completed);
+      if (hasUncompletedChildren) return false; // Exclude blocked todos
       return !t.startDate || t.startDate <= now;
     });
 
