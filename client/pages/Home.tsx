@@ -896,18 +896,17 @@ const Home = () => {
         }),
       });
 
-      // Read response body once and store it
-      const responseText = await response.text();
       console.log("askTodd: Response received, status:", response.status);
 
       if (!response.ok) {
-        console.error("Todd error response:", responseText);
+        const errorText = await response.text();
+        console.error("Todd error response:", errorText);
         let errorData;
         try {
-          errorData = JSON.parse(responseText);
+          errorData = JSON.parse(errorText);
         } catch (e) {
           errorData = {
-            error: `Server error: ${responseText || "Unknown error"}`,
+            error: `Server error: ${errorText || "Unknown error"}`,
           };
         }
         throw new Error(
@@ -915,7 +914,7 @@ const Home = () => {
         );
       }
 
-      const data = JSON.parse(responseText);
+      const data = await response.json();
       setToddMessages((prev) => [
         ...prev,
         {
@@ -1050,17 +1049,15 @@ const Home = () => {
         }),
       });
 
-      // Parse response body once
-      const responseText = await response.text();
-
       if (!response.ok) {
-        console.error("Todd error response:", responseText);
+        const errorText = await response.text();
+        console.error("Todd error response:", errorText);
         let errorData;
         try {
-          errorData = JSON.parse(responseText);
+          errorData = JSON.parse(errorText);
         } catch (e) {
           errorData = {
-            error: `Server error: ${responseText || "Unknown error"}`,
+            error: `Server error: ${errorText || "Unknown error"}`,
           };
         }
         throw new Error(
@@ -1068,7 +1065,7 @@ const Home = () => {
         );
       }
 
-      const data = JSON.parse(responseText);
+      const data = await response.json();
       setToddMessages((prev) => [
         ...prev,
         {
@@ -1155,17 +1152,15 @@ Return ONLY the todo IDs, no explanation needed.`;
         }),
       });
 
-      // Parse response body once
-      const responseText = await response.text();
-
       if (!response.ok) {
-        console.error("Auto-prioritize error response:", responseText);
+        const errorText = await response.text();
+        console.error("Auto-prioritize error response:", errorText);
         let errorData;
         try {
-          errorData = JSON.parse(responseText);
+          errorData = JSON.parse(errorText);
         } catch (e) {
           errorData = {
-            error: `Server error: ${responseText || "Unknown error"}`,
+            error: `Server error: ${errorText || "Unknown error"}`,
           };
         }
         throw new Error(
@@ -1173,7 +1168,7 @@ Return ONLY the todo IDs, no explanation needed.`;
         );
       }
 
-      const data = JSON.parse(responseText);
+      const data = await response.json();
 
       console.log(
         "Auto-prioritize received suggestions:",
