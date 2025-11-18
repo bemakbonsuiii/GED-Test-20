@@ -1,5 +1,5 @@
-// HOME.TSX VERSION: 2024-01-20-v6-JSON-DIRECT
-console.log("✅ Home.tsx LOADED - Version v6 - Using response.json() directly");
+// HOME.TSX VERSION: 2024-01-20-v7-CLONE-FIX
+console.log("✅ Home.tsx LOADED - Version v7 - Using response.clone() to prevent stream errors");
 
 import React, { useState, useEffect, useRef } from "react";
 import {
@@ -1127,7 +1127,7 @@ const Home = () => {
 
   const autoPrioritize = async () => {
     console.log("========================================");
-    console.log("autoPrioritize VERSION v6 - Using response.json()");
+    console.log("autoPrioritize VERSION v7 - Clone fix");
     console.log("Timestamp:", new Date().toISOString());
     console.log("========================================");
     setToddLoading(true);
