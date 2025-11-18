@@ -8,7 +8,7 @@ const openai = new OpenAI({
 interface Todo {
   id: string;
   text: string;
-  type: "Task" | "Deliverable" | "Quick Win" | "Meeting";
+  type: "Task" | "Deliverable" | "Quick Win" | "Meeting" | "Blocker";
   priority: string;
   completed: boolean;
   startDate?: number;
@@ -51,10 +51,14 @@ When asked about priorities or reprioritization:
 - **ABSOLUTE TOP PRIORITY: OVERDUE ITEMS** - Items with past due dates MUST be prioritized FIRST above everything else
 - **CRITICAL PRIORITY: UPCOMING MEETINGS WITH INCOMPLETE PREP** - If a meeting is scheduled for today or tomorrow and has incomplete child to-dos, those child to-dos are CRITICAL and must be prioritized immediately after overdue items
 - **DEPRIORITIZE items with future start dates** - If an item has a startDate that hasn't arrived yet, the user CANNOT take action on it, so it should NOT be prioritized
-- **UNDERSTAND PARENT-CHILD RELATIONSHIPS** - Children must be completed before their parent can be completed
+- **UNDERSTAND PARENT-CHILD RELATIONSHIPS & BLOCKERS** - Children must be completed before their parent can be completed
   - If a to-do has children (hasChildren: true), those children are BLOCKERS for the parent
+  - **BLOCKER TYPE**: Blockers are a special type of child to-do that MUST be completed before the parent can be worked on
+  - If a to-do has incomplete BLOCKER children, the parent is NOT ACTIONABLE and CANNOT be prioritized
+  - ALWAYS prioritize BLOCKER children over their parents - blockers make parents non-actionable
+  - Blockers can have their own actionable children (to break down the blocking work)
   - PRIORITIZE CHILDREN over their parents - the parent cannot be completed until all children are done
-  - When prioritizing, always suggest children before suggesting their parent
+  - When prioritizing, always suggest blocker children before suggesting their parent
   - **SPECIAL CASE**: If a parent is a MEETING scheduled for TODAY or TOMORROW, its children are EXTREMELY URGENT (meeting prep tasks)
 - Consider due dates and time sensitivity
 - Consider priority levels (P0 > P1 > P2)
@@ -63,22 +67,26 @@ When asked about priorities or reprioritization:
 - Be conversational and helpful
 
 Prioritization Order (STRICT):
-1. **OVERDUE CHILDREN** (past due date AND is a child) - ABSOLUTE TOP PRIORITY
-2. **OVERDUE ITEMS** (past due date) - CRITICAL
-3. **MEETING PREP - TODAY** (children of meetings happening TODAY) - EXTREMELY URGENT
-4. **MEETING PREP - TOMORROW** (children of meetings happening TOMORROW) - VERY URGENT
-5. Children of high-priority items (these block their parents)
-6. Items with today's due date that are children
+1. **OVERDUE BLOCKERS** (Blocker type AND past due date) - ABSOLUTE TOP PRIORITY
+2. **OVERDUE CHILDREN** (past due date AND is a child) - CRITICAL
+3. **OVERDUE ITEMS** (past due date) - CRITICAL
+4. **MEETING PREP - TODAY** (children of meetings happening TODAY) - EXTREMELY URGENT
+5. **MEETING PREP - TOMORROW** (children of meetings happening TOMORROW) - VERY URGENT
+6. **BLOCKERS** (Blocker type todos) - these must be done before their parents can be worked on
+7. Children of high-priority items (these block their parents)
+8. Items with today's due date that are children
 9. Items with today's due date (and no future start date)
-10. P0 priority children (blockers)
-11. P0 priority items (that can be started today)
-12. Children of items with approaching deadlines
-13. Items with approaching deadlines (that can be started today)
-14. P1 priority children
-15. P1 priority items (that can be started today)
-16. Everything else that can be started today
-17. EXCLUDE: Items with future start dates (user cannot work on them yet)
-18. DEPRIORITIZE: Parent items when they have incomplete children (parent is blocked), UNLESS the parent is a meeting happening today/tomorrow
+10. P0 priority blockers
+11. P0 priority children
+12. P0 priority items (that can be started today AND have no blocker children)
+13. Children of items with approaching deadlines
+14. Items with approaching deadlines (that can be started today AND have no blocker children)
+15. P1 priority blockers
+16. P1 priority children
+17. P1 priority items (that can be started today AND have no blocker children)
+18. Everything else that can be started today AND has no blocker children
+19. EXCLUDE: Items with future start dates (user cannot work on them yet)
+20. EXCLUDE: Parent items that have incomplete blocker children (parent is NOT actionable until blockers are resolved)
 
 When responding with suggestions, format them as a JSON array of todo IDs at the end of your response, like this:
 SUGGESTIONS: ["todo-id-1", "todo-id-2"]
@@ -134,7 +142,9 @@ Current todos:
 ${JSON.stringify(incompleteTodos.slice(0, 50).map(t => {
   const canStart = !t.startDate || t.startDate <= now;
   const hasChildren = todos.some(child => child.parentId === t.id && !child.completed);
+  const hasBlockerChildren = todos.some(child => child.parentId === t.id && child.type === 'Blocker' && !child.completed);
   const isChild = !!t.parentId;
+  const isBlocker = t.type === 'Blocker';
   const parentInfo = t.parentId ? todos.find(p => p.id === t.parentId) : null;
 
   // Check if overdue
@@ -150,7 +160,7 @@ ${JSON.stringify(incompleteTodos.slice(0, 50).map(t => {
     type: t.type,
     priority: t.priority,
     startDate: t.startDate,
-    canStartNow: canStart ? true : `⏳ CANNOT START UNTIL ${new Date(t.startDate!).toLocaleDateString()}`,
+    canStartNow: canStart ? (hasBlockerChildren ? "🚫 NOT ACTIONABLE - has incomplete BLOCKER children" : true) : `⏳ CANNOT START UNTIL ${new Date(t.startDate!).toLocaleDateString()}`,
     dueDate: t.dueDate,
     isOverdue: isOverdue ? "🚨 OVERDUE - CRITICAL PRIORITY" : false,
     isEOD: t.isEOD ? "⚠️ EOD - URGENT" : false,
@@ -158,7 +168,9 @@ ${JSON.stringify(incompleteTodos.slice(0, 50).map(t => {
     isPriority: t.isPriority,
     project: t.project,
     hasChildren: hasChildren ? "🔗 BLOCKED - has incomplete children" : false,
+    hasBlockerChildren: hasBlockerChildren ? "🚫 NOT ACTIONABLE - has incomplete BLOCKER children (must resolve blockers first)" : false,
     isChild: isChild ? `👶 CHILD of: "${parentInfo?.text || 'parent'}"` : false,
+    isBlocker: isBlocker ? `🚧 BLOCKER - blocks parent "${parentInfo?.text || 'parent'}" from being actionable` : false,
     parentId: t.parentId || undefined
   };
 }), null, 2)}
