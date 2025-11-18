@@ -961,7 +961,8 @@ Return ONLY the todo IDs, no explanation needed.`;
       });
 
       if (!response.ok) {
-        throw new Error('Failed to auto-prioritize');
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || errorData.details || 'Failed to auto-prioritize');
       }
 
       const data = await response.json();
