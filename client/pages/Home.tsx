@@ -3486,7 +3486,16 @@ Return ONLY the todo IDs, no explanation needed.`;
                         "To-dos"
                       )}
                       <Badge variant="secondary" className="ml-auto text-xs">
-                        {workspaceTodos.length}
+                        {(() => {
+                          // Count all todos in workspace, including children
+                          const allWorkspaceTodos = workspace === "everything"
+                            ? todos
+                            : todos.filter((todo) => todo.workspace === workspace);
+                          const filtered = selectedProjectPage
+                            ? allWorkspaceTodos.filter(t => t.project === selectedProjectPage)
+                            : allWorkspaceTodos;
+                          return filtered.length;
+                        })()}
                       </Badge>
                       <Button
                         variant="ghost"
