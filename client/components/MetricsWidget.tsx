@@ -117,6 +117,8 @@ export function MetricsWidget({
   };
 
   const getBlockedTasksMetrics = (filteredTodos: Todo[]) => {
+    const now = Date.now();
+
     // All todos that are currently blocked by either a blocker child or an unfinished child
     const blockedTodos = filteredTodos.filter(t => {
       if (t.completed) return false; // Don't count completed todos
@@ -125,6 +127,13 @@ export function MetricsWidget({
       const hasUncompletedChildren = todos.some(child => child.parentId === t.id && !child.completed);
 
       return hasUncompletedChildren;
+    });
+
+    // Not started todos (start date hasn't elapsed yet)
+    const notStartedTodos = filteredTodos.filter(t => {
+      if (t.completed) return false;
+      if (!t.startDate) return false; // Only count todos with a start date
+      return t.startDate > now;
     });
 
     // Separate by blocker type for detail
@@ -137,10 +146,13 @@ export function MetricsWidget({
       return !hasBlocker; // Has other children but not blockers
     });
 
+    const totalBlocked = blockedTodos.length + notStartedTodos.length;
+
     return {
-      total: blockedTodos.length,
+      total: totalBlocked,
       byBlocker: blockedByBlocker.length,
-      byChildren: blockedByOtherChildren.length
+      byChildren: blockedByOtherChildren.length,
+      notStarted: notStartedTodos.length
     };
   };
 
