@@ -808,6 +808,26 @@ const Home = () => {
       const todo = prevTodos.find(t => t.id === todoId);
       if (!todo || todo.isPriority) return prevTodos;
 
+      // Meetings and Blockers can never be priorities - add their children instead
+      if (todo.type === 'Meeting' || todo.type === 'Blocker') {
+        const children = prevTodos.filter(t => t.parentId === todoId && !t.completed);
+        if (children.length > 0) {
+          // Add all uncompleted children (except Blockers) to priorities
+          const priorityTodos = prevTodos.filter(t => t.isPriority);
+          let nextOrder = priorityTodos.length;
+
+          return prevTodos.map(t => {
+            const childIndex = children.findIndex(c => c.id === t.id);
+            if (childIndex !== -1 && !t.isPriority && t.type !== 'Blocker') {
+              const order = nextOrder + childIndex;
+              return { ...t, isPriority: true, priorityOrder: order };
+            }
+            return t;
+          });
+        }
+        return prevTodos;
+      }
+
       // Check if this todo has uncompleted children
       const children = prevTodos.filter(t => t.parentId === todoId && !t.completed);
       const hasUncompletedChildren = children.length > 0;
@@ -818,15 +838,16 @@ const Home = () => {
         let nextOrder = priorityTodos.length;
 
         return prevTodos.map(t => {
-          // Add children first
+          // Add children first (except Blockers)
           const childIndex = children.findIndex(c => c.id === t.id);
-          if (childIndex !== -1 && !t.isPriority) {
+          if (childIndex !== -1 && !t.isPriority && t.type !== 'Blocker') {
             const order = nextOrder + childIndex;
             return { ...t, isPriority: true, priorityOrder: order };
           }
           // Then add the parent
           if (t.id === todoId) {
-            const parentOrder = nextOrder + children.length;
+            const nonBlockerChildren = children.filter(c => c.type !== 'Blocker');
+            const parentOrder = nextOrder + nonBlockerChildren.length;
             return { ...t, isPriority: true, priorityOrder: parentOrder };
           }
           return t;
