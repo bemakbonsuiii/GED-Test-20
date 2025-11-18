@@ -3346,8 +3346,8 @@ Return ONLY the todo IDs, no explanation needed.`;
                           const isToday = daysUntil === 0;
 
                           // Check for incomplete dependencies
-                          const hasUncompletedChildren = workspaceTodos.some(t => t.parentId === todo.id && !t.completed);
-                          const incompleteDeps = workspaceTodos.filter(t => t.parentId === todo.id && !t.completed);
+                          const hasUncompletedChildren = allWorkspaceTodosWithChildren.some(t => t.parentId === todo.id && !t.completed);
+                          const incompleteDeps = allWorkspaceTodosWithChildren.filter(t => t.parentId === todo.id && !t.completed);
 
                           return (
                             <div
