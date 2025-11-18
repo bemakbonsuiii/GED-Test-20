@@ -1705,8 +1705,11 @@ Return ONLY the todo IDs, no explanation needed.`;
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
+    // Use cached todos if manual alerts mode is enabled
+    const todosToUse = autoAlerts ? todos : cachedAlertsTodos;
+
     // Filter todos by workspace and project
-    const relevantTodos = todos.filter(t => {
+    const relevantTodos = todosToUse.filter(t => {
       if (workspace !== "everything" && t.workspace !== workspace) return false;
       if (selectedProjectPage && t.project !== selectedProjectPage) return false;
       return true;
