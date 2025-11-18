@@ -940,10 +940,11 @@ IMPORTANT CONTEXT:
 - You CAN and SHOULD suggest important todos even if they have Blocker children - they'll show in the blocked section
 - If suggesting a parent with children, include the children first, then the parent
 
-CRITICAL RULES:
+CRITICAL EXCLUSIONS:
+- NEVER suggest Blocker type todos - they should not appear in priorities
+- NEVER suggest Meeting type todos - only their children can be prioritized
 - Suggest important work even if it's blocked - blocked items will be shown separately
 - Children must always be prioritized before their parents in the list
-- Blocker children are the most critical to prioritize (they unblock other work)
 
 Return ONLY the todo IDs, no explanation needed.`;
 
