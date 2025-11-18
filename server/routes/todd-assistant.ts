@@ -111,12 +111,17 @@ SUGGESTIONS: ["todo-id-1", "todo-id-2"]
 Be concise but friendly. Address the user's specific question.`;
 
     const now = Date.now();
-    const futureStartItems = incompleteTodos.filter(t => t.startDate && t.startDate > now);
+    const futureStartItems = incompleteTodos.filter(
+      (t) => t.startDate && t.startDate > now,
+    );
 
     // Check for overdue items
-    const overdueItems = incompleteTodos.filter(t => {
+    const overdueItems = incompleteTodos.filter((t) => {
       if (!t.dueDate) return false;
-      const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+      const dueTime =
+        typeof t.dueDate === "string"
+          ? new Date(t.dueDate).getTime()
+          : t.dueDate;
       return dueTime < now;
     });
 
@@ -127,78 +132,135 @@ Be concise but friendly. Address the user's specific question.`;
     tomorrow.setDate(tomorrow.getDate() + 2); // End of tomorrow
     tomorrow.setHours(0, 0, 0, 0);
 
-    const upcomingMeetingsWithIncompletePrep = incompleteTodos.filter(t => {
+    const upcomingMeetingsWithIncompletePrep = incompleteTodos.filter((t) => {
       if (t.type !== "Meeting") return false;
       if (!t.dueDate) return false;
-      const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
-      if (dueTime < today.getTime() || dueTime >= tomorrow.getTime()) return false;
+      const dueTime =
+        typeof t.dueDate === "string"
+          ? new Date(t.dueDate).getTime()
+          : t.dueDate;
+      if (dueTime < today.getTime() || dueTime >= tomorrow.getTime())
+        return false;
       // Check if this meeting has incomplete children
-      const hasIncompleteChildren = todos.some(child => child.parentId === t.id && !child.completed);
+      const hasIncompleteChildren = todos.some(
+        (child) => child.parentId === t.id && !child.completed,
+      );
       return hasIncompleteChildren;
     });
 
-    const meetingPrepTasks = upcomingMeetingsWithIncompletePrep.flatMap(meeting => {
-      return incompleteTodos.filter(t => t.parentId === meeting.id);
-    });
+    const meetingPrepTasks = upcomingMeetingsWithIncompletePrep.flatMap(
+      (meeting) => {
+        return incompleteTodos.filter((t) => t.parentId === meeting.id);
+      },
+    );
 
     // Build parent-child relationship map
-    const todosWithChildren = incompleteTodos.filter(t =>
-      todos.some(child => child.parentId === t.id && !child.completed)
+    const todosWithChildren = incompleteTodos.filter((t) =>
+      todos.some((child) => child.parentId === t.id && !child.completed),
     );
-    const childTodos = incompleteTodos.filter(t => t.parentId);
+    const childTodos = incompleteTodos.filter((t) => t.parentId);
 
-    const userPrompt = `${overdueItems.length > 0 ? `🚨 OVERDUE ITEMS (CRITICAL - PAST DUE): ${overdueItems.length}\n` : ''}${upcomingMeetingsWithIncompletePrep.length > 0 ? `🔴 URGENT: ${upcomingMeetingsWithIncompletePrep.length} MEETING(S) TODAY/TOMORROW WITH INCOMPLETE PREP TASKS (${meetingPrepTasks.length} tasks)\n` : ''}${futureStartItems.length > 0 ? `⏳ FUTURE START ITEMS (cannot start yet): ${futureStartItems.length}\n` : ''}${todosWithChildren.length > 0 ? `🔗 PARENT ITEMS (blocked by children): ${todosWithChildren.length}\n` : ''}${childTodos.length > 0 ? `👶 CHILD ITEMS (blockers for parents): ${childTodos.length}\n` : ''}
-${upcomingMeetingsWithIncompletePrep.length > 0 ? `\nUPCOMING MEETINGS WITH INCOMPLETE PREP:\n${upcomingMeetingsWithIncompletePrep.map(m => {
-  const dueTime = typeof m.dueDate === 'string' ? new Date(m.dueDate).getTime() : m.dueDate!;
-  const dueDate = new Date(dueTime);
-  const isToday = dueDate.toDateString() === new Date().toDateString();
-  const incompletePrepTasks = todos.filter(t => t.parentId === m.id && !t.completed);
-  return `  📅 ${isToday ? 'TODAY' : 'TOMORROW'}: "${m.text}" - ${incompletePrepTasks.length} prep task(s) not done: ${incompletePrepTasks.map(t => `"${t.text}"`).join(', ')}`;
-}).join('\n')}\n` : ''}
+    const userPrompt = `${overdueItems.length > 0 ? `🚨 OVERDUE ITEMS (CRITICAL - PAST DUE): ${overdueItems.length}\n` : ""}${upcomingMeetingsWithIncompletePrep.length > 0 ? `🔴 URGENT: ${upcomingMeetingsWithIncompletePrep.length} MEETING(S) TODAY/TOMORROW WITH INCOMPLETE PREP TASKS (${meetingPrepTasks.length} tasks)\n` : ""}${futureStartItems.length > 0 ? `⏳ FUTURE START ITEMS (cannot start yet): ${futureStartItems.length}\n` : ""}${todosWithChildren.length > 0 ? `🔗 PARENT ITEMS (blocked by children): ${todosWithChildren.length}\n` : ""}${childTodos.length > 0 ? `👶 CHILD ITEMS (blockers for parents): ${childTodos.length}\n` : ""}
+${
+  upcomingMeetingsWithIncompletePrep.length > 0
+    ? `\nUPCOMING MEETINGS WITH INCOMPLETE PREP:\n${upcomingMeetingsWithIncompletePrep
+        .map((m) => {
+          const dueTime =
+            typeof m.dueDate === "string"
+              ? new Date(m.dueDate).getTime()
+              : m.dueDate!;
+          const dueDate = new Date(dueTime);
+          const isToday = dueDate.toDateString() === new Date().toDateString();
+          const incompletePrepTasks = todos.filter(
+            (t) => t.parentId === m.id && !t.completed,
+          );
+          return `  📅 ${isToday ? "TODAY" : "TOMORROW"}: "${m.text}" - ${incompletePrepTasks.length} prep task(s) not done: ${incompletePrepTasks.map((t) => `"${t.text}"`).join(", ")}`;
+        })
+        .join("\n")}\n`
+    : ""
+}
 Current todos:
-${JSON.stringify(incompleteTodos.slice(0, 100).map(t => {
-  const canStart = !t.startDate || t.startDate <= now;
-  const hasChildren = todos.some(child => child.parentId === t.id && !child.completed);
-  const hasBlockerChildren = todos.some(child => child.parentId === t.id && child.type === 'Blocker' && !child.completed);
-  const isChild = !!t.parentId;
-  const isBlocker = t.type === 'Blocker';
-  const parentInfo = t.parentId ? todos.find(p => p.id === t.parentId) : null;
+${JSON.stringify(
+  incompleteTodos.slice(0, 100).map((t) => {
+    const canStart = !t.startDate || t.startDate <= now;
+    const hasChildren = todos.some(
+      (child) => child.parentId === t.id && !child.completed,
+    );
+    const hasBlockerChildren = todos.some(
+      (child) =>
+        child.parentId === t.id && child.type === "Blocker" && !child.completed,
+    );
+    const isChild = !!t.parentId;
+    const isBlocker = t.type === "Blocker";
+    const parentInfo = t.parentId
+      ? todos.find((p) => p.id === t.parentId)
+      : null;
 
-  // Check if overdue
-  const isOverdue = t.dueDate && (typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate) < now;
+    // Check if overdue
+    const isOverdue =
+      t.dueDate &&
+      (typeof t.dueDate === "string"
+        ? new Date(t.dueDate).getTime()
+        : t.dueDate) < now;
 
-  // Check if this is a meeting prep task (child of upcoming meeting)
-  const isMeetingPrep = parentInfo && parentInfo.type === "Meeting" && parentInfo.dueDate &&
-    upcomingMeetingsWithIncompletePrep.some(m => m.id === parentInfo.id);
+    // Check if this is a meeting prep task (child of upcoming meeting)
+    const isMeetingPrep =
+      parentInfo &&
+      parentInfo.type === "Meeting" &&
+      parentInfo.dueDate &&
+      upcomingMeetingsWithIncompletePrep.some((m) => m.id === parentInfo.id);
 
-  return {
-    id: t.id,
-    text: t.text,
-    type: t.type,
-    priority: t.priority,
-    startDate: t.startDate,
-    canStartNow: canStart ? (hasBlockerChildren ? "🚫 NOT ACTIONABLE - has incomplete BLOCKER children" : true) : `⏳ CANNOT START UNTIL ${new Date(t.startDate!).toLocaleDateString()}`,
-    dueDate: t.dueDate,
-    isOverdue: isOverdue ? "🚨 OVERDUE - CRITICAL PRIORITY" : false,
-    isEOD: t.isEOD ? "⚠️ EOD - URGENT" : false,
-    isMeetingPrep: isMeetingPrep ? `🔴 MEETING PREP - CRITICAL (for "${parentInfo?.text}")` : false,
-    isPriority: t.isPriority,
-    project: t.project,
-    hasChildren: hasChildren ? "🔗 BLOCKED - has incomplete children" : false,
-    hasBlockerChildren: hasBlockerChildren ? "🚫 NOT ACTIONABLE - has incomplete BLOCKER children (must resolve blockers first)" : false,
-    isChild: isChild ? `👶 CHILD of: "${parentInfo?.text || 'parent'}"` : false,
-    isBlocker: isBlocker ? `🚧 BLOCKER - blocks parent "${parentInfo?.text || 'parent'}" from being actionable` : false,
-    parentId: t.parentId || undefined
-  };
-}), null, 2)}
+    return {
+      id: t.id,
+      text: t.text,
+      type: t.type,
+      priority: t.priority,
+      startDate: t.startDate,
+      canStartNow: canStart
+        ? hasBlockerChildren
+          ? "🚫 NOT ACTIONABLE - has incomplete BLOCKER children"
+          : true
+        : `⏳ CANNOT START UNTIL ${new Date(t.startDate!).toLocaleDateString()}`,
+      dueDate: t.dueDate,
+      isOverdue: isOverdue ? "🚨 OVERDUE - CRITICAL PRIORITY" : false,
+      isEOD: t.isEOD ? "⚠️ EOD - URGENT" : false,
+      isMeetingPrep: isMeetingPrep
+        ? `🔴 MEETING PREP - CRITICAL (for "${parentInfo?.text}")`
+        : false,
+      isPriority: t.isPriority,
+      project: t.project,
+      hasChildren: hasChildren ? "🔗 BLOCKED - has incomplete children" : false,
+      hasBlockerChildren: hasBlockerChildren
+        ? "🚫 NOT ACTIONABLE - has incomplete BLOCKER children (must resolve blockers first)"
+        : false,
+      isChild: isChild
+        ? `👶 CHILD of: "${parentInfo?.text || "parent"}"`
+        : false,
+      isBlocker: isBlocker
+        ? `🚧 BLOCKER - blocks parent "${parentInfo?.text || "parent"}" from being actionable`
+        : false,
+      parentId: t.parentId || undefined,
+    };
+  }),
+  null,
+  2,
+)}
 
 Current priority list:
-${priorityTodos.length > 0 ? JSON.stringify(priorityTodos.map(t => ({
-  id: t.id,
-  text: t.text,
-  type: t.type,
-  priority: t.priority
-})), null, 2) : "Empty"}
+${
+  priorityTodos.length > 0
+    ? JSON.stringify(
+        priorityTodos.map((t) => ({
+          id: t.id,
+          text: t.text,
+          type: t.type,
+          priority: t.priority,
+        })),
+        null,
+        2,
+      )
+    : "Empty"
+}
 
 User question: ${message}`;
 
@@ -227,26 +289,38 @@ User question: ${message}`;
     // Extract suggestions if present
     let suggestions: string[] = [];
     let cleanResponse = responseText;
-    
+
     const suggestionsMatch = responseText.match(/SUGGESTIONS:\s*(\[.*?\])/s);
     if (suggestionsMatch) {
       try {
         suggestions = JSON.parse(suggestionsMatch[1]);
-        console.log('AI returned suggestions:', suggestions.length, suggestions);
-        cleanResponse = responseText.replace(/SUGGESTIONS:\s*\[.*?\]/s, '').trim();
+        console.log(
+          "AI returned suggestions:",
+          suggestions.length,
+          suggestions,
+        );
+        cleanResponse = responseText
+          .replace(/SUGGESTIONS:\s*\[.*?\]/s, "")
+          .trim();
       } catch (e) {
         console.error("Failed to parse suggestions:", e);
       }
     } else {
-      console.log('No suggestions found in AI response');
+      console.log("No suggestions found in AI response");
     }
 
-    const filteredSuggestions = suggestions.filter(id => todos.some(t => t.id === id));
-    console.log('Filtered suggestions:', filteredSuggestions.length, filteredSuggestions);
+    const filteredSuggestions = suggestions.filter((id) =>
+      todos.some((t) => t.id === id),
+    );
+    console.log(
+      "Filtered suggestions:",
+      filteredSuggestions.length,
+      filteredSuggestions,
+    );
 
     res.json({
       response: cleanResponse,
-      suggestions: filteredSuggestions
+      suggestions: filteredSuggestions,
     });
   } catch (error: any) {
     console.error("Todd assistant error:", error);
@@ -256,7 +330,7 @@ User question: ${message}`;
       return res.status(429).json({
         error: "OpenAI rate limit reached. Please wait a moment and try again.",
         details: error.message,
-        retryAfter: error.headers?.['retry-after'] || 20
+        retryAfter: error.headers?.["retry-after"] || 20,
       });
     }
 
