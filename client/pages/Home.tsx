@@ -1856,7 +1856,7 @@ Return ONLY the todo IDs, no explanation needed.`;
               if (parent) {
                 return (
                   <div className="mt-2">
-                    <p className="text-xs font-medium text-blue-700 dark:text-blue-400">Unblocking:</p>
+                    <p className="text-xs font-medium text-blue-700 dark:text-blue-400">Will Unblock:</p>
                     <div
                       className="flex items-center gap-2 text-xs cursor-pointer hover:underline"
                       onClick={() => openSummaryDialog(parent)}
