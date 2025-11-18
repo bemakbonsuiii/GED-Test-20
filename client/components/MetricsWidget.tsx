@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
-import { ChevronUp, ChevronDown, Target, CalendarIcon, Zap, Briefcase, AlertTriangle } from "lucide-react";
+import { ChevronUp, ChevronDown, Target, CalendarIcon, Zap, Briefcase, AlertTriangle, ListTodo, Activity } from "lucide-react";
 
 interface Todo {
   id: string;
@@ -301,7 +301,7 @@ export function MetricsWidget({
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Target className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+              <ListTodo className="h-4 w-4 text-slate-600 dark:text-slate-400" />
               <span className="text-sm font-medium">Total To-dos by Type</span>
             </div>
             <span className="text-sm text-muted-foreground">
@@ -342,7 +342,7 @@ export function MetricsWidget({
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Target className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+              <Activity className="h-4 w-4 text-green-600 dark:text-green-400" />
               <span className="text-sm font-medium">Actionable vs Blocked</span>
             </div>
             <span className="text-sm text-muted-foreground">
@@ -500,7 +500,7 @@ export function MetricsWidget({
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Target className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+              <ListTodo className="h-4 w-4 text-slate-600 dark:text-slate-400" />
               <span className="text-sm font-medium">Total To-dos by Type</span>
             </div>
             <span className="text-sm text-muted-foreground">
@@ -541,7 +541,7 @@ export function MetricsWidget({
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Target className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+              <Activity className="h-4 w-4 text-green-600 dark:text-green-400" />
               <span className="text-sm font-medium">Actionable vs Blocked</span>
             </div>
             <span className="text-sm text-muted-foreground">
@@ -738,7 +738,7 @@ export function MetricsWidget({
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Target className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+              <ListTodo className="h-4 w-4 text-slate-600 dark:text-slate-400" />
               <span className="text-sm font-medium">Total To-dos by Type</span>
             </div>
             <span className="text-sm text-muted-foreground">
@@ -779,7 +779,7 @@ export function MetricsWidget({
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Target className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+              <Activity className="h-4 w-4 text-green-600 dark:text-green-400" />
               <span className="text-sm font-medium">Actionable vs Blocked</span>
             </div>
             <span className="text-sm text-muted-foreground">
@@ -817,7 +817,7 @@ export function MetricsWidget({
             {(() => {
               const actionableMetrics = getActionableTasksMetrics(todos);
               const blockedMetrics = getBlockedTasksMetrics(todos);
-              return `${actionableMetrics.total} Actionable • ${blockedMetrics.total} Blocked`;
+              return `${actionableMetrics.total} Actionable ��� ${blockedMetrics.total} Blocked`;
             })()}
           </p>
         </div>
