@@ -1303,6 +1303,15 @@ Return ONLY the todo IDs, no explanation needed.`;
     let inheritedPriority = newTodoPriority;
     let inheritedLinks = newTodoLinks;
 
+    // All children inherit links from parent
+    if (newTodoParentId) {
+      const parent = todos.find((t) => t.id === newTodoParentId);
+      if (parent && parent.links) {
+        inheritedLinks = parent.links;
+      }
+    }
+
+    // Blockers inherit additional properties from parent
     if (newTodoType === "Blocker" && newTodoParentId) {
       const parent = todos.find((t) => t.id === newTodoParentId);
       if (parent) {
@@ -1315,7 +1324,6 @@ Return ONLY the todo IDs, no explanation needed.`;
         inheritedDueTime = parent.dueTime || "";
         inheritedProject = parent.project || "";
         inheritedPriority = parent.priority;
-        inheritedLinks = parent.links || "";
       }
     }
 
