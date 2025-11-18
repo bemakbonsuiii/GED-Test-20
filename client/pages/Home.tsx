@@ -959,11 +959,35 @@ Return ONLY the todo IDs, no explanation needed.`;
   };
 
   const createTodo = () => {
-    const startDateTime = newTodoStartDate ? newTodoStartDate.getTime() : Date.now();
-    let dueDateTime = newTodoDueDate ? newTodoDueDate.getTime() : undefined;
+    // Validate: Blockers can only be children of other todos
+    if (newTodoType === "Blocker" && !newTodoParentId) {
+      alert("Blockers can only be created as children of other to-dos. Please select a parent or choose a different type.");
+      return;
+    }
+
+    // For Blockers, inherit parent's properties
+    let inheritedStartDate = newTodoStartDate;
+    let inheritedDueDate = newTodoDueDate;
+    let inheritedDueTime = newTodoDueTime;
+    let inheritedProject = newTodoProject;
+    let inheritedPriority = newTodoPriority;
+
+    if (newTodoType === "Blocker" && newTodoParentId) {
+      const parent = todos.find(t => t.id === newTodoParentId);
+      if (parent) {
+        inheritedStartDate = parent.startDate ? new Date(parent.startDate) : undefined;
+        inheritedDueDate = parent.dueDate ? new Date(parent.dueDate) : undefined;
+        inheritedDueTime = parent.dueTime || "";
+        inheritedProject = parent.project || "";
+        inheritedPriority = parent.priority;
+      }
+    }
+
+    const startDateTime = inheritedStartDate ? inheritedStartDate.getTime() : Date.now();
+    let dueDateTime = inheritedDueDate ? inheritedDueDate.getTime() : undefined;
 
     // Default to 11:59 PM if due date is set but no time specified for non-Meeting types
-    const effectiveDueTime = newTodoType !== "Meeting" && newTodoDueDate && !newTodoDueTime ? "23:59" : newTodoDueTime;
+    const effectiveDueTime = newTodoType !== "Meeting" && inheritedDueDate && !inheritedDueTime ? "23:59" : inheritedDueTime;
 
     if (newTodoType === "Meeting" && newTodoDueDate && newTodoMeetingTime) {
       const [hours, minutes] = newTodoMeetingTime.split(":");
