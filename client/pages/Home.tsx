@@ -899,36 +899,42 @@ const Home = () => {
       console.log("askTodd: Response received, status:", response.status);
 
       let data;
-      try {
-        const responseClone = response.clone();
 
-        if (!response.ok) {
-          let errorText = "Unknown error";
-          try {
-            errorText = await response.text();
-          } catch (streamErr) {
-            console.error("Could not read error response:", streamErr);
-          }
-
-          console.error("Todd error response:", errorText);
-          let errorData;
-          try {
-            errorData = JSON.parse(errorText);
-          } catch (e) {
-            errorData = { error: `Server error: ${errorText}` };
-          }
-          throw new Error(
-            errorData.error || errorData.details || "Failed to get Todd response",
-          );
+      if (!response.ok) {
+        let errorData: any = { error: "Unknown error" };
+        try {
+          errorData = await response.json();
+        } catch (e) {
+          console.error("Could not parse error response:", e);
         }
 
-        data = await responseClone.json();
-      } catch (parseError: any) {
-        if (parseError.message?.includes("body stream")) {
-          throw new Error("Response already consumed. Please try again.");
+        console.error("Todd error (status " + response.status + "):", errorData);
+
+        // Handle rate limit errors
+        if (response.status === 429) {
+          const retryTime = errorData.retryAfter || 20;
+          const details = errorData.details || "";
+
+          if (details.includes("35h") || details.includes("36h") || details.includes("hour")) {
+            throw new Error(
+              "⚠️ OpenAI DAILY token limit reached (100,000 tokens used).\\n\\n" +
+              "Options:\\n" +
+              "1. Wait ~36 hours for the limit to reset\\n" +
+              "2. Add a payment method at: https://platform.openai.com/account/billing"
+            );
+          } else {
+            throw new Error(
+              `⏳ OpenAI rate limit reached. Please wait ${retryTime} seconds.`
+            );
+          }
         }
-        throw parseError;
+
+        throw new Error(
+          errorData.error || errorData.details || "Failed to get Todd response"
+        );
       }
+
+      data = await response.json();
       setToddMessages((prev) => [
         ...prev,
         {
