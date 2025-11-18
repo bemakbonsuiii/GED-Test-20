@@ -3389,6 +3389,36 @@ Return ONLY the todo IDs, no explanation needed.`;
                       </p>
                     </div>
 
+                    {/* Blocked To-dos Metric */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                          <span className="text-sm font-medium">Blocked To-dos</span>
+                        </div>
+                        <span className="text-sm text-muted-foreground">
+                          {getBlockedTasksMetrics().total}
+                        </span>
+                      </div>
+                      <div className="relative h-4 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                        <div className="flex h-full">
+                          <div
+                            className="h-full bg-gradient-to-r from-red-500 to-red-600 transition-all duration-500"
+                            style={{ width: `${getBlockedTasksMetrics().total > 0 ? (getBlockedTasksMetrics().byBlocker / getBlockedTasksMetrics().total) * 100 : 0}%` }}
+                            title={`${getBlockedTasksMetrics().byBlocker} blocked by Blockers`}
+                          />
+                          <div
+                            className="h-full bg-gradient-to-r from-amber-500 to-amber-600 transition-all duration-500"
+                            style={{ width: `${getBlockedTasksMetrics().total > 0 ? (getBlockedTasksMetrics().byChildren / getBlockedTasksMetrics().total) * 100 : 0}%` }}
+                            title={`${getBlockedTasksMetrics().byChildren} blocked by other children`}
+                          />
+                        </div>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        {getBlockedTasksMetrics().byBlocker} by Blockers • {getBlockedTasksMetrics().byChildren} by other children
+                      </p>
+                    </div>
+
                     {/* Projects Progress */}
                     <div className="space-y-4">
                       <div className="flex items-center gap-2">
