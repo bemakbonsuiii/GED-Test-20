@@ -76,7 +76,7 @@ When asked about priorities or reprioritization:
 - Consider due dates and time sensitivity
 - Consider priority levels (P0 > P1 > P2)
 - Consider task types and dependencies
-- Suggest specific todo IDs that should be in the priority list
+- When auto-prioritizing, suggest 3-5 specific todo IDs (minimum 3, maximum 5)
 - Be conversational and helpful
 
 Prioritization Order (STRICT):
@@ -107,6 +107,8 @@ IMPORTANT RULES:
 
 When responding with suggestions, format them as a JSON array of todo IDs at the end of your response, like this:
 SUGGESTIONS: ["todo-id-1", "todo-id-2"]
+
+IMPORTANT FOR AUTO-PRIORITIZATION: When the user asks you to auto-prioritize or select top priorities, you MUST return between 3-5 todo IDs (minimum 3, maximum 5).
 
 Be concise but friendly. Address the user's specific question.`;
 
