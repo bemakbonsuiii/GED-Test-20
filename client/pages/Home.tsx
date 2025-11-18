@@ -165,8 +165,25 @@ const TODO_TYPE_CONFIG: Record<
 };
 
 const Home = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
-  const [projects, setProjects] = useState<Project[]>([]);
+  // Initialize from localStorage
+  const [todos, setTodos] = useState<Todo[]>(() => {
+    try {
+      const saved = localStorage.getItem("todos");
+      return saved ? JSON.parse(saved) : [];
+    } catch (error) {
+      console.error("Error loading todos from localStorage:", error);
+      return [];
+    }
+  });
+  const [projects, setProjects] = useState<Project[]>(() => {
+    try {
+      const saved = localStorage.getItem("projects");
+      return saved ? JSON.parse(saved) : [];
+    } catch (error) {
+      console.error("Error loading projects from localStorage:", error);
+      return [];
+    }
+  });
   const [darkMode, setDarkMode] = useState(false);
   const [toddMessages, setToddMessages] = useState<Array<{ role: 'user' | 'assistant'; content: string; suggestions?: string[] }>>([]);
   const [toddInput, setToddInput] = useState("");
@@ -215,6 +232,24 @@ const Home = () => {
   const [newTodoMeetingTime, setNewTodoMeetingTime] = useState("");
   const [newTodoDueTime, setNewTodoDueTime] = useState("");
   const [editingTodoId, setEditingTodoId] = useState<string | null>(null);
+
+  // Save todos to localStorage whenever they change
+  useEffect(() => {
+    try {
+      localStorage.setItem("todos", JSON.stringify(todos));
+    } catch (error) {
+      console.error("Error saving todos to localStorage:", error);
+    }
+  }, [todos]);
+
+  // Save projects to localStorage whenever they change
+  useEffect(() => {
+    try {
+      localStorage.setItem("projects", JSON.stringify(projects));
+    } catch (error) {
+      console.error("Error saving projects to localStorage:", error);
+    }
+  }, [projects]);
   const [dueDatePopoverOpen, setDueDatePopoverOpen] = useState(false);
   const [newTodoNotes, setNewTodoNotes] = useState("");
   const [newTodoLinks, setNewTodoLinks] = useState("");
