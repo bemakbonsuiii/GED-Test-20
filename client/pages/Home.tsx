@@ -3403,7 +3403,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
 
           <TabsContent value={workspace}>
             {/* Expandable Add New To-Do */}
-            {isAddTodoExpanded && (
+            {!focusMode && isAddTodoExpanded && (
               <Card className="mb-6 border border-slate-200 dark:border-slate-800 animate-in fade-in slide-in-from-top-2 duration-200">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base font-medium flex items-center gap-2">
