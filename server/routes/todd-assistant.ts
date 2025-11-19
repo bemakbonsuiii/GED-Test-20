@@ -60,6 +60,7 @@ IMPORTANT CONTEXT ABOUT PRIORITY PANEL:
 - You SHOULD suggest important todos even if they're blocked - users need to see what's important but blocked
 
 CRITICAL EXCLUSIONS:
+- NEVER suggest completed todos - they are already done
 - NEVER suggest Blocker type todos in your suggestions - they should not be prioritized
 - NEVER suggest Meeting type todos in your suggestions - only their children can be prioritized
 - If a Meeting is important, suggest its children instead
@@ -317,7 +318,7 @@ User question: ${message}`;
     }
 
     const filteredSuggestions = suggestions.filter((id) =>
-      todos.some((t) => t.id === id),
+      todos.some((t) => t.id === id && !t.completed),
     );
     console.log(
       "Filtered suggestions:",
