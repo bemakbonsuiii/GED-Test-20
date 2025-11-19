@@ -4432,7 +4432,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                                       className="text-xs gap-1"
                                     >
                                       <Clock className="h-3 w-3" />
-                                      {meeting.meetingTime}
+                                      {formatTimeToAMPM(meeting.meetingTime)}
                                     </Badge>
                                   )}
                                   <Badge
