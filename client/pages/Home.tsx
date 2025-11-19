@@ -3676,7 +3676,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
             )}
 
             {/* Expandable Alerts Widget */}
-            {isAlertsExpanded && getAlertsCount() > 0 && (
+            {!focusMode && isAlertsExpanded && getAlertsCount() > 0 && (
               <Card className="mb-6 border border-slate-200 dark:border-slate-800 animate-in fade-in slide-in-from-top-2 duration-200">
                 <CardHeader>
                   <CardTitle className="text-base font-medium flex items-center gap-2">
@@ -3699,7 +3699,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
             )}
 
             {/* Expandable Smart Suggestions Widget */}
-            {isSmartSuggestionsExpanded && getSmartSuggestionsCount() > 0 && (
+            {!focusMode && isSmartSuggestionsExpanded && getSmartSuggestionsCount() > 0 && (
               <Card className="mb-6 border border-slate-200 dark:border-slate-800 animate-in fade-in slide-in-from-top-2 duration-200">
                 <CardHeader>
                   <CardTitle className="text-base font-medium flex items-center gap-2">
