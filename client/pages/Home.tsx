@@ -4205,23 +4205,23 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
 
                   // Separate actionable from blocked priorities
                   const actionablePriorities = priorityTodos.filter((t) => {
-                    const hasBlockerChild = todos.some(
+                    const hasBlockingChild = todos.some(
                       (child) =>
                         child.parentId === t.id &&
-                        child.type === "Blocker" &&
+                        (child.type === "Blocker" || child.type === "Meeting") &&
                         !child.completed,
                     );
-                    return !hasBlockerChild;
+                    return !hasBlockingChild;
                   });
 
                   const blockedPriorities = priorityTodos.filter((t) => {
-                    const hasBlockerChild = todos.some(
+                    const hasBlockingChild = todos.some(
                       (child) =>
                         child.parentId === t.id &&
-                        child.type === "Blocker" &&
+                        (child.type === "Blocker" || child.type === "Meeting") &&
                         !child.completed,
                     );
-                    return hasBlockerChild;
+                    return hasBlockingChild;
                   });
 
                   if (priorityTodos.length === 0) {
