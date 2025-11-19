@@ -1343,13 +1343,13 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
         let errorText = "";
 
         try {
-          // Clone response to avoid body stream issues
-          const responseClone = response.clone();
-          errorData = await responseClone.json();
+          const jsonClone = response.clone();
+          errorData = await jsonClone.json();
         } catch (e) {
-          // If JSON parsing fails, try reading as text from original
+          // If JSON parsing fails, try reading as text from a fresh clone
           try {
-            errorText = await response.text();
+            const textClone = response.clone();
+            errorText = await textClone.text();
             console.error("Error response text:", errorText);
             errorData = { error: errorText || "Unknown error" };
           } catch (textErr) {
