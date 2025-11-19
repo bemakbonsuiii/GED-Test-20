@@ -278,6 +278,12 @@ const Home = () => {
   });
   const [cachedAlertsTodos, setCachedAlertsTodos] = useState<Todo[]>([]);
   const [lastAlertsUpdate, setLastAlertsUpdate] = useState<number>(Date.now());
+
+  // Focus mode setting
+  const [focusMode, setFocusMode] = useState(() => {
+    const saved = localStorage.getItem("focusMode");
+    return saved !== null ? JSON.parse(saved) : false;
+  });
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [dialogStep, setDialogStep] = useState<
     "type" | "workspace" | "details"
