@@ -473,7 +473,7 @@ const Home = () => {
 
       const notificationKey = `${nextMeeting.id}-`;
 
-      // Check if meeting has started (within last 5 minutes)
+      // Check if meeting just started (0 to 5 minutes ago)
       if (minutes <= 0 && minutes >= -5) {
         const key = `${notificationKey}started`;
         if (!shownNotifications.has(key)) {
@@ -482,21 +482,21 @@ const Home = () => {
         }
       }
       // Check for 5 minute warning
-      else if (minutes <= 5 && minutes > 4) {
+      else if (minutes <= 5 && minutes > 0) {
         const key = `${notificationKey}5min`;
         if (!shownNotifications.has(key)) {
           setShownNotifications(prev => new Set(prev).add(key));
         }
       }
       // Check for 15 minute warning
-      else if (minutes <= 15 && minutes > 14) {
+      else if (minutes <= 15 && minutes > 5) {
         const key = `${notificationKey}15min`;
         if (!shownNotifications.has(key)) {
           setShownNotifications(prev => new Set(prev).add(key));
         }
       }
       // Check for 30 minute warning
-      else if (minutes <= 30 && minutes > 29) {
+      else if (minutes <= 30 && minutes > 15) {
         const key = `${notificationKey}30min`;
         if (!shownNotifications.has(key)) {
           setShownNotifications(prev => new Set(prev).add(key));
