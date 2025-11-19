@@ -5146,11 +5146,17 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                             : filter === "completed" &&
                                 workspaceTodos.length > 0
                               ? "No completed to-dos yet."
-                              : selectedTypeFilter
-                                ? `No ${selectedTypeFilter} to-dos`
-                                : selectedProjectFilter
-                                  ? `No to-dos in project "${selectedProjectFilter}"`
-                                  : "No to-dos yet. Add one to get started!"}
+                              : filter === "dueToday" && workspaceTodos.length > 0
+                                ? "No to-dos due today!"
+                                : filter === "actionable" && workspaceTodos.length > 0
+                                  ? "No actionable to-dos right now."
+                                  : filter === "blocked" && workspaceTodos.length > 0
+                                    ? "No blocked to-dos!"
+                                    : selectedTypeFilter
+                                      ? `No ${selectedTypeFilter} to-dos`
+                                      : selectedProjectFilter
+                                        ? `No to-dos in project "${selectedProjectFilter}"`
+                                        : "No to-dos yet. Add one to get started!"}
                         </div>
                       ) : (
                         filteredTodos.map(renderTodoItem)
