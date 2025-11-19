@@ -3547,7 +3547,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
               })()}
 
             {/* Expandable Ask Todd */}
-            {isToddExpanded && (
+            {!focusMode && isToddExpanded && (
               <Card className="mb-6 border border-slate-200 dark:border-slate-800 border-l-4 border-l-purple-500 dark:border-l-purple-500 shadow-md animate-in fade-in slide-in-from-top-2 duration-200">
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
