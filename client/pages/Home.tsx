@@ -2180,16 +2180,9 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
         if (t.completed || t.type !== "Meeting") return false;
         if (!t.dueDate) return false;
 
-        const baseDueDate = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
         const meetingTime = getMeetingTimestamp(t);
 
-        // Check if meeting is today (based on the base due date)
-        const isToday = baseDueDate >= todayStart.getTime() && baseDueDate <= todayEnd.getTime();
-
-        // Include all meetings today (regardless of time) OR future meetings OR meetings that started within last 15 min
-        if (isToday) return true;
-
-        // For non-today meetings, only include if they haven't passed
+        // Only include meetings that haven't started yet OR started within the last 15 minutes
         return meetingTime >= fifteenMinutesAgo;
       })
       .sort((a, b) => {
