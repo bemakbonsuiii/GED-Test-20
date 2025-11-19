@@ -87,22 +87,24 @@ When asked about priorities or reprioritization:
 - If there aren't enough high-priority items, suggest lower-priority actionable items to reach the requested count
 - Be conversational and helpful
 
-Prioritization Order (STRICT):
+Prioritization Order (STRICT - FOLLOW THIS EXACTLY):
 1. **OVERDUE CHILDREN OF MEETINGS** (children of meetings, past due) - ABSOLUTE TOP PRIORITY
 2. **OVERDUE ITEMS** (past due date, NOT Blockers or Meetings) - CRITICAL
 3. **MEETING PREP - TODAY** (children of meetings happening TODAY) - EXTREMELY URGENT
 4. **MEETING PREP - TOMORROW** (children of meetings happening TOMORROW) - VERY URGENT
-5. Children of high-priority items (these block their parents)
-6. Items with today's due date that are children
-7. Items with today's due date (and no future start date, NOT Blockers or Meetings)
-8. P0 priority children (NOT Blockers)
-9. P0 priority items (that can be started today AND have no blocker children, NOT Blockers or Meetings)
-10. Children of items with approaching deadlines
-11. Items with approaching deadlines (that can be started today AND have no blocker children, NOT Blockers or Meetings)
-12. P1 priority children (NOT Blockers)
-13. P1 priority items (that can be started today AND have no blocker children, NOT Blockers or Meetings)
-14. Everything else that can be started today (NOT Blockers or Meetings)
+5. **Items due TOMORROW** (not meetings/blockers, can be started) - VERY HIGH PRIORITY
+6. **Items due within 3 days** (not meetings/blockers, can be started) - HIGH PRIORITY
+7. **Items due within 1 week** (not meetings/blockers, can be started) - MEDIUM-HIGH PRIORITY
+8. Children of high-priority items (these block their parents)
+9. P0 priority items with due dates (that can be started today, NOT Blockers or Meetings)
+10. P1 priority items with due dates (that can be started today, NOT Blockers or Meetings)
+11. **Items with ANY due date** (not meetings/blockers, can be started) - MEDIUM PRIORITY
+12. P0 priority items WITHOUT due dates (can be started today, NOT Blockers or Meetings)
+13. P1 priority items WITHOUT due dates (can be started today, NOT Blockers or Meetings)
+14. Items WITHOUT due dates (can be started today, NOT Blockers or Meetings) - LOW PRIORITY
 15. Important blocked work (has Blocker children) - will appear in "Blocked Priorities" section
+
+**CRITICAL**: ALWAYS prioritize items WITH due dates over items WITHOUT due dates. Only suggest items without due dates if there aren't enough items with due dates to meet the requested count.
 
 ABSOLUTE EXCLUSIONS:
 - NEVER SUGGEST: Blocker type todos (they should not be in priorities at all)
