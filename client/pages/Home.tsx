@@ -1510,8 +1510,11 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
     let dueDateTime = inheritedDueDate ? inheritedDueDate.getTime() : undefined;
 
     // Default to 11:59 PM if due date is set but no time specified for non-Meeting types
+    // For meetings, use the meeting time as the due time
     const effectiveDueTime =
-      newTodoType !== "Meeting" && inheritedDueDate && !inheritedDueTime
+      newTodoType === "Meeting"
+        ? newTodoMeetingTime
+        : newTodoType !== "Meeting" && inheritedDueDate && !inheritedDueTime
         ? "23:59"
         : inheritedDueTime;
 
