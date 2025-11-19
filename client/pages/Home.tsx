@@ -284,6 +284,10 @@ const Home = () => {
     const saved = localStorage.getItem("focusMode");
     return saved !== null ? JSON.parse(saved) : false;
   });
+
+  // Next meeting state
+  const [nextMeetingExpanded, setNextMeetingExpanded] = useState(false);
+  const [shownNotifications, setShownNotifications] = useState<Set<string>>(new Set());
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [dialogStep, setDialogStep] = useState<
     "type" | "workspace" | "details"
@@ -4444,7 +4448,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                         />
                       </div>
                       <p className="text-xs text-muted-foreground">
-                        To-dos ready to start now •{" "}
+                        To-dos ready to start now ��{" "}
                         {getActionableTasksMetrics().percentage}% complete
                       </p>
                     </div>
