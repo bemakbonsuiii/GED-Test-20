@@ -523,6 +523,11 @@ const Home = () => {
     if (selectedTypeFilter) {
       return true; // Don't filter out children when type filter is active
     }
+    // If filtering by actionable or blocked, show all todos (including children) as standalone items
+    // This allows children of meetings to show up as actionable
+    if (filter === "actionable" || filter === "blocked") {
+      return true;
+    }
     // Otherwise, only show parent todos (children appear nested under parents)
     return !todo.parentId;
   });
