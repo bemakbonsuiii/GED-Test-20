@@ -1745,6 +1745,30 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
     return null;
   };
 
+  // Format time to AM/PM format (converts 24-hour format if needed)
+  const formatTimeToAMPM = (timeString: string | undefined): string => {
+    if (!timeString) return '';
+
+    // If already in AM/PM format, return as is
+    if (/AM|PM/i.test(timeString)) return timeString;
+
+    // Parse 24-hour format (e.g., "14:30" or "14:30:00")
+    const match = timeString.match(/(\d{1,2}):(\d{2})/);
+    if (match) {
+      let hours = parseInt(match[1]);
+      const minutes = match[2];
+      const isPM = hours >= 12;
+
+      // Convert to 12-hour format
+      if (hours === 0) hours = 12;
+      else if (hours > 12) hours -= 12;
+
+      return `${hours}:${minutes} ${isPM ? 'PM' : 'AM'}`;
+    }
+
+    return timeString;
+  };
+
   // Get actual meeting timestamp considering both dueDate and meetingTime
   const getMeetingTimestamp = (meeting: Todo) => {
     if (!meeting.dueDate) return 0;
