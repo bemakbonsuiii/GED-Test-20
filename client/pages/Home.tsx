@@ -4352,17 +4352,21 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                                         <p className="text-xs font-medium text-amber-700 dark:text-amber-400">
                                           Blocked by:
                                         </p>
-                                        {blockers.map((blocker) => (
+                                        {blockingChildren.map((blockingChild) => (
                                           <div
-                                            key={blocker.id}
+                                            key={blockingChild.id}
                                             className="flex items-center gap-2 text-xs cursor-pointer hover:underline"
                                             onClick={() =>
-                                              openSummaryDialog(blocker)
+                                              openSummaryDialog(blockingChild)
                                             }
                                           >
-                                            <AlertTriangle className="h-3 w-3 text-red-500" />
-                                            <span className="text-red-600 dark:text-red-400">
-                                              {blocker.text}
+                                            {blockingChild.type === "Meeting" ? (
+                                              <Users className="h-3 w-3 text-purple-500" />
+                                            ) : (
+                                              <AlertTriangle className="h-3 w-3 text-red-500" />
+                                            )}
+                                            <span className={blockingChild.type === "Meeting" ? "text-purple-600 dark:text-purple-400" : "text-red-600 dark:text-red-400"}>
+                                              {blockingChild.text}
                                             </span>
                                           </div>
                                         ))}
