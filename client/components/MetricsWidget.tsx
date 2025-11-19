@@ -171,14 +171,17 @@ export function MetricsWidget({
       { type: "Meeting", color: "from-orange-500 to-orange-600", count: 0 },
     ];
 
-    filteredTodos.forEach(todo => {
+    // Only count uncompleted todos
+    const uncompletedTodos = filteredTodos.filter(todo => !todo.completed);
+
+    uncompletedTodos.forEach(todo => {
       const typeData = types.find(t => t.type === todo.type);
       if (typeData) {
         typeData.count++;
       }
     });
 
-    const total = filteredTodos.length;
+    const total = uncompletedTodos.length;
     return { types, total };
   };
 

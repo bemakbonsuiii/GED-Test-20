@@ -1855,7 +1855,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
       workspace === "everything"
         ? todos
         : todos.filter((todo) => todo.workspace === workspace);
-    return allWorkspaceTodos.filter((todo) => todo.type === type).length;
+    return allWorkspaceTodos.filter((todo) => todo.type === type && !todo.completed).length;
   };
 
   // Metrics calculations
