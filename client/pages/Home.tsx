@@ -860,19 +860,31 @@ const Home = () => {
         const priorityTodos = prevTodos.filter((t) => t.isPriority);
         let nextOrder = priorityTodos.length;
 
+        // Check if all children are meetings
+        const allChildrenAreMeetings = children.every((c) => c.type === "Meeting");
+
+        // If all children are meetings, just add the parent (no children)
+        if (allChildrenAreMeetings) {
+          return prevTodos.map((t) =>
+            t.id === todoId
+              ? { ...t, isPriority: true, priorityOrder: nextOrder }
+              : t,
+          );
+        }
+
         return prevTodos.map((t) => {
-          // Add children first (except Blockers)
+          // Add children first (except Blockers and Meetings)
           const childIndex = children.findIndex((c) => c.id === t.id);
-          if (childIndex !== -1 && t.type !== "Blocker") {
+          if (childIndex !== -1 && t.type !== "Blocker" && t.type !== "Meeting") {
             const order = nextOrder + childIndex;
             return { ...t, isPriority: true, priorityOrder: order };
           }
           // Then add the parent (it will show in "Blocked Priorities" if it has blockers)
           if (t.id === todoId) {
-            const nonBlockerChildren = children.filter(
-              (c) => c.type !== "Blocker",
+            const nonBlockerNonMeetingChildren = children.filter(
+              (c) => c.type !== "Blocker" && c.type !== "Meeting",
             );
-            const parentOrder = nextOrder + nonBlockerChildren.length;
+            const parentOrder = nextOrder + nonBlockerNonMeetingChildren.length;
             return { ...t, isPriority: true, priorityOrder: parentOrder };
           }
           return t;
