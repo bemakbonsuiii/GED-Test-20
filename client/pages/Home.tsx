@@ -2094,18 +2094,28 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
       .filter((t) => {
         if (t.completed || t.type !== "Meeting") return false;
         if (!t.dueDate) return false;
+
+        const baseDueDate = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
         const meetingTime = getMeetingTimestamp(t);
 
-        // Only include meetings that haven't passed (or started within last 15 minutes)
+        // Check if meeting is today (based on the base due date)
+        const isToday = baseDueDate >= todayStart.getTime() && baseDueDate <= todayEnd.getTime();
+
+        // Include all meetings today (regardless of time) OR future meetings OR meetings that started within last 15 min
+        if (isToday) return true;
+
+        // For non-today meetings, only include if they haven't passed
         return meetingTime >= fifteenMinutesAgo;
       })
       .sort((a, b) => {
         const aTime = getMeetingTimestamp(a);
         const bTime = getMeetingTimestamp(b);
+        const aBaseDueDate = typeof a.dueDate === 'string' ? new Date(a.dueDate).getTime() : a.dueDate!;
+        const bBaseDueDate = typeof b.dueDate === 'string' ? new Date(b.dueDate).getTime() : b.dueDate!;
 
         // Check if meetings are today
-        const aIsToday = aTime >= todayStart.getTime() && aTime <= todayEnd.getTime();
-        const bIsToday = bTime >= todayStart.getTime() && bTime <= todayEnd.getTime();
+        const aIsToday = aBaseDueDate >= todayStart.getTime() && aBaseDueDate <= todayEnd.getTime();
+        const bIsToday = bBaseDueDate >= todayStart.getTime() && bBaseDueDate <= todayEnd.getTime();
 
         // Prioritize today's meetings over future meetings
         if (aIsToday && !bIsToday) return -1;
