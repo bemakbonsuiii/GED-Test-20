@@ -2004,6 +2004,53 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
     return score;
   };
 
+  // Get next upcoming meeting
+  const getNextMeeting = () => {
+    const now = Date.now();
+    const upcomingMeetings = todos
+      .filter((t) => {
+        if (t.completed || t.type !== "Meeting") return false;
+        if (!t.dueDate) return false;
+        const meetingTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+        // Include meetings up to 2 hours in the past (in case meeting just started)
+        return meetingTime >= now - (2 * 60 * 60 * 1000);
+      })
+      .sort((a, b) => {
+        const aTime = typeof a.dueDate === 'string' ? new Date(a.dueDate).getTime() : a.dueDate!;
+        const bTime = typeof b.dueDate === 'string' ? new Date(b.dueDate).getTime() : b.dueDate!;
+        return aTime - bTime;
+      });
+
+    return upcomingMeetings[0] || null;
+  };
+
+  // Get time until meeting in minutes
+  const getTimeUntilMeeting = (meeting: Todo) => {
+    if (!meeting.dueDate) return null;
+    const now = Date.now();
+    const meetingTime = typeof meeting.dueDate === 'string' ? new Date(meeting.dueDate).getTime() : meeting.dueDate;
+    const diffMs = meetingTime - now;
+    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+    return diffMinutes;
+  };
+
+  // Format time until meeting
+  const formatTimeUntilMeeting = (minutes: number) => {
+    if (minutes < 0) {
+      const elapsed = Math.abs(minutes);
+      if (elapsed < 60) return `Started ${elapsed} min ago`;
+      const hours = Math.floor(elapsed / 60);
+      const mins = elapsed % 60;
+      return `Started ${hours}h ${mins}m ago`;
+    }
+
+    if (minutes < 60) return `${minutes} min`;
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    if (mins === 0) return `${hours}h`;
+    return `${hours}h ${mins}m`;
+  };
+
   // Get alerts count
   const getAlertsCount = () => {
     const now = Date.now();
@@ -4448,7 +4495,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                         />
                       </div>
                       <p className="text-xs text-muted-foreground">
-                        To-dos ready to start now ��{" "}
+                        To-dos ready to start now •{" "}
                         {getActionableTasksMetrics().percentage}% complete
                       </p>
                     </div>
