@@ -118,10 +118,12 @@ IMPORTANT RULES:
 When responding with suggestions, format them as a JSON array of todo IDs at the end of your response, like this:
 SUGGESTIONS: ["todo-id-1", "todo-id-2"]
 
-IMPORTANT FOR AUTO-PRIORITIZATION:
-- If the user specifies a number (e.g., "give me 5 items", "top 5", "prioritize 5 tasks"), you MUST return EXACTLY that many todo IDs
+IMPORTANT FOR AUTO-PRIORITIZATION (THIS IS MANDATORY):
+- If the user specifies a number (e.g., "give me 5 items", "top 5", "prioritize 5 tasks"), you MUST return EXACTLY that many todo IDs - NO EXCEPTIONS
+- If the user asks for 5 items, you MUST provide 5 todo IDs in your SUGGESTIONS array
 - If no specific number is requested, return between 3-5 todo IDs (minimum 3, maximum 5)
-- NEVER return fewer items than requested - if there aren't enough urgent items, include lower-priority but actionable tasks to meet the count
+- NEVER EVER return fewer items than requested - if there aren't enough critical items, include items due tomorrow, items due within 3 days, high-priority items, or ANY actionable items to meet the exact count requested
+- It is BETTER to suggest lower-priority actionable items than to return fewer items than requested
 
 Be concise but friendly. Address the user's specific question.`;
 
@@ -169,13 +171,43 @@ Be concise but friendly. Address the user's specific question.`;
       },
     );
 
+    // Check for items due tomorrow (excluding meeting prep tasks already tracked)
+    const tomorrowEnd = new Date(tomorrow);
+    const dueTomorrow = incompleteTodos.filter((t) => {
+      if (!t.dueDate) return false;
+      if (t.type === "Meeting" || t.type === "Blocker") return false;
+      // Exclude items that are already counted as meeting prep tasks
+      if (meetingPrepTasks.some((prep) => prep.id === t.id)) return false;
+      const dueTime =
+        typeof t.dueDate === "string"
+          ? new Date(t.dueDate).getTime()
+          : t.dueDate;
+      return dueTime >= tomorrow.getTime() && dueTime < tomorrowEnd.getTime();
+    });
+
+    // Check for items due within next 3 days (excluding already tracked items)
+    const threeDaysFromNow = new Date(today);
+    threeDaysFromNow.setDate(threeDaysFromNow.getDate() + 3);
+    const dueWithin3Days = incompleteTodos.filter((t) => {
+      if (!t.dueDate) return false;
+      if (t.type === "Meeting" || t.type === "Blocker") return false;
+      // Exclude items already counted
+      if (meetingPrepTasks.some((prep) => prep.id === t.id)) return false;
+      if (dueTomorrow.some((item) => item.id === t.id)) return false;
+      const dueTime =
+        typeof t.dueDate === "string"
+          ? new Date(t.dueDate).getTime()
+          : t.dueDate;
+      return dueTime >= tomorrowEnd.getTime() && dueTime < threeDaysFromNow.getTime();
+    });
+
     // Build parent-child relationship map
     const todosWithChildren = incompleteTodos.filter((t) =>
       todos.some((child) => child.parentId === t.id && !child.completed),
     );
     const childTodos = incompleteTodos.filter((t) => t.parentId);
 
-    const userPrompt = `${overdueItems.length > 0 ? `🚨 OVERDUE ITEMS (CRITICAL - PAST DUE): ${overdueItems.length}\n` : ""}${upcomingMeetingsWithIncompletePrep.length > 0 ? `🔴 URGENT: ${upcomingMeetingsWithIncompletePrep.length} MEETING(S) TODAY/TOMORROW WITH INCOMPLETE PREP TASKS (${meetingPrepTasks.length} tasks)\n` : ""}${futureStartItems.length > 0 ? `⏳ FUTURE START ITEMS (cannot start yet): ${futureStartItems.length}\n` : ""}${todosWithChildren.length > 0 ? `🔗 PARENT ITEMS (blocked by children): ${todosWithChildren.length}\n` : ""}${childTodos.length > 0 ? `👶 CHILD ITEMS (blockers for parents): ${childTodos.length}\n` : ""}
+    const userPrompt = `${overdueItems.length > 0 ? `🚨 OVERDUE ITEMS (CRITICAL - PAST DUE): ${overdueItems.length}\n` : ""}${upcomingMeetingsWithIncompletePrep.length > 0 ? `🔴 URGENT: ${upcomingMeetingsWithIncompletePrep.length} MEETING(S) TODAY/TOMORROW WITH INCOMPLETE PREP TASKS (${meetingPrepTasks.length} tasks)\n` : ""}${dueTomorrow.length > 0 ? `⚠️ DUE TOMORROW (VERY HIGH PRIORITY): ${dueTomorrow.length} items\n` : ""}${dueWithin3Days.length > 0 ? `📅 DUE WITHIN 3 DAYS (HIGH PRIORITY): ${dueWithin3Days.length} items\n` : ""}${futureStartItems.length > 0 ? `⏳ FUTURE START ITEMS (cannot start yet): ${futureStartItems.length}\n` : ""}${todosWithChildren.length > 0 ? `🔗 PARENT ITEMS (blocked by children): ${todosWithChildren.length}\n` : ""}${childTodos.length > 0 ? `👶 CHILD ITEMS (blockers for parents): ${childTodos.length}\n` : ""}
 ${
   upcomingMeetingsWithIncompletePrep.length > 0
     ? `\nUPCOMING MEETINGS WITH INCOMPLETE PREP:\n${upcomingMeetingsWithIncompletePrep
