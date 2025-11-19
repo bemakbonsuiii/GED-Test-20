@@ -1724,6 +1724,38 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
     return true;
   });
 
+  // Get actual meeting timestamp considering both dueDate and meetingTime
+  const getMeetingTimestamp = (meeting: Todo) => {
+    if (!meeting.dueDate) return 0;
+    const baseTime = typeof meeting.dueDate === 'string' ? new Date(meeting.dueDate).getTime() : meeting.dueDate;
+
+    // Check for time in meetingTime or dueTime fields
+    const timeString = meeting.meetingTime || meeting.dueTime;
+
+    if (timeString) {
+      const dateObj = new Date(baseTime);
+      const timeMatch = timeString.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+      if (timeMatch) {
+        let hours = parseInt(timeMatch[1]);
+        const minutes = parseInt(timeMatch[2]);
+        const isPM = timeMatch[3].toUpperCase() === 'PM';
+
+        // Convert to 24-hour format
+        if (isPM && hours !== 12) hours += 12;
+        if (!isPM && hours === 12) hours = 0;
+
+        dateObj.setHours(hours, minutes, 0, 0);
+        return dateObj.getTime();
+      }
+    }
+
+    // If no specific meeting time is set, default to 11:59 PM (end of day)
+    // This prevents meetings without times from appearing as "started" when they're scheduled for today
+    const dateObj = new Date(baseTime);
+    dateObj.setHours(23, 59, 0, 0);
+    return dateObj.getTime();
+  };
+
   const meetingTodos = allWorkspaceTodos
     .filter((todo) => todo.type === "Meeting" && !todo.completed)
     .sort((a, b) => {
@@ -2057,38 +2089,6 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
     );
 
     return score;
-  };
-
-  // Get actual meeting timestamp considering both dueDate and meetingTime
-  const getMeetingTimestamp = (meeting: Todo) => {
-    if (!meeting.dueDate) return 0;
-    const baseTime = typeof meeting.dueDate === 'string' ? new Date(meeting.dueDate).getTime() : meeting.dueDate;
-
-    // Check for time in meetingTime or dueTime fields
-    const timeString = meeting.meetingTime || meeting.dueTime;
-
-    if (timeString) {
-      const dateObj = new Date(baseTime);
-      const timeMatch = timeString.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
-      if (timeMatch) {
-        let hours = parseInt(timeMatch[1]);
-        const minutes = parseInt(timeMatch[2]);
-        const isPM = timeMatch[3].toUpperCase() === 'PM';
-
-        // Convert to 24-hour format
-        if (isPM && hours !== 12) hours += 12;
-        if (!isPM && hours === 12) hours = 0;
-
-        dateObj.setHours(hours, minutes, 0, 0);
-        return dateObj.getTime();
-      }
-    }
-
-    // If no specific meeting time is set, default to 11:59 PM (end of day)
-    // This prevents meetings without times from appearing as "started" when they're scheduled for today
-    const dateObj = new Date(baseTime);
-    dateObj.setHours(23, 59, 0, 0);
-    return dateObj.getTime();
   };
 
   // Get next upcoming meeting(s)
