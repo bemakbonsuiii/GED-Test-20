@@ -3247,6 +3247,23 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
+                      const newValue = !focusMode;
+                      setFocusMode(newValue);
+                      localStorage.setItem(
+                        "focusMode",
+                        JSON.stringify(newValue),
+                      );
+                    }}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Target className="h-4 w-4" />
+                      <span>
+                        {focusMode ? "Exit Focus Mode" : "Focus Mode"}
+                      </span>
+                    </div>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
                       if (
                         confirm(
                           "Load 30 test todos? This will replace existing data.",
