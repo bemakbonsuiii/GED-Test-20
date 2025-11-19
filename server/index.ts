@@ -1,4 +1,7 @@
-import "dotenv/config";
+import { config } from "dotenv";
+
+// Override environment to use .env file (fixes cached shell environment issue)
+config({ override: true });
 import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";

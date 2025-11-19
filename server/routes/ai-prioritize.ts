@@ -21,8 +21,8 @@ interface Todo {
 
 export async function handleAIPrioritize(req: Request, res: Response) {
   try {
-    // Use VITE_OPENAI_API_KEY if available (from platform), otherwise fall back to OPENAI_API_KEY
-    const apiKey = process.env.VITE_OPENAI_API_KEY || process.env.OPENAI_API_KEY;
+    // Get API key from environment
+    const apiKey = process.env.OPENAI_API_KEY;
 
     // Create OpenAI client here to pick up the latest env var
     const openai = new OpenAI({
