@@ -2078,7 +2078,11 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
       }
     }
 
-    return baseTime;
+    // If no specific meeting time is set, default to 11:59 PM (end of day)
+    // This prevents meetings without times from appearing as "started" when they're scheduled for today
+    const dateObj = new Date(baseTime);
+    dateObj.setHours(23, 59, 0, 0);
+    return dateObj.getTime();
   };
 
   // Get next upcoming meeting(s)
