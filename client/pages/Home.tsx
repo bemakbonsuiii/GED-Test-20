@@ -284,6 +284,7 @@ const Home = () => {
     const saved = localStorage.getItem("autoAlerts");
     return saved !== null ? JSON.parse(saved) : true;
   });
+  const [autoPrioritizeCount, setAutoPrioritizeCount] = useState(3);
   const [cachedAlertsTodos, setCachedAlertsTodos] = useState<Todo[]>([]);
   const [lastAlertsUpdate, setLastAlertsUpdate] = useState<number>(Date.now());
 
@@ -1281,7 +1282,8 @@ const Home = () => {
     }
   };
 
-  const autoPrioritize = async () => {
+  const autoPrioritize = async (count?: number) => {
+    const itemCount = count || autoPrioritizeCount;
     console.log("========================================");
     console.log("autoPrioritize VERSION v8 - Rate limit fix");
     console.log("Timestamp:", new Date().toISOString());
@@ -1299,7 +1301,7 @@ const Home = () => {
         workspace === "everything"
           ? "all workspaces"
           : `the ${workspace} workspace`;
-      const autoPrioritizePrompt = `Analyze all my to-dos in ${workspaceLabel} and automatically select 3-5 most important items I should focus on today. You MUST suggest at least 3 items and no more than 5 items.
+      const autoPrioritizePrompt = `Analyze all my to-dos in ${workspaceLabel} and automatically select ${itemCount} most important items I should focus on today. You MUST suggest EXACTLY ${itemCount} item${itemCount === 1 ? '' : 's'}.
 
 PRIORITY ORDER (STRICT):
 1. OVERDUE items MUST be prioritized FIRST above everything else
@@ -4332,16 +4334,30 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                   </div>
                   {!focusMode && (
                     <div className="flex gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={autoPrioritize}
-                        disabled={toddLoading}
-                        className="text-xs"
-                      >
-                        <Sparkles className="h-3 w-3 mr-1" />
-                        Auto
-                      </Button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            disabled={toddLoading}
+                            className="text-xs"
+                          >
+                            <Sparkles className="h-3 w-3 mr-1" />
+                            Auto ({autoPrioritizeCount})
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => { setAutoPrioritizeCount(1); autoPrioritize(1); }}>
+                            Prioritize 1 item
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => { setAutoPrioritizeCount(3); autoPrioritize(3); }}>
+                            Prioritize 3 items
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => { setAutoPrioritizeCount(5); autoPrioritize(5); }}>
+                            Prioritize 5 items
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                       {todos.some((t) => t.isPriority) && (
                         <Button
                           variant="ghost"
