@@ -1312,7 +1312,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
           throw new Error(
             "🔑 Invalid OpenAI API key.\\n\\n" +
               "Please verify your API key at: https://platform.openai.com/api-keys\\n" +
-              "Then update it in Settings �� Environment Variables",
+              "Then update it in Settings → Environment Variables",
           );
         }
 
@@ -5085,18 +5085,39 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                       })()}
                     <div className="flex gap-2 flex-wrap">
                       <Button
-                        variant={filter === "all" ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setFilter("all")}
-                      >
-                        All ({workspaceTodos.length})
-                      </Button>
-                      <Button
                         variant={filter === "active" ? "default" : "outline"}
                         size="sm"
                         onClick={() => setFilter("active")}
                       >
                         Active ({activeCount})
+                      </Button>
+                      <Button
+                        variant={filter === "dueToday" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setFilter("dueToday")}
+                      >
+                        Due Today ({dueTodayCount})
+                      </Button>
+                      <Button
+                        variant={filter === "actionable" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setFilter("actionable")}
+                      >
+                        Actionable ({actionableCount})
+                      </Button>
+                      <Button
+                        variant={filter === "blocked" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setFilter("blocked")}
+                      >
+                        Blocked ({blockedCount})
+                      </Button>
+                      <Button
+                        variant={filter === "all" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setFilter("all")}
+                      >
+                        All ({workspaceTodos.length})
                       </Button>
                       <Button
                         variant={filter === "completed" ? "default" : "outline"}
