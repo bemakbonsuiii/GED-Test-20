@@ -1392,7 +1392,8 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
               children.forEach((child) => {
                 if (
                   !validSuggestions.includes(child.id) &&
-                  child.type !== "Blocker"
+                  child.type !== "Blocker" &&
+                  child.type !== "Meeting"
                 ) {
                   validSuggestions.push(child.id);
                   console.log("  Added child:", child.text);
@@ -1408,18 +1409,29 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
             const hasUncompletedChildren = children.length > 0;
 
             if (hasUncompletedChildren) {
-              // Add children first (excluding Blockers)
-              children.forEach((child) => {
-                if (
-                  !validSuggestions.includes(child.id) &&
-                  child.type !== "Blocker"
-                ) {
-                  validSuggestions.push(child.id);
+              // Check if all children are meetings
+              const allChildrenAreMeetings = children.every((c) => c.type === "Meeting");
+
+              // If all children are meetings, just add the parent
+              if (allChildrenAreMeetings) {
+                if (!validSuggestions.includes(todoId)) {
+                  validSuggestions.push(todoId);
                 }
-              });
-              // Then add the parent (it will show in "Blocked Priorities" if it has blockers)
-              if (!validSuggestions.includes(todoId)) {
-                validSuggestions.push(todoId);
+              } else {
+                // Add children first (excluding Blockers and Meetings)
+                children.forEach((child) => {
+                  if (
+                    !validSuggestions.includes(child.id) &&
+                    child.type !== "Blocker" &&
+                    child.type !== "Meeting"
+                  ) {
+                    validSuggestions.push(child.id);
+                  }
+                });
+                // Then add the parent (it will show in "Blocked Priorities" if it has blockers)
+                if (!validSuggestions.includes(todoId)) {
+                  validSuggestions.push(todoId);
+                }
               }
             } else {
               // No children, just add the todo
