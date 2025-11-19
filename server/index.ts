@@ -5,6 +5,10 @@ import { handleDemo } from "./routes/demo";
 import { handleAIPrioritize } from "./routes/ai-prioritize";
 import { handleToddAssistant } from "./routes/todd-assistant";
 
+// Force override OPENAI_API_KEY with the latest value
+process.env.OPENAI_API_KEY = "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";
+console.log("OPENAI_API_KEY set to:", process.env.OPENAI_API_KEY?.slice(-10));
+
 export function createServer() {
   const app = express();
 
