@@ -4012,6 +4012,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
 
             {/* Upcoming Meetings and Deadlines */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+              {!focusMode && (
               <Card className="border border-slate-200 dark:border-slate-800">
                 <CardHeader
                   className="pb-3 cursor-pointer"
@@ -4148,6 +4149,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                   </CardContent>
                 )}
               </Card>
+              )}
 
               {/* Upcoming Deadlines */}
               {!focusMode && (
