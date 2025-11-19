@@ -829,13 +829,13 @@ const Home = () => {
           (t) => t.parentId === todoId && !t.completed,
         );
         if (children.length > 0) {
-          // Add all uncompleted children (except Blockers) to priorities
+          // Add all uncompleted children (except Blockers and Meetings) to priorities
           const priorityTodos = prevTodos.filter((t) => t.isPriority);
           let nextOrder = priorityTodos.length;
 
           return prevTodos.map((t) => {
             const childIndex = children.findIndex((c) => c.id === t.id);
-            if (childIndex !== -1 && t.type !== "Blocker") {
+            if (childIndex !== -1 && t.type !== "Blocker" && t.type !== "Meeting") {
               const order = nextOrder + childIndex;
               return { ...t, isPriority: true, priorityOrder: order };
             }
