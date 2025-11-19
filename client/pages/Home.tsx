@@ -473,8 +473,8 @@ const Home = () => {
 
       const notificationKey = `${nextMeeting.id}-`;
 
-      // Check if meeting just started (0 to 5 minutes ago)
-      if (minutes <= 0 && minutes >= -5) {
+      // Check if meeting just started (0 to 15 minutes ago)
+      if (minutes <= 0 && minutes >= -15) {
         const key = `${notificationKey}started`;
         if (!shownNotifications.has(key)) {
           setShownNotifications(prev => new Set(prev).add(key));
@@ -2058,7 +2058,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
   // Get next upcoming meeting(s)
   const getNextMeeting = () => {
     const now = Date.now();
-    const fiveMinutesAgo = now - (5 * 60 * 1000);
+    const fifteenMinutesAgo = now - (15 * 60 * 1000);
     const thirtyMinutesFromNow = now + (30 * 60 * 1000);
 
     const upcomingMeetings = todos
@@ -2067,8 +2067,8 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
         if (!t.dueDate) return false;
         const meetingTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
 
-        // Only include meetings that haven't passed (or started within last 5 minutes)
-        return meetingTime >= fiveMinutesAgo;
+        // Only include meetings that haven't passed (or started within last 15 minutes)
+        return meetingTime >= fifteenMinutesAgo;
       })
       .sort((a, b) => {
         const aTime = typeof a.dueDate === 'string' ? new Date(a.dueDate).getTime() : a.dueDate!;
