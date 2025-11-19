@@ -3734,28 +3734,30 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                       Drag to reorder
                     </p>
                   </div>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={autoPrioritize}
-                      disabled={toddLoading}
-                      className="text-xs"
-                    >
-                      <Sparkles className="h-3 w-3 mr-1" />
-                      Auto
-                    </Button>
-                    {todos.some((t) => t.isPriority) && (
+                  {!focusMode && (
+                    <div className="flex gap-2">
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={clearPriorities}
+                        onClick={autoPrioritize}
+                        disabled={toddLoading}
                         className="text-xs"
                       >
-                        Clear
+                        <Sparkles className="h-3 w-3 mr-1" />
+                        Auto
                       </Button>
-                    )}
-                  </div>
+                      {todos.some((t) => t.isPriority) && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={clearPriorities}
+                          className="text-xs"
+                        >
+                          Clear
+                        </Button>
+                      )}
+                    </div>
+                  )}
                 </div>
               </CardHeader>
               <CardContent className="pt-6">
