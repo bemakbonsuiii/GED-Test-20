@@ -2055,13 +2055,11 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
     return score;
   };
 
-  // Get next upcoming meeting
+  // Get next upcoming meeting(s)
   const getNextMeeting = () => {
     const now = Date.now();
-    const todayStart = new Date();
-    todayStart.setHours(0, 0, 0, 0);
-    const todayEnd = new Date();
-    todayEnd.setHours(23, 59, 59, 999);
+    const fiveMinutesAgo = now - (5 * 60 * 1000);
+    const thirtyMinutesFromNow = now + (30 * 60 * 1000);
 
     const upcomingMeetings = todos
       .filter((t) => {
@@ -2069,12 +2067,8 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
         if (!t.dueDate) return false;
         const meetingTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
 
-        // Include all meetings today, OR future meetings, OR meetings that started within last 2 hours
-        const isToday = meetingTime >= todayStart.getTime() && meetingTime <= todayEnd.getTime();
-        const isFuture = meetingTime > todayEnd.getTime();
-        const recentlyStarted = meetingTime >= now - (2 * 60 * 60 * 1000) && meetingTime < todayStart.getTime();
-
-        return isToday || isFuture || recentlyStarted;
+        // Only include meetings that haven't passed (or started within last 5 minutes)
+        return meetingTime >= fiveMinutesAgo;
       })
       .sort((a, b) => {
         const aTime = typeof a.dueDate === 'string' ? new Date(a.dueDate).getTime() : a.dueDate!;
@@ -2082,7 +2076,11 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
         return aTime - bTime;
       });
 
-    return upcomingMeetings[0] || null;
+    if (upcomingMeetings.length === 0) return null;
+
+    // Return the first upcoming meeting
+    // (In the future, we could return multiple if they're within 30 min window)
+    return upcomingMeetings[0];
   };
 
   // Get time until meeting in minutes
