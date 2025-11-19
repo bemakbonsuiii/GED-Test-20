@@ -4557,6 +4557,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
               </Card>
             )}
 
+            {!focusMode && (
             <Card className="border border-slate-200 dark:border-slate-800">
               <CardHeader
                 className="cursor-pointer"
@@ -4801,6 +4802,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                 </CardContent>
               )}
             </Card>
+            )}
           </TabsContent>
         </Tabs>
 
