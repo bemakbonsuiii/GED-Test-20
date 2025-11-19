@@ -2085,6 +2085,10 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
   const getNextMeeting = () => {
     const now = Date.now();
     const fifteenMinutesAgo = now - (15 * 60 * 1000);
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    const todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999);
 
     const upcomingMeetings = todos
       .filter((t) => {
@@ -2098,6 +2102,16 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
       .sort((a, b) => {
         const aTime = getMeetingTimestamp(a);
         const bTime = getMeetingTimestamp(b);
+
+        // Check if meetings are today
+        const aIsToday = aTime >= todayStart.getTime() && aTime <= todayEnd.getTime();
+        const bIsToday = bTime >= todayStart.getTime() && bTime <= todayEnd.getTime();
+
+        // Prioritize today's meetings over future meetings
+        if (aIsToday && !bIsToday) return -1;
+        if (!aIsToday && bIsToday) return 1;
+
+        // If both are today or both are future, sort by time
         return aTime - bTime;
       });
 
