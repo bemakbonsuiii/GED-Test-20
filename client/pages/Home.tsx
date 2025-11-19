@@ -3064,6 +3064,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                   <Plus className="h-4 w-4 mr-1" />
                   New To-do
                 </Button>
+                {!focusMode && (
                 <Button
                   variant="ghost"
                   size="sm"
@@ -3087,7 +3088,8 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                   <Briefcase className="h-4 w-4 mr-1" />
                   New Project
                 </Button>
-                {!autoAlerts && (
+                )}
+                {!focusMode && !autoAlerts && (
                   <Button
                     variant="outline"
                     size="sm"
@@ -3119,7 +3121,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                   <Sparkles className="h-4 w-4 mr-1" />
                   Ask Todd
                 </Button>
-                {getSmartSuggestionsCount() > 0 && (
+                {!focusMode && getSmartSuggestionsCount() > 0 && (
                   <Button
                     variant="ghost"
                     size="sm"
@@ -3146,7 +3148,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                     </Badge>
                   </Button>
                 )}
-                {getAlertsCount() > 0 && (
+                {!focusMode && getAlertsCount() > 0 && (
                   <Button
                     variant="ghost"
                     size="sm"
@@ -3174,6 +3176,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
               </div>
             </div>
             <div className="flex items-center gap-3">
+              {!focusMode && (
               <div className="hidden md:flex items-center gap-4 text-sm">
                 <div className="flex flex-col items-end gap-0.5">
                   <div className="text-xs text-slate-500 dark:text-slate-400">
@@ -3204,6 +3207,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                   </div>
                 </div>
               </div>
+              )}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="h-9 w-9">
