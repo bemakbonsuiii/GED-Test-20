@@ -84,6 +84,7 @@ import {
   ExternalLink,
   Settings,
   FileWarning,
+  Search,
 } from "lucide-react";
 import {
   format,
@@ -1030,7 +1031,7 @@ const Home = () => {
             );
           } else {
             throw new Error(
-              `⏳ OpenAI rate limit reached. Please wait ${retryTime} seconds.`,
+              `��� OpenAI rate limit reached. Please wait ${retryTime} seconds.`,
             );
           }
         }
@@ -5238,6 +5239,16 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                             </div>
                           );
                         })()}
+                      <div className="relative mb-4">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          type="text"
+                          placeholder="Search todos..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="pl-9"
+                        />
+                      </div>
                       <div className="flex gap-2 flex-wrap">
                         <Button
                           variant={filter === "active" ? "default" : "outline"}
