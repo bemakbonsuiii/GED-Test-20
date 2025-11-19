@@ -4344,14 +4344,16 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
             </div>
 
             {/* Metrics Widget */}
-            <MetricsWidget
-              workspace={workspace}
-              selectedProjectPage={selectedProjectPage}
-              todos={todos}
-              projects={projects}
-              isExpanded={isMetricsExpanded}
-              setIsExpanded={setIsMetricsExpanded}
-            />
+            {!focusMode && (
+              <MetricsWidget
+                workspace={workspace}
+                selectedProjectPage={selectedProjectPage}
+                todos={todos}
+                projects={projects}
+                isExpanded={isMetricsExpanded}
+                setIsExpanded={setIsMetricsExpanded}
+              />
+            )}
 
             {false && (
               <Card className="mb-6 shadow-lg border-2 border-blue-200 dark:border-blue-800">
