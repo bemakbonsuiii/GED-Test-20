@@ -1008,7 +1008,8 @@ const Home = () => {
         } catch (e) {
           console.error("Could not parse error response:", e);
           try {
-            const errorText = await clonedResponse.text();
+            const textResponse = response.clone();
+            const errorText = await textResponse.text();
             console.error("Error response text:", errorText);
           } catch (e2) {
             console.error("Could not read error response text:", e2);
@@ -1038,7 +1039,7 @@ const Home = () => {
             details.includes("hour")
           ) {
             throw new Error(
-              "⚠️ OpenAI DAILY token limit reached (100,000 tokens used).\\n\\n" +
+              "⚠�� OpenAI DAILY token limit reached (100,000 tokens used).\\n\\n" +
                 "Options:\\n" +
                 "1. Wait ~36 hours for the limit to reset\\n" +
                 "2. Add a payment method at: https://platform.openai.com/account/billing",
@@ -1200,7 +1201,8 @@ const Home = () => {
         } catch (e) {
           console.error("Could not parse error response:", e);
           try {
-            const errorText = await clonedResponse.text();
+            const textResponse = response.clone();
+            const errorText = await textResponse.text();
             console.error("Error response text:", errorText);
           } catch (e2) {
             console.error("Could not read error response text:", e2);
@@ -1230,7 +1232,7 @@ const Home = () => {
             details.includes("hour")
           ) {
             throw new Error(
-              "⚠️ OpenAI DAILY token limit reached (100,000 tokens used).\\n\\n" +
+              "⚠��� OpenAI DAILY token limit reached (100,000 tokens used).\\n\\n" +
                 "Options:\\n" +
                 "1. Wait ~36 hours for the limit to reset\\n" +
                 "2. Add a payment method at: https://platform.openai.com/account/billing",
