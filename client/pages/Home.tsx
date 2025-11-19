@@ -4349,24 +4349,33 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                                         <p className="text-xs font-medium text-amber-700 dark:text-amber-400">
                                           Blocked by:
                                         </p>
-                                        {blockingChildren.map((blockingChild) => (
-                                          <div
-                                            key={blockingChild.id}
-                                            className="flex items-center gap-2 text-xs cursor-pointer hover:underline"
-                                            onClick={() =>
-                                              openSummaryDialog(blockingChild)
-                                            }
-                                          >
-                                            {blockingChild.type === "Meeting" ? (
-                                              <Users className="h-3 w-3 text-purple-500" />
-                                            ) : (
-                                              <AlertTriangle className="h-3 w-3 text-red-500" />
-                                            )}
-                                            <span className={blockingChild.type === "Meeting" ? "text-purple-600 dark:text-purple-400" : "text-red-600 dark:text-red-400"}>
-                                              {blockingChild.text}
-                                            </span>
-                                          </div>
-                                        ))}
+                                        {blockingChildren.map((blockingChild) => {
+                                          const childConfig = TODO_TYPE_CONFIG[blockingChild.type];
+                                          return (
+                                            <div
+                                              key={blockingChild.id}
+                                              className="flex items-center gap-2 text-xs cursor-pointer hover:underline"
+                                              onClick={() =>
+                                                openSummaryDialog(blockingChild)
+                                              }
+                                            >
+                                              {blockingChild.type === "Meeting" ? (
+                                                <Users className="h-3 w-3 text-purple-500" />
+                                              ) : blockingChild.type === "Blocker" ? (
+                                                <AlertTriangle className="h-3 w-3 text-red-500" />
+                                              ) : blockingChild.type === "Deliverable" ? (
+                                                <Target className="h-3 w-3 text-blue-500" />
+                                              ) : blockingChild.type === "Quick Win" ? (
+                                                <Zap className="h-3 w-3 text-green-500" />
+                                              ) : (
+                                                <CheckCircle2 className="h-3 w-3 text-slate-500" />
+                                              )}
+                                              <span className={`${blockingChild.type === "Meeting" ? "text-purple-600 dark:text-purple-400" : blockingChild.type === "Blocker" ? "text-red-600 dark:text-red-400" : "text-slate-600 dark:text-slate-400"}`}>
+                                                {blockingChild.text}
+                                              </span>
+                                            </div>
+                                          );
+                                        })}
                                       </div>
                                     </div>
                                   </div>
@@ -4998,7 +5007,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                                 onClick={() => setSelectedProjectPage(null)}
                                 className="gap-2"
                               >
-                                ��� Back to All{" "}
+                                ← Back to All{" "}
                                 {workspace !== "everything"
                                   ? workspace.charAt(0).toUpperCase() +
                                     workspace.slice(1)
