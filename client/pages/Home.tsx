@@ -1724,6 +1724,23 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
     return true;
   });
 
+  // Parse time string in AM/PM format to hours and minutes
+  const parseTimeString = (timeString: string): { hours: number; minutes: number } | null => {
+    const timeMatch = timeString.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+    if (timeMatch) {
+      let hours = parseInt(timeMatch[1]);
+      const minutes = parseInt(timeMatch[2]);
+      const isPM = timeMatch[3].toUpperCase() === 'PM';
+
+      // Convert to 24-hour format
+      if (isPM && hours !== 12) hours += 12;
+      if (!isPM && hours === 12) hours = 0;
+
+      return { hours, minutes };
+    }
+    return null;
+  };
+
   // Get actual meeting timestamp considering both dueDate and meetingTime
   const getMeetingTimestamp = (meeting: Todo) => {
     if (!meeting.dueDate) return 0;
