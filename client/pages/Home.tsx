@@ -4271,10 +4271,10 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                           </h3>
                           <div className="space-y-3">
                             {blockedPriorities.map((todo) => {
-                              const blockers = todos.filter(
+                              const blockingChildren = todos.filter(
                                 (child) =>
                                   child.parentId === todo.id &&
-                                  child.type === "Blocker" &&
+                                  (child.type === "Blocker" || child.type === "Meeting") &&
                                   !child.completed,
                               );
                               const typeConfig = TODO_TYPE_CONFIG[todo.type];
