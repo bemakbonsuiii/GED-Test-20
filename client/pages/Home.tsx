@@ -1561,12 +1561,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                 ? startDateTime
                 : undefined,
           dueDate: dueDateTime,
-          dueTime:
-            newTodoType !== "Meeting" && newTodoType !== "Blocker"
-              ? effectiveDueTime || undefined
-              : newTodoType === "Blocker"
-                ? effectiveDueTime || undefined
-                : undefined,
+          dueTime: effectiveDueTime || undefined,
           project: undefined, // Will be set after project creation
           priority:
             newTodoType === "Blocker" ? inheritedPriority : newTodoPriority,
