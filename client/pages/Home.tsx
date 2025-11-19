@@ -1728,13 +1728,14 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
     return true;
   });
 
-  // Parse time string in AM/PM format to hours and minutes
+  // Parse time string in AM/PM or 24-hour format to hours and minutes
   const parseTimeString = (timeString: string): { hours: number; minutes: number } | null => {
-    const timeMatch = timeString.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
-    if (timeMatch) {
-      let hours = parseInt(timeMatch[1]);
-      const minutes = parseInt(timeMatch[2]);
-      const isPM = timeMatch[3].toUpperCase() === 'PM';
+    // Try AM/PM format first
+    const ampmMatch = timeString.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+    if (ampmMatch) {
+      let hours = parseInt(ampmMatch[1]);
+      const minutes = parseInt(ampmMatch[2]);
+      const isPM = ampmMatch[3].toUpperCase() === 'PM';
 
       // Convert to 24-hour format
       if (isPM && hours !== 12) hours += 12;
@@ -1742,6 +1743,19 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
 
       return { hours, minutes };
     }
+
+    // Try 24-hour format (e.g., "14:30" or "14:30:00")
+    const militaryMatch = timeString.match(/(\d{1,2}):(\d{2})/);
+    if (militaryMatch) {
+      const hours = parseInt(militaryMatch[1]);
+      const minutes = parseInt(militaryMatch[2]);
+
+      // Validate hours and minutes
+      if (hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59) {
+        return { hours, minutes };
+      }
+    }
+
     return null;
   };
 
