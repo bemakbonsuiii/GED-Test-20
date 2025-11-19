@@ -1335,6 +1335,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
           priorityTodos: currentWorkspaceTodos
             .filter((t) => t.isPriority)
             .sort((a, b) => (a.priorityOrder || 0) - (b.priorityOrder || 0)),
+          count: itemCount,
         }),
       });
 
