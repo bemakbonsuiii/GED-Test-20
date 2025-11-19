@@ -2111,7 +2111,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
   const getTimeUntilMeeting = (meeting: Todo) => {
     if (!meeting.dueDate) return null;
     const now = Date.now();
-    const meetingTime = typeof meeting.dueDate === 'string' ? new Date(meeting.dueDate).getTime() : meeting.dueDate;
+    const meetingTime = getMeetingTimestamp(meeting);
     const diffMs = meetingTime - now;
     const diffMinutes = Math.floor(diffMs / (1000 * 60));
     return diffMinutes;
