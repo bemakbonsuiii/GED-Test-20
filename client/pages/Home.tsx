@@ -4272,7 +4272,6 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                               const blockingChildren = todos.filter(
                                 (child) =>
                                   child.parentId === todo.id &&
-                                  (child.type === "Blocker" || child.type === "Meeting") &&
                                   !child.completed,
                               );
                               const typeConfig = TODO_TYPE_CONFIG[todo.type];
@@ -4999,7 +4998,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                                 onClick={() => setSelectedProjectPage(null)}
                                 className="gap-2"
                               >
-                                ← Back to All{" "}
+                                ��� Back to All{" "}
                                 {workspace !== "everything"
                                   ? workspace.charAt(0).toUpperCase() +
                                     workspace.slice(1)
