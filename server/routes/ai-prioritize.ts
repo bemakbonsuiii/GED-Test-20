@@ -67,29 +67,58 @@ export async function handleAIPrioritize(req: Request, res: Response) {
       };
     });
 
-    const prompt = `You are a productivity assistant helping prioritize tasks. Analyze the following to-dos and recommend the top 3 that should be worked on next.
+    const now = Date.now();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const threeDaysFromNow = new Date(today);
+    threeDaysFromNow.setDate(threeDaysFromNow.getDate() + 3);
 
-Consider:
-- Due dates and times (prioritize urgent items)
-- Priority levels (P0 > P1 > P2)
-- **Parent-Child Relationships**: Children MUST be completed before their parent can be completed
-  - Items with hasChildren=true are BLOCKED until their children are done
-  - Items with isChild=true are BLOCKERS and should be prioritized over their parents
-  - ALWAYS prioritize children over parents
-- Task types (Deliverables and Meetings may need preparation)
-- Project context and workspace
+    const prompt = `You are a productivity assistant helping prioritize tasks. Analyze the following to-dos and recommend the top 3-5 that should be worked on next.
+
+CRITICAL EXCLUSIONS:
+- NEVER suggest completed todos
+- NEVER suggest Blocker type todos in your suggestions - they should not be prioritized
+- NEVER suggest Meeting type todos in your suggestions - only their children can be prioritized
+
+PRIORITIZATION ORDER (STRICT - FOLLOW THIS EXACTLY):
+1. **OVERDUE CHILDREN** (children that are blocking parents, past due) - ABSOLUTE TOP PRIORITY
+2. **OVERDUE ITEMS** (past due date, NOT Blockers or Meetings) - CRITICAL
+3. **MEETING PREP - TODAY/TOMORROW** (children of meetings happening soon) - EXTREMELY URGENT
+4. **CHILDREN DUE TOMORROW** (children blocking parents, due tomorrow) - EXTREMELY HIGH PRIORITY
+5. **Items due TOMORROW** (not meetings/blockers, can be started) - VERY HIGH PRIORITY
+6. **CHILDREN DUE WITHIN 3 DAYS** (children blocking parents) - VERY HIGH PRIORITY
+7. **Items due within 3 days** (not meetings/blockers, can be started) - HIGH PRIORITY
+8. **CHILDREN WITH ANY DUE DATE** (children blocking parents) - HIGH PRIORITY because they're blocking important work
+9. **Items due within 1 week** (not meetings/blockers, can be started) - MEDIUM-HIGH PRIORITY
+10. P0 priority items with due dates (that can be started today, NOT Blockers or Meetings)
+11. P1 priority items with due dates (that can be started today, NOT Blockers or Meetings)
+12. **ACTIONABLE CHILDREN** (children blocking parents, even without due dates) - MEDIUM PRIORITY
+13. Items with ANY due date (not meetings/blockers, can be started) - MEDIUM PRIORITY
+14. P0 priority items WITHOUT due dates
+15. P1 priority items WITHOUT due dates
+16. Items WITHOUT due dates - LOW PRIORITY
+
+**CRITICAL RULES**:
+- Children that are blocking parents (isChild=true) are HIGH PRIORITY because they prevent important work from being done
+- ALWAYS prioritize children with due dates, especially if they're due soon
+- If a task is a child (has a parentId), it should be prioritized higher than similar tasks without parents
+- NEVER exclude children just because their parent is blocked - that's backwards logic!
+- The fact that a parent is "blocked by incomplete children" is EXACTLY why you should suggest those children - to unblock the parent!
+- ALWAYS prioritize items WITH due dates over items WITHOUT due dates
 
 To-dos:
 ${JSON.stringify(todosData, null, 2)}
 
-Return ONLY a JSON array of exactly 3 todo IDs in priority order, with a brief reason for each. Format:
+Return ONLY a JSON array of 3-5 todo IDs in priority order, with a brief reason for each. Format:
 [
   { "id": "todo-id", "reason": "Brief explanation why this should be prioritized" },
   { "id": "todo-id", "reason": "Brief explanation why this should be prioritized" },
   { "id": "todo-id", "reason": "Brief explanation why this should be prioritized" }
 ]
 
-If there are fewer than 3 incomplete todos, return only what's available.`;
+You MUST return at least 3 recommendations and up to 5 if there are enough actionable items.`;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
@@ -126,13 +155,13 @@ If there are fewer than 3 incomplete todos, return only what's available.`;
       return res.status(500).json({ error: "Invalid AI response format" });
     }
 
-    // Validate and limit to 3 recommendations
+    // Validate and limit to 5 recommendations
     if (!Array.isArray(recommendations)) {
       return res.status(500).json({ error: "Invalid recommendations format" });
     }
 
     const validRecommendations = recommendations
-      .slice(0, 3)
+      .slice(0, 5)
       .filter((rec) => rec.id && rec.reason);
 
     res.json({ recommendations: validRecommendations });
