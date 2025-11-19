@@ -1733,6 +1733,36 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
   const filteredTodos = workspaceTodos.filter((todo) => {
     if (filter === "active" && todo.completed) return false;
     if (filter === "completed" && !todo.completed) return false;
+
+    if (filter === "dueToday") {
+      if (todo.completed) return false;
+      if (!todo.dueDate) return false;
+      const dueDate = new Date(todo.dueDate);
+      if (!isToday(dueDate)) return false;
+    }
+
+    if (filter === "actionable") {
+      if (todo.completed) return false;
+      // Must be able to start (start date in past or today)
+      const now = Date.now();
+      const canStart = !todo.startDate || todo.startDate <= now;
+      if (!canStart) return false;
+      // Must not have any uncompleted children
+      const hasUncompletedChildren = todos.some(
+        (child) => child.parentId === todo.id && !child.completed,
+      );
+      if (hasUncompletedChildren) return false;
+    }
+
+    if (filter === "blocked") {
+      if (todo.completed) return false;
+      // Must have uncompleted children
+      const hasUncompletedChildren = todos.some(
+        (child) => child.parentId === todo.id && !child.completed,
+      );
+      if (!hasUncompletedChildren) return false;
+    }
+
     if (selectedTypeFilter && todo.type !== selectedTypeFilter) return false;
     if (selectedProjectFilter && todo.project !== selectedProjectFilter)
       return false;
