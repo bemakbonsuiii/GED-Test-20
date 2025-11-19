@@ -1803,8 +1803,14 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
       if (!a.dueDate) return 1;
       if (!b.dueDate) return -1;
 
-      const aTime = typeof a.dueDate === "string" ? new Date(a.dueDate).getTime() : a.dueDate;
-      const bTime = typeof b.dueDate === "string" ? new Date(b.dueDate).getTime() : b.dueDate;
+      const aTime =
+        typeof a.dueDate === "string"
+          ? new Date(a.dueDate).getTime()
+          : a.dueDate;
+      const bTime =
+        typeof b.dueDate === "string"
+          ? new Date(b.dueDate).getTime()
+          : b.dueDate;
 
       return aTime - bTime;
     });
