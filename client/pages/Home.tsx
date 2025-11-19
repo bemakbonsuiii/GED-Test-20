@@ -3436,7 +3436,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
             )}
 
             {/* Expandable Create Project */}
-            {isCreateProjectExpanded &&
+            {!focusMode && isCreateProjectExpanded &&
               (() => {
                 // Auto-set workspace when not on homepage
                 if (
