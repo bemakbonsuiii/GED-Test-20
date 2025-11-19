@@ -1,10 +1,6 @@
 import { Request, Response } from "express";
 import OpenAI from "openai";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 interface Todo {
   id: string;
   text: string;
@@ -25,6 +21,11 @@ interface Todo {
 
 export async function handleAIPrioritize(req: Request, res: Response) {
   try {
+    // Create OpenAI client here to pick up the latest env var
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+
     const { todos } = req.body as { todos: Todo[] };
 
     if (!todos || !Array.isArray(todos)) {
