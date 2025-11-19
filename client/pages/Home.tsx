@@ -5896,7 +5896,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                         <p className="text-xs text-muted-foreground font-medium mb-1">
                           Meeting Time
                         </p>
-                        <p className="text-sm">{viewingTodo.meetingTime}</p>
+                        <p className="text-sm">{formatTimeToAMPM(viewingTodo.meetingTime)}</p>
                       </div>
                     )}
                   {viewingTodo.project && (
