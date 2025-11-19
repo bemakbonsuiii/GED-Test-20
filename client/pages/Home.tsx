@@ -987,7 +987,7 @@ const Home = () => {
             details.includes("hour")
           ) {
             throw new Error(
-              "⚠️ OpenAI DAILY token limit reached (100,000 tokens used).\\n\\n" +
+              "��️ OpenAI DAILY token limit reached (100,000 tokens used).\\n\\n" +
                 "Options:\\n" +
                 "1. Wait ~36 hours for the limit to reset\\n" +
                 "2. Add a payment method at: https://platform.openai.com/account/billing",
@@ -1750,18 +1750,10 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
     const timeString = meeting.meetingTime || meeting.dueTime;
 
     if (timeString) {
-      const dateObj = new Date(baseTime);
-      const timeMatch = timeString.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
-      if (timeMatch) {
-        let hours = parseInt(timeMatch[1]);
-        const minutes = parseInt(timeMatch[2]);
-        const isPM = timeMatch[3].toUpperCase() === 'PM';
-
-        // Convert to 24-hour format
-        if (isPM && hours !== 12) hours += 12;
-        if (!isPM && hours === 12) hours = 0;
-
-        dateObj.setHours(hours, minutes, 0, 0);
+      const parsedTime = parseTimeString(timeString);
+      if (parsedTime) {
+        const dateObj = new Date(baseTime);
+        dateObj.setHours(parsedTime.hours, parsedTime.minutes, 0, 0);
         return dateObj.getTime();
       }
     }
