@@ -3827,6 +3827,134 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
               </Card>
             )}
 
+            {/* Next Meeting Banner */}
+            {(() => {
+              const nextMeeting = getNextMeeting();
+              if (!nextMeeting) return null;
+
+              const minutes = getTimeUntilMeeting(nextMeeting);
+              if (minutes === null) return null;
+
+              const meetingDate = nextMeeting.dueDate ? new Date(typeof nextMeeting.dueDate === 'string' ? nextMeeting.dueDate : nextMeeting.dueDate) : null;
+              const meetingStarted = minutes <= 0;
+              const isUrgent = minutes <= 15 && minutes > 0;
+              const isWarning = minutes <= 30 && minutes > 15;
+
+              return (
+                <div
+                  className={`mb-3 p-3 rounded-lg border-2 cursor-pointer transition-all ${
+                    meetingStarted
+                      ? 'bg-red-50 dark:bg-red-950 border-red-500 animate-pulse'
+                      : isUrgent
+                      ? 'bg-orange-50 dark:bg-orange-950 border-orange-500'
+                      : isWarning
+                      ? 'bg-yellow-50 dark:bg-yellow-950 border-yellow-500'
+                      : 'bg-blue-50 dark:bg-blue-950 border-blue-500'
+                  }`}
+                  onClick={() => setNextMeetingExpanded(!nextMeetingExpanded)}
+                  title={`${formatTimeUntilMeeting(minutes)} ${meetingStarted ? '' : 'until meeting'}`}
+                >
+                  {!nextMeetingExpanded ? (
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Users className={`h-4 w-4 ${
+                          meetingStarted
+                            ? 'text-red-600 dark:text-red-400'
+                            : isUrgent
+                            ? 'text-orange-600 dark:text-orange-400'
+                            : isWarning
+                            ? 'text-yellow-600 dark:text-yellow-400'
+                            : 'text-blue-600 dark:text-blue-400'
+                        }`} />
+                        <span className="text-sm font-medium">
+                          {meetingStarted ? '🔴 Meeting Started: ' : 'Next Meeting: '}
+                          {nextMeeting.text}
+                        </span>
+                      </div>
+                      <div className={`text-xs font-semibold ${
+                        meetingStarted
+                          ? 'text-red-700 dark:text-red-300'
+                          : isUrgent
+                          ? 'text-orange-700 dark:text-orange-300'
+                          : isWarning
+                          ? 'text-yellow-700 dark:text-yellow-300'
+                          : 'text-blue-700 dark:text-blue-300'
+                      }`}>
+                        {meetingStarted ? formatTimeUntilMeeting(minutes) : `in ${formatTimeUntilMeeting(minutes)}`}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Users className="h-5 w-5 text-red-600 dark:text-red-400" />
+                            <h3 className="font-semibold text-base">{nextMeeting.text}</h3>
+                          </div>
+                          {meetingStarted && (
+                            <div className="bg-red-100 dark:bg-red-900 border border-red-300 dark:border-red-700 rounded p-2 mb-2">
+                              <p className="text-sm font-bold text-red-800 dark:text-red-200">
+                                🔴 Meeting has started!
+                              </p>
+                            </div>
+                          )}
+                          <div className="space-y-1 text-sm">
+                            {meetingDate && (
+                              <div className="flex items-center gap-2 text-muted-foreground">
+                                <Calendar className="h-4 w-4" />
+                                <span>{format(meetingDate, 'EEEE, MMMM d, yyyy')}</span>
+                              </div>
+                            )}
+                            {nextMeeting.meetingTime && (
+                              <div className="flex items-center gap-2 text-muted-foreground">
+                                <Clock className="h-4 w-4" />
+                                <span>{nextMeeting.meetingTime}</span>
+                              </div>
+                            )}
+                            {nextMeeting.agenda && (
+                              <div className="mt-2">
+                                <p className="text-xs text-muted-foreground mb-1">Agenda:</p>
+                                <p className="text-sm">{nextMeeting.agenda}</p>
+                              </div>
+                            )}
+                          </div>
+                          {(() => {
+                            const childTodos = todos.filter(t => t.parentId === nextMeeting.id && !t.completed);
+                            if (childTodos.length > 0) {
+                              return (
+                                <div className="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700">
+                                  <p className="text-xs font-semibold mb-2">Prep Tasks ({childTodos.filter(t => !t.completed).length} remaining):</p>
+                                  <ul className="space-y-1">
+                                    {childTodos.map(child => (
+                                      <li key={child.id} className="text-sm flex items-start gap-2">
+                                        <span className="text-muted-foreground">•</span>
+                                        <span className={child.completed ? 'line-through text-muted-foreground' : ''}>
+                                          {child.text}
+                                        </span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              );
+                            }
+                          })()}
+                        </div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setNextMeetingExpanded(false);
+                          }}
+                          className="text-muted-foreground hover:text-foreground"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+
             {/* Priorities Widget */}
             <Card className="mb-6 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 border-l-4 border-l-amber-500 dark:border-l-amber-500 shadow-md">
               <CardHeader>
