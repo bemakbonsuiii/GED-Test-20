@@ -998,17 +998,20 @@ const Home = () => {
 
       console.log("askTodd: Response received, status:", response.status);
 
+      // Clone response immediately to avoid body stream issues
+      const responseClone = response.clone();
+
       let data;
 
       if (!response.ok) {
-        const clonedResponse = response.clone();
+        const clonedResponse = responseClone.clone();
         let errorData: any = { error: "Unknown error" };
         try {
           errorData = await clonedResponse.json();
         } catch (e) {
           console.error("Could not parse error response:", e);
           try {
-            const textResponse = response.clone();
+            const textResponse = responseClone.clone();
             const errorText = await textResponse.text();
             console.error("Error response text:", errorText);
           } catch (e2) {
@@ -1191,17 +1194,20 @@ const Home = () => {
         }),
       });
 
+      // Clone response immediately to avoid body stream issues
+      const responseClone = response.clone();
+
       let data;
 
       if (!response.ok) {
-        const clonedResponse = response.clone();
+        const clonedResponse = responseClone.clone();
         let errorData: any = { error: "Unknown error" };
         try {
           errorData = await clonedResponse.json();
         } catch (e) {
           console.error("Could not parse error response:", e);
           try {
-            const textResponse = response.clone();
+            const textResponse = responseClone.clone();
             const errorText = await textResponse.text();
             console.error("Error response text:", errorText);
           } catch (e2) {
