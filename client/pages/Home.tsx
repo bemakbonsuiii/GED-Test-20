@@ -1883,17 +1883,30 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
       return aTime - bTime;
     });
 
+  // Get all todos in workspace (including children) for accurate counting
+  const allWorkspaceTodosForCounting = (
+    workspace === "everything"
+      ? todos
+      : todos.filter((todo) => todo.workspace === workspace)
+  ).filter((todo) => {
+    // If viewing a specific project page, only count todos from that project
+    if (selectedProjectPage && todo.project !== selectedProjectPage) {
+      return false;
+    }
+    return true;
+  });
+
   const activeCount = workspaceTodos.filter((todo) => !todo.completed).length;
   const completedCount = workspaceTodos.filter((todo) => todo.completed).length;
 
-  const dueTodayCount = workspaceTodos.filter((todo) => {
+  const dueTodayCount = allWorkspaceTodosForCounting.filter((todo) => {
     if (todo.completed) return false;
     if (!todo.dueDate) return false;
     const dueDate = new Date(todo.dueDate);
     return isToday(dueDate);
   }).length;
 
-  const actionableCount = workspaceTodos.filter((todo) => {
+  const actionableCount = allWorkspaceTodosForCounting.filter((todo) => {
     if (todo.completed) return false;
     // Exclude meetings from actionable
     if (todo.type === "Meeting") return false;
@@ -1906,7 +1919,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
     return !hasUncompletedChildren;
   }).length;
 
-  const blockedCount = workspaceTodos.filter((todo) => {
+  const blockedCount = allWorkspaceTodosForCounting.filter((todo) => {
     if (todo.completed) return false;
     const hasUncompletedChildren = todos.some(
       (child) => child.parentId === todo.id && !child.completed,
