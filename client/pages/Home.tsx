@@ -96,7 +96,7 @@ import {
 import { MetricsWidget } from "../components/MetricsWidget";
 import { CircularScore } from "../components/CircularScore";
 import { AlertsWidget } from "../components/AlertsWidget";
-import { SmartSuggestionsWidget } from "../components/SmartSuggestionsWidget";
+import { SmartSuggestionsWidget, getSuggestionsCount } from "../components/SmartSuggestionsWidget";
 import { loadTestData } from "../utils/loadTestData";
 
 type TodoType = "Task" | "Deliverable" | "Quick Win" | "Meeting" | "Blocker";
@@ -2555,81 +2555,10 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
     return alertCount;
   };
 
-  // Get smart suggestions count
+  // Get smart suggestions count - use the widget's actual logic
   const getSmartSuggestionsCount = () => {
-    const now = Date.now();
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    // Use cached todos if manual alerts mode is enabled
     const todosToUse = autoAlerts ? todos : cachedAlertsTodos;
-
-    // Filter todos by workspace and project
-    const relevantTodos = todosToUse.filter((t) => {
-      if (workspace !== "everything" && t.workspace !== workspace) return false;
-      if (selectedProjectPage && t.project !== selectedProjectPage)
-        return false;
-      return true;
-    });
-
-    const incompleteTodos = relevantTodos.filter((t) => !t.completed);
-    let suggestionCount = 0;
-
-    // Stale todos
-    const staleTodos = incompleteTodos.filter((t) => {
-      const daysSinceCreated = differenceInDays(
-        new Date(),
-        new Date(t.createdAt),
-      );
-      return daysSinceCreated >= 7;
-    });
-    suggestionCount += Math.min(staleTodos.length, 2);
-
-    // Head start opportunities
-    const todayTasks = incompleteTodos.filter((t) => {
-      if (t.dueDate) {
-        const dueTime =
-          typeof t.dueDate === "string"
-            ? new Date(t.dueDate).getTime()
-            : t.dueDate;
-        const dueDate = new Date(dueTime);
-        return isToday(dueDate);
-      }
-      return false;
-    });
-
-    if (todayTasks.length <= 2) {
-      const upcomingTasks = incompleteTodos.filter((t) => {
-        if (!t.dueDate) return false;
-        const dueTime =
-          typeof t.dueDate === "string"
-            ? new Date(t.dueDate).getTime()
-            : t.dueDate;
-        const dueDate = new Date(dueTime);
-        const daysUntil = differenceInDays(dueDate, today);
-        return daysUntil >= 3 && daysUntil <= 5;
-      });
-      if (upcomingTasks.length > 0) suggestionCount += 1;
-    }
-
-    // Quick wins
-    const quickWins = incompleteTodos.filter((t) => t.type === "Quick Win");
-    if (quickWins.length >= 3) suggestionCount += 1;
-
-    // Upcoming deadlines
-    const upcomingDeadlines = incompleteTodos.filter((t) => {
-      if (!t.dueDate) return false;
-      const dueTime =
-        typeof t.dueDate === "string"
-          ? new Date(t.dueDate).getTime()
-          : t.dueDate;
-      const dueDate = new Date(dueTime);
-      const daysUntil = differenceInDays(dueDate, today);
-      return daysUntil >= 1 && daysUntil <= 3 && t.type === "Deliverable";
-    });
-    suggestionCount += Math.min(upcomingDeadlines.length, 1);
-
-    return suggestionCount;
+    return getSuggestionsCount(todosToUse, workspace, selectedProjectPage);
   };
 
   // Workspace-specific metrics
