@@ -1,6 +1,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
-import { ChevronUp, ChevronDown, Target, CalendarIcon, Zap, Briefcase, AlertTriangle, ListTodo, Activity } from "lucide-react";
+import {
+  ChevronUp,
+  ChevronDown,
+  Target,
+  CalendarIcon,
+  Zap,
+  Briefcase,
+  AlertTriangle,
+  ListTodo,
+  Activity,
+} from "lucide-react";
 
 interface Todo {
   id: string;
@@ -35,9 +45,8 @@ export function MetricsWidget({
   todos,
   projects,
   isExpanded,
-  setIsExpanded
+  setIsExpanded,
 }: MetricsWidgetProps) {
-
   const getDailyTasksMetrics = (filteredTodos: Todo[]) => {
     const now = Date.now();
     const today = new Date();
@@ -45,37 +54,49 @@ export function MetricsWidget({
     const todayEnd = new Date();
     todayEnd.setHours(23, 59, 59, 999);
 
-    const dailyTasks = filteredTodos.filter(t => {
+    const dailyTasks = filteredTodos.filter((t) => {
       if (t.completed) return false;
       if (t.isPriority) return true;
       if (t.dueDate) {
-        const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+        const dueTime =
+          typeof t.dueDate === "string"
+            ? new Date(t.dueDate).getTime()
+            : t.dueDate;
         return dueTime >= today.getTime() && dueTime <= todayEnd.getTime();
       }
       return false;
     });
 
-    const overdueTasks = filteredTodos.filter(t => {
+    const overdueTasks = filteredTodos.filter((t) => {
       if (t.completed) return false;
       if (!t.dueDate) return false;
-      const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+      const dueTime =
+        typeof t.dueDate === "string"
+          ? new Date(t.dueDate).getTime()
+          : t.dueDate;
       return dueTime < today.getTime();
     });
 
-    const completedToday = filteredTodos.filter(t => {
+    const completedToday = filteredTodos.filter((t) => {
       if (!t.completed) return false;
       if (t.isPriority) return true;
       if (t.dueDate) {
-        const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+        const dueTime =
+          typeof t.dueDate === "string"
+            ? new Date(t.dueDate).getTime()
+            : t.dueDate;
         return dueTime >= today.getTime() && dueTime <= todayEnd.getTime();
       }
       return false;
     });
 
-    const completedOverdue = filteredTodos.filter(t => {
+    const completedOverdue = filteredTodos.filter((t) => {
       if (!t.completed) return false;
       if (!t.dueDate) return false;
-      const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+      const dueTime =
+        typeof t.dueDate === "string"
+          ? new Date(t.dueDate).getTime()
+          : t.dueDate;
       return dueTime < today.getTime();
     });
 
@@ -86,7 +107,8 @@ export function MetricsWidget({
     return {
       total: totalIncomplete,
       completed: totalCompleted,
-      percentage: totalTasks > 0 ? Math.round((totalCompleted / totalTasks) * 100) : 0
+      percentage:
+        totalTasks > 0 ? Math.round((totalCompleted / totalTasks) * 100) : 0,
     };
   };
 
@@ -94,28 +116,36 @@ export function MetricsWidget({
     const now = Date.now();
     // Actionable tasks are those that can be started now (no start date or start date has passed) AND are not blocked
     // Exclude meetings from actionable
-    const actionableCompleted = filteredTodos.filter(t => {
+    const actionableCompleted = filteredTodos.filter((t) => {
       if (!t.completed) return false;
       if (t.type === "Meeting") return false; // Exclude meetings
-      const hasUncompletedChildren = todos.some(child => child.parentId === t.id && !child.completed);
+      const hasUncompletedChildren = todos.some(
+        (child) => child.parentId === t.id && !child.completed,
+      );
       if (hasUncompletedChildren) return false; // Exclude blocked todos
       return !t.startDate || t.startDate <= now;
     });
 
-    const actionableIncomplete = filteredTodos.filter(t => {
+    const actionableIncomplete = filteredTodos.filter((t) => {
       if (t.completed) return false;
       if (t.type === "Meeting") return false; // Exclude meetings
-      const hasUncompletedChildren = todos.some(child => child.parentId === t.id && !child.completed);
+      const hasUncompletedChildren = todos.some(
+        (child) => child.parentId === t.id && !child.completed,
+      );
       if (hasUncompletedChildren) return false; // Exclude blocked todos
       return !t.startDate || t.startDate <= now;
     });
 
-    const totalActionable = actionableCompleted.length + actionableIncomplete.length;
+    const totalActionable =
+      actionableCompleted.length + actionableIncomplete.length;
 
     return {
       actionable: actionableCompleted.length,
       total: actionableIncomplete.length,
-      percentage: totalActionable > 0 ? Math.round((actionableCompleted.length / totalActionable) * 100) : 0
+      percentage:
+        totalActionable > 0
+          ? Math.round((actionableCompleted.length / totalActionable) * 100)
+          : 0,
     };
   };
 
@@ -123,35 +153,49 @@ export function MetricsWidget({
     const now = Date.now();
 
     // All todos that are currently blocked by either a blocker child or an unfinished child
-    const blockedTodos = filteredTodos.filter(t => {
+    const blockedTodos = filteredTodos.filter((t) => {
       if (t.completed) return false; // Don't count completed todos
 
       // Check if this todo has any uncompleted children
-      const hasUncompletedChildren = todos.some(child => child.parentId === t.id && !child.completed);
+      const hasUncompletedChildren = todos.some(
+        (child) => child.parentId === t.id && !child.completed,
+      );
 
       return hasUncompletedChildren;
     });
 
     // Not started todos (start date hasn't elapsed yet) - but NOT if they're already counted as blocked
-    const notStartedTodos = filteredTodos.filter(t => {
+    const notStartedTodos = filteredTodos.filter((t) => {
       if (t.completed) return false;
       if (!t.startDate) return false; // Only count todos with a start date
       if (t.startDate <= now) return false; // Start date has passed
 
       // Don't count if already blocked by children
-      const hasUncompletedChildren = todos.some(child => child.parentId === t.id && !child.completed);
+      const hasUncompletedChildren = todos.some(
+        (child) => child.parentId === t.id && !child.completed,
+      );
       if (hasUncompletedChildren) return false;
 
       return true;
     });
 
     // Separate by blocker type for detail
-    const blockedByBlocker = blockedTodos.filter(t =>
-      todos.some(child => child.parentId === t.id && child.type === 'Blocker' && !child.completed)
+    const blockedByBlocker = blockedTodos.filter((t) =>
+      todos.some(
+        (child) =>
+          child.parentId === t.id &&
+          child.type === "Blocker" &&
+          !child.completed,
+      ),
     );
 
-    const blockedByOtherChildren = blockedTodos.filter(t => {
-      const hasBlocker = todos.some(child => child.parentId === t.id && child.type === 'Blocker' && !child.completed);
+    const blockedByOtherChildren = blockedTodos.filter((t) => {
+      const hasBlocker = todos.some(
+        (child) =>
+          child.parentId === t.id &&
+          child.type === "Blocker" &&
+          !child.completed,
+      );
       return !hasBlocker; // Has other children but not blockers
     });
 
@@ -161,12 +205,16 @@ export function MetricsWidget({
       total: totalBlocked,
       byBlocker: blockedByBlocker.length,
       byChildren: blockedByOtherChildren.length,
-      notStarted: notStartedTodos.length
+      notStarted: notStartedTodos.length,
     };
   };
 
   const getTodosByType = (filteredTodos: Todo[]) => {
-    const types: Array<{ type: "Task" | "Deliverable" | "Quick Win" | "Meeting" | "Blocker"; color: string; count: number }> = [
+    const types: Array<{
+      type: "Task" | "Deliverable" | "Quick Win" | "Meeting" | "Blocker";
+      color: string;
+      count: number;
+    }> = [
       { type: "Blocker", color: "from-red-500 to-red-600", count: 0 }, // Blocker first
       { type: "Task", color: "from-blue-500 to-blue-600", count: 0 },
       { type: "Deliverable", color: "from-purple-500 to-purple-600", count: 0 },
@@ -175,10 +223,10 @@ export function MetricsWidget({
     ];
 
     // Only count uncompleted todos
-    const uncompletedTodos = filteredTodos.filter(todo => !todo.completed);
+    const uncompletedTodos = filteredTodos.filter((todo) => !todo.completed);
 
-    uncompletedTodos.forEach(todo => {
-      const typeData = types.find(t => t.type === todo.type);
+    uncompletedTodos.forEach((todo) => {
+      const typeData = types.find((t) => t.type === todo.type);
       if (typeData) {
         typeData.count++;
       }
@@ -191,12 +239,15 @@ export function MetricsWidget({
   const renderProjectPageMetrics = () => {
     if (!selectedProjectPage) return null;
 
-    const projectTodos = todos.filter(t => t.project === selectedProjectPage);
+    const projectTodos = todos.filter((t) => t.project === selectedProjectPage);
     const dailyMetrics = getDailyTasksMetrics(projectTodos);
     const actionableMetrics = getActionableTasksMetrics(projectTodos);
-    
-    const totalCompleted = projectTodos.filter(t => t.completed).length;
-    const overallPercentage = projectTodos.length > 0 ? Math.round((totalCompleted / projectTodos.length) * 100) : 0;
+
+    const totalCompleted = projectTodos.filter((t) => t.completed).length;
+    const overallPercentage =
+      projectTodos.length > 0
+        ? Math.round((totalCompleted / projectTodos.length) * 100)
+        : 0;
 
     return (
       <>
@@ -228,11 +279,12 @@ export function MetricsWidget({
               <span className="text-sm font-medium">Today's Tasks</span>
             </div>
             <span className="text-sm text-muted-foreground">
-              {dailyMetrics.completed} / {dailyMetrics.completed + dailyMetrics.total} completed
+              {dailyMetrics.completed} /{" "}
+              {dailyMetrics.completed + dailyMetrics.total} completed
             </span>
           </div>
           <div className="relative h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-            <div 
+            <div
               className="absolute top-0 left-0 h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-500"
               style={{ width: `${dailyMetrics.percentage}%` }}
             />
@@ -259,7 +311,8 @@ export function MetricsWidget({
             />
           </div>
           <p className="text-xs text-muted-foreground">
-            Tasks ready to start • {actionableMetrics.percentage}% of project tasks
+            Tasks ready to start • {actionableMetrics.percentage}% of project
+            tasks
           </p>
         </div>
 
@@ -280,16 +333,19 @@ export function MetricsWidget({
             <div className="flex h-full">
               {(() => {
                 const typeMetrics = getTodosByType(projectTodos);
-                return typeMetrics.types.map((typeData, index) => (
-                  typeData.count > 0 && (
-                    <div
-                      key={index}
-                      className={`h-full bg-gradient-to-r ${typeData.color} transition-all duration-500`}
-                      style={{ width: `${typeMetrics.total > 0 ? (typeData.count / typeMetrics.total) * 100 : 0}%` }}
-                      title={`${typeData.count} ${typeData.type}`}
-                    />
-                  )
-                ));
+                return typeMetrics.types.map(
+                  (typeData, index) =>
+                    typeData.count > 0 && (
+                      <div
+                        key={index}
+                        className={`h-full bg-gradient-to-r ${typeData.color} transition-all duration-500`}
+                        style={{
+                          width: `${typeMetrics.total > 0 ? (typeData.count / typeMetrics.total) * 100 : 0}%`,
+                        }}
+                        title={`${typeData.count} ${typeData.type}`}
+                      />
+                    ),
+                );
               })()}
             </div>
           </div>
@@ -297,9 +353,9 @@ export function MetricsWidget({
             {(() => {
               const typeMetrics = getTodosByType(projectTodos);
               return typeMetrics.types
-                .filter(t => t.count > 0)
-                .map(t => `${t.count} ${t.type}${t.count !== 1 ? 's' : ''}`)
-                .join(' • ');
+                .filter((t) => t.count > 0)
+                .map((t) => `${t.count} ${t.type}${t.count !== 1 ? "s" : ""}`)
+                .join(" • ");
             })()}
           </p>
         </div>
@@ -325,17 +381,23 @@ export function MetricsWidget({
                   <>
                     <div
                       className="h-full bg-gradient-to-r from-red-500 to-red-600 transition-all duration-500"
-                      style={{ width: `${blockedMetrics.total > 0 ? (blockedMetrics.byBlocker / blockedMetrics.total) * 100 : 0}%` }}
+                      style={{
+                        width: `${blockedMetrics.total > 0 ? (blockedMetrics.byBlocker / blockedMetrics.total) * 100 : 0}%`,
+                      }}
                       title={`${blockedMetrics.byBlocker} blocked by Blockers`}
                     />
                     <div
                       className="h-full bg-gradient-to-r from-amber-500 to-amber-600 transition-all duration-500"
-                      style={{ width: `${blockedMetrics.total > 0 ? (blockedMetrics.byChildren / blockedMetrics.total) * 100 : 0}%` }}
+                      style={{
+                        width: `${blockedMetrics.total > 0 ? (blockedMetrics.byChildren / blockedMetrics.total) * 100 : 0}%`,
+                      }}
                       title={`${blockedMetrics.byChildren} blocked by other children`}
                     />
                     <div
                       className="h-full bg-gradient-to-r from-slate-500 to-slate-600 transition-all duration-500"
-                      style={{ width: `${blockedMetrics.total > 0 ? (blockedMetrics.notStarted / blockedMetrics.total) * 100 : 0}%` }}
+                      style={{
+                        width: `${blockedMetrics.total > 0 ? (blockedMetrics.notStarted / blockedMetrics.total) * 100 : 0}%`,
+                      }}
                       title={`${blockedMetrics.notStarted} not started yet`}
                     />
                   </>
@@ -359,7 +421,8 @@ export function MetricsWidget({
             </div>
             <span className="text-sm text-muted-foreground">
               {(() => {
-                const actionableMetrics = getActionableTasksMetrics(projectTodos);
+                const actionableMetrics =
+                  getActionableTasksMetrics(projectTodos);
                 const blockedMetrics = getBlockedTasksMetrics(projectTodos);
                 return actionableMetrics.total + blockedMetrics.total;
               })()}
@@ -368,19 +431,24 @@ export function MetricsWidget({
           <div className="relative h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
             <div className="flex h-full">
               {(() => {
-                const actionableMetrics = getActionableTasksMetrics(projectTodos);
+                const actionableMetrics =
+                  getActionableTasksMetrics(projectTodos);
                 const blockedMetrics = getBlockedTasksMetrics(projectTodos);
                 const total = actionableMetrics.total + blockedMetrics.total;
                 return (
                   <>
                     <div
                       className="h-full bg-gradient-to-r from-green-500 to-green-600 transition-all duration-500"
-                      style={{ width: `${total > 0 ? (actionableMetrics.total / total) * 100 : 0}%` }}
+                      style={{
+                        width: `${total > 0 ? (actionableMetrics.total / total) * 100 : 0}%`,
+                      }}
                       title={`${actionableMetrics.total} Actionable`}
                     />
                     <div
                       className="h-full bg-gradient-to-r from-red-500 to-red-600 transition-all duration-500"
-                      style={{ width: `${total > 0 ? (blockedMetrics.total / total) * 100 : 0}%` }}
+                      style={{
+                        width: `${total > 0 ? (blockedMetrics.total / total) * 100 : 0}%`,
+                      }}
                       title={`${blockedMetrics.total} Blocked`}
                     />
                   </>
@@ -394,7 +462,8 @@ export function MetricsWidget({
               const blockedMetrics = getBlockedTasksMetrics(projectTodos);
               return (
                 <>
-                  {actionableMetrics.total} Actionable {' • '} {blockedMetrics.total} Blocked
+                  {actionableMetrics.total} Actionable {" • "}{" "}
+                  {blockedMetrics.total} Blocked
                 </>
               );
             })()}
@@ -405,20 +474,23 @@ export function MetricsWidget({
   };
 
   const renderWorkspaceMetrics = () => {
-    const wsTodos = todos.filter(t => t.workspace === workspace);
-    const wsProjects = projects.filter(p => p.workspace === workspace);
-    
+    const wsTodos = todos.filter((t) => t.workspace === workspace);
+    const wsProjects = projects.filter((p) => p.workspace === workspace);
+
     const dailyMetrics = getDailyTasksMetrics(wsTodos);
     const actionableMetrics = getActionableTasksMetrics(wsTodos);
 
-    const projectsData = wsProjects.map(project => {
-      const projectTodos = wsTodos.filter(t => t.project === project.name);
-      const completed = projectTodos.filter(t => t.completed).length;
+    const projectsData = wsProjects.map((project) => {
+      const projectTodos = wsTodos.filter((t) => t.project === project.name);
+      const completed = projectTodos.filter((t) => t.completed).length;
       return {
         name: project.name,
         total: projectTodos.length,
         completed,
-        percentage: projectTodos.length > 0 ? Math.round((completed / projectTodos.length) * 100) : 0
+        percentage:
+          projectTodos.length > 0
+            ? Math.round((completed / projectTodos.length) * 100)
+            : 0,
       };
     });
 
@@ -431,11 +503,12 @@ export function MetricsWidget({
               <span className="text-sm font-medium">Today's Tasks</span>
             </div>
             <span className="text-sm text-muted-foreground">
-              {dailyMetrics.completed} / {dailyMetrics.completed + dailyMetrics.total} completed
+              {dailyMetrics.completed} /{" "}
+              {dailyMetrics.completed + dailyMetrics.total} completed
             </span>
           </div>
           <div className="relative h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-            <div 
+            <div
               className="absolute top-0 left-0 h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-500"
               style={{ width: `${dailyMetrics.percentage}%` }}
             />
@@ -462,7 +535,8 @@ export function MetricsWidget({
             />
           </div>
           <p className="text-xs text-muted-foreground">
-            Tasks ready to start • {actionableMetrics.percentage}% of workspace tasks
+            Tasks ready to start • {actionableMetrics.percentage}% of workspace
+            tasks
           </p>
         </div>
 
@@ -483,16 +557,19 @@ export function MetricsWidget({
             <div className="flex h-full">
               {(() => {
                 const typeMetrics = getTodosByType(wsTodos);
-                return typeMetrics.types.map((typeData, index) => (
-                  typeData.count > 0 && (
-                    <div
-                      key={index}
-                      className={`h-full bg-gradient-to-r ${typeData.color} transition-all duration-500`}
-                      style={{ width: `${typeMetrics.total > 0 ? (typeData.count / typeMetrics.total) * 100 : 0}%` }}
-                      title={`${typeData.count} ${typeData.type}`}
-                    />
-                  )
-                ));
+                return typeMetrics.types.map(
+                  (typeData, index) =>
+                    typeData.count > 0 && (
+                      <div
+                        key={index}
+                        className={`h-full bg-gradient-to-r ${typeData.color} transition-all duration-500`}
+                        style={{
+                          width: `${typeMetrics.total > 0 ? (typeData.count / typeMetrics.total) * 100 : 0}%`,
+                        }}
+                        title={`${typeData.count} ${typeData.type}`}
+                      />
+                    ),
+                );
               })()}
             </div>
           </div>
@@ -500,9 +577,9 @@ export function MetricsWidget({
             {(() => {
               const typeMetrics = getTodosByType(wsTodos);
               return typeMetrics.types
-                .filter(t => t.count > 0)
-                .map(t => `${t.count} ${t.type}${t.count !== 1 ? 's' : ''}`)
-                .join(' • ');
+                .filter((t) => t.count > 0)
+                .map((t) => `${t.count} ${t.type}${t.count !== 1 ? "s" : ""}`)
+                .join(" • ");
             })()}
           </p>
         </div>
@@ -528,17 +605,23 @@ export function MetricsWidget({
                   <>
                     <div
                       className="h-full bg-gradient-to-r from-red-500 to-red-600 transition-all duration-500"
-                      style={{ width: `${blockedMetrics.total > 0 ? (blockedMetrics.byBlocker / blockedMetrics.total) * 100 : 0}%` }}
+                      style={{
+                        width: `${blockedMetrics.total > 0 ? (blockedMetrics.byBlocker / blockedMetrics.total) * 100 : 0}%`,
+                      }}
                       title={`${blockedMetrics.byBlocker} blocked by Blockers`}
                     />
                     <div
                       className="h-full bg-gradient-to-r from-amber-500 to-amber-600 transition-all duration-500"
-                      style={{ width: `${blockedMetrics.total > 0 ? (blockedMetrics.byChildren / blockedMetrics.total) * 100 : 0}%` }}
+                      style={{
+                        width: `${blockedMetrics.total > 0 ? (blockedMetrics.byChildren / blockedMetrics.total) * 100 : 0}%`,
+                      }}
                       title={`${blockedMetrics.byChildren} blocked by other children`}
                     />
                     <div
                       className="h-full bg-gradient-to-r from-slate-500 to-slate-600 transition-all duration-500"
-                      style={{ width: `${blockedMetrics.total > 0 ? (blockedMetrics.notStarted / blockedMetrics.total) * 100 : 0}%` }}
+                      style={{
+                        width: `${blockedMetrics.total > 0 ? (blockedMetrics.notStarted / blockedMetrics.total) * 100 : 0}%`,
+                      }}
                       title={`${blockedMetrics.notStarted} not started yet`}
                     />
                   </>
@@ -578,12 +661,16 @@ export function MetricsWidget({
                   <>
                     <div
                       className="h-full bg-gradient-to-r from-green-500 to-green-600 transition-all duration-500"
-                      style={{ width: `${total > 0 ? (actionableMetrics.total / total) * 100 : 0}%` }}
+                      style={{
+                        width: `${total > 0 ? (actionableMetrics.total / total) * 100 : 0}%`,
+                      }}
                       title={`${actionableMetrics.total} Actionable`}
                     />
                     <div
                       className="h-full bg-gradient-to-r from-red-500 to-red-600 transition-all duration-500"
-                      style={{ width: `${total > 0 ? (blockedMetrics.total / total) * 100 : 0}%` }}
+                      style={{
+                        width: `${total > 0 ? (blockedMetrics.total / total) * 100 : 0}%`,
+                      }}
                       title={`${blockedMetrics.total} Blocked`}
                     />
                   </>
@@ -597,7 +684,8 @@ export function MetricsWidget({
               const blockedMetrics = getBlockedTasksMetrics(wsTodos);
               return (
                 <>
-                  {actionableMetrics.total} Actionable {' • '} {blockedMetrics.total} Blocked
+                  {actionableMetrics.total} Actionable {" • "}{" "}
+                  {blockedMetrics.total} Blocked
                 </>
               );
             })()}
@@ -610,8 +698,11 @@ export function MetricsWidget({
               <Briefcase className="h-4 w-4 text-purple-600 dark:text-purple-400" />
               <span className="text-sm font-medium">Projects</span>
             </div>
-            {projectsData.map(project => (
-              <div key={project.name} className="space-y-2 p-3 bg-accent/30 rounded-lg">
+            {projectsData.map((project) => (
+              <div
+                key={project.name}
+                className="space-y-2 p-3 bg-accent/30 rounded-lg"
+              >
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium">{project.name}</span>
                   <span className="text-xs text-muted-foreground">
@@ -620,7 +711,7 @@ export function MetricsWidget({
                 </div>
                 {project.total > 0 && (
                   <div className="relative h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                    <div 
+                    <div
                       className="absolute top-0 left-0 h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-500"
                       style={{ width: `${project.percentage}%` }}
                     />
@@ -638,29 +729,38 @@ export function MetricsWidget({
     const dailyMetrics = getDailyTasksMetrics(todos);
     const actionableMetrics = getActionableTasksMetrics(todos);
 
-    const workspaceTypes = ['personal', 'work', 'creative'];
-    const workspaceMetrics = workspaceTypes.map(ws => {
-      const wsProjects = projects.filter(p => p.workspace === ws);
-      const projectsData = wsProjects.map(project => {
-        const projectTodos = todos.filter(t => t.project === project.name && t.workspace === ws);
-        const completed = projectTodos.filter(t => t.completed).length;
+    const workspaceTypes = ["personal", "work", "creative"];
+    const workspaceMetrics = workspaceTypes.map((ws) => {
+      const wsProjects = projects.filter((p) => p.workspace === ws);
+      const projectsData = wsProjects.map((project) => {
+        const projectTodos = todos.filter(
+          (t) => t.project === project.name && t.workspace === ws,
+        );
+        const completed = projectTodos.filter((t) => t.completed).length;
         return {
           name: project.name,
           total: projectTodos.length,
           completed,
-          percentage: projectTodos.length > 0 ? Math.round((completed / projectTodos.length) * 100) : 0
+          percentage:
+            projectTodos.length > 0
+              ? Math.round((completed / projectTodos.length) * 100)
+              : 0,
         };
       });
 
       const totalTodos = projectsData.reduce((acc, p) => acc + p.total, 0);
-      const totalCompleted = projectsData.reduce((acc, p) => acc + p.completed, 0);
+      const totalCompleted = projectsData.reduce(
+        (acc, p) => acc + p.completed,
+        0,
+      );
 
       return {
         workspace: ws,
         projects: projectsData,
-        overall: totalTodos > 0 ? Math.round((totalCompleted / totalTodos) * 100) : 0,
+        overall:
+          totalTodos > 0 ? Math.round((totalCompleted / totalTodos) * 100) : 0,
         totalTodos,
-        totalCompleted
+        totalCompleted,
       };
     });
 
@@ -673,11 +773,12 @@ export function MetricsWidget({
               <span className="text-sm font-medium">Today's Tasks</span>
             </div>
             <span className="text-sm text-muted-foreground">
-              {dailyMetrics.completed} / {dailyMetrics.completed + dailyMetrics.total} completed
+              {dailyMetrics.completed} /{" "}
+              {dailyMetrics.completed + dailyMetrics.total} completed
             </span>
           </div>
           <div className="relative h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-            <div 
+            <div
               className="absolute top-0 left-0 h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-500"
               style={{ width: `${dailyMetrics.percentage}%` }}
             />
@@ -725,16 +826,19 @@ export function MetricsWidget({
             <div className="flex h-full">
               {(() => {
                 const typeMetrics = getTodosByType(todos);
-                return typeMetrics.types.map((typeData, index) => (
-                  typeData.count > 0 && (
-                    <div
-                      key={index}
-                      className={`h-full bg-gradient-to-r ${typeData.color} transition-all duration-500`}
-                      style={{ width: `${typeMetrics.total > 0 ? (typeData.count / typeMetrics.total) * 100 : 0}%` }}
-                      title={`${typeData.count} ${typeData.type}`}
-                    />
-                  )
-                ));
+                return typeMetrics.types.map(
+                  (typeData, index) =>
+                    typeData.count > 0 && (
+                      <div
+                        key={index}
+                        className={`h-full bg-gradient-to-r ${typeData.color} transition-all duration-500`}
+                        style={{
+                          width: `${typeMetrics.total > 0 ? (typeData.count / typeMetrics.total) * 100 : 0}%`,
+                        }}
+                        title={`${typeData.count} ${typeData.type}`}
+                      />
+                    ),
+                );
               })()}
             </div>
           </div>
@@ -742,9 +846,9 @@ export function MetricsWidget({
             {(() => {
               const typeMetrics = getTodosByType(todos);
               return typeMetrics.types
-                .filter(t => t.count > 0)
-                .map(t => `${t.count} ${t.type}${t.count !== 1 ? 's' : ''}`)
-                .join(' • ');
+                .filter((t) => t.count > 0)
+                .map((t) => `${t.count} ${t.type}${t.count !== 1 ? "s" : ""}`)
+                .join(" • ");
             })()}
           </p>
         </div>
@@ -770,17 +874,23 @@ export function MetricsWidget({
                   <>
                     <div
                       className="h-full bg-gradient-to-r from-red-500 to-red-600 transition-all duration-500"
-                      style={{ width: `${blockedMetrics.total > 0 ? (blockedMetrics.byBlocker / blockedMetrics.total) * 100 : 0}%` }}
+                      style={{
+                        width: `${blockedMetrics.total > 0 ? (blockedMetrics.byBlocker / blockedMetrics.total) * 100 : 0}%`,
+                      }}
                       title={`${blockedMetrics.byBlocker} blocked by Blockers`}
                     />
                     <div
                       className="h-full bg-gradient-to-r from-amber-500 to-amber-600 transition-all duration-500"
-                      style={{ width: `${blockedMetrics.total > 0 ? (blockedMetrics.byChildren / blockedMetrics.total) * 100 : 0}%` }}
+                      style={{
+                        width: `${blockedMetrics.total > 0 ? (blockedMetrics.byChildren / blockedMetrics.total) * 100 : 0}%`,
+                      }}
                       title={`${blockedMetrics.byChildren} blocked by other children`}
                     />
                     <div
                       className="h-full bg-gradient-to-r from-slate-500 to-slate-600 transition-all duration-500"
-                      style={{ width: `${blockedMetrics.total > 0 ? (blockedMetrics.notStarted / blockedMetrics.total) * 100 : 0}%` }}
+                      style={{
+                        width: `${blockedMetrics.total > 0 ? (blockedMetrics.notStarted / blockedMetrics.total) * 100 : 0}%`,
+                      }}
                       title={`${blockedMetrics.notStarted} not started yet`}
                     />
                   </>
@@ -820,12 +930,16 @@ export function MetricsWidget({
                   <>
                     <div
                       className="h-full bg-gradient-to-r from-green-500 to-green-600 transition-all duration-500"
-                      style={{ width: `${total > 0 ? (actionableMetrics.total / total) * 100 : 0}%` }}
+                      style={{
+                        width: `${total > 0 ? (actionableMetrics.total / total) * 100 : 0}%`,
+                      }}
                       title={`${actionableMetrics.total} Actionable`}
                     />
                     <div
                       className="h-full bg-gradient-to-r from-red-500 to-red-600 transition-all duration-500"
-                      style={{ width: `${total > 0 ? (blockedMetrics.total / total) * 100 : 0}%` }}
+                      style={{
+                        width: `${total > 0 ? (blockedMetrics.total / total) * 100 : 0}%`,
+                      }}
                       title={`${blockedMetrics.total} Blocked`}
                     />
                   </>
@@ -839,7 +953,8 @@ export function MetricsWidget({
               const blockedMetrics = getBlockedTasksMetrics(todos);
               return (
                 <>
-                  {actionableMetrics.total} Actionable {' • '} {blockedMetrics.total} Blocked
+                  {actionableMetrics.total} Actionable {" • "}{" "}
+                  {blockedMetrics.total} Blocked
                 </>
               );
             })()}
@@ -851,10 +966,15 @@ export function MetricsWidget({
             <Briefcase className="h-4 w-4 text-purple-600 dark:text-purple-400" />
             <span className="text-sm font-medium">Projects by Workspace</span>
           </div>
-          {workspaceMetrics.map(wsMetric => (
-            <div key={wsMetric.workspace} className="space-y-2 p-3 bg-accent/30 rounded-lg">
+          {workspaceMetrics.map((wsMetric) => (
+            <div
+              key={wsMetric.workspace}
+              className="space-y-2 p-3 bg-accent/30 rounded-lg"
+            >
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium capitalize">{wsMetric.workspace}</span>
+                <span className="text-sm font-medium capitalize">
+                  {wsMetric.workspace}
+                </span>
                 <span className="text-xs text-muted-foreground">
                   {wsMetric.totalCompleted} / {wsMetric.totalTodos} tasks
                 </span>
@@ -862,20 +982,27 @@ export function MetricsWidget({
               {wsMetric.totalTodos > 0 ? (
                 <>
                   <div className="relative h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                    <div 
+                    <div
                       className="absolute top-0 left-0 h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-500"
                       style={{ width: `${wsMetric.overall}%` }}
                     />
                   </div>
                   {wsMetric.projects.length > 0 && (
                     <div className="space-y-1 mt-2">
-                      {wsMetric.projects.map(project => (
-                        <div key={project.name} className="flex items-center justify-between text-xs">
-                          <span className="text-muted-foreground truncate flex-1">{project.name}</span>
+                      {wsMetric.projects.map((project) => (
+                        <div
+                          key={project.name}
+                          className="flex items-center justify-between text-xs"
+                        >
+                          <span className="text-muted-foreground truncate flex-1">
+                            {project.name}
+                          </span>
                           <div className="flex items-center gap-2">
-                            <span className="text-muted-foreground">{project.completed}/{project.total}</span>
+                            <span className="text-muted-foreground">
+                              {project.completed}/{project.total}
+                            </span>
                             <div className="w-16 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                              <div 
+                              <div
                                 className="h-full bg-gradient-to-r from-blue-500 to-blue-600"
                                 style={{ width: `${project.percentage}%` }}
                               />
@@ -887,7 +1014,9 @@ export function MetricsWidget({
                   )}
                 </>
               ) : (
-                <p className="text-xs text-muted-foreground">No projects in this workspace</p>
+                <p className="text-xs text-muted-foreground">
+                  No projects in this workspace
+                </p>
               )}
             </div>
           ))}
@@ -898,7 +1027,10 @@ export function MetricsWidget({
 
   return (
     <Card className="mb-6 border border-slate-200 dark:border-slate-800">
-      <CardHeader className="cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
+      <CardHeader
+        className="cursor-pointer"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
         <CardTitle className="text-base font-medium flex items-center gap-2">
           <Target className="h-4 w-4" />
           Progress
@@ -911,18 +1043,21 @@ export function MetricsWidget({
               setIsExpanded(!isExpanded);
             }}
           >
-            {isExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+            {isExpanded ? (
+              <ChevronUp className="h-3 w-3" />
+            ) : (
+              <ChevronDown className="h-3 w-3" />
+            )}
           </Button>
         </CardTitle>
       </CardHeader>
       {isExpanded && (
         <CardContent className="space-y-6 pt-4">
-          {selectedProjectPage 
+          {selectedProjectPage
             ? renderProjectPageMetrics()
             : workspace !== "everything"
               ? renderWorkspaceMetrics()
-              : renderHomepageMetrics()
-          }
+              : renderHomepageMetrics()}
         </CardContent>
       )}
     </Card>

@@ -132,7 +132,13 @@ interface Todo {
   priorityOrder?: number;
 }
 
-type FilterType = "all" | "active" | "completed" | "dueToday" | "actionable" | "blocked";
+type FilterType =
+  | "all"
+  | "active"
+  | "completed"
+  | "dueToday"
+  | "actionable"
+  | "blocked";
 
 const TODO_TYPE_CONFIG: Record<
   TodoType,
@@ -287,7 +293,9 @@ const Home = () => {
 
   // Next meeting state
   const [nextMeetingExpanded, setNextMeetingExpanded] = useState(false);
-  const [shownNotifications, setShownNotifications] = useState<Set<string>>(new Set());
+  const [shownNotifications, setShownNotifications] = useState<Set<string>>(
+    new Set(),
+  );
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [dialogStep, setDialogStep] = useState<
     "type" | "workspace" | "details"
@@ -477,7 +485,7 @@ const Home = () => {
       if (minutes <= 0 && minutes >= -15) {
         const key = `${notificationKey}started`;
         if (!shownNotifications.has(key)) {
-          setShownNotifications(prev => new Set(prev).add(key));
+          setShownNotifications((prev) => new Set(prev).add(key));
           setNextMeetingExpanded(true);
         }
       }
@@ -485,21 +493,21 @@ const Home = () => {
       else if (minutes <= 5 && minutes > 0) {
         const key = `${notificationKey}5min`;
         if (!shownNotifications.has(key)) {
-          setShownNotifications(prev => new Set(prev).add(key));
+          setShownNotifications((prev) => new Set(prev).add(key));
         }
       }
       // Check for 15 minute warning
       else if (minutes <= 15 && minutes > 5) {
         const key = `${notificationKey}15min`;
         if (!shownNotifications.has(key)) {
-          setShownNotifications(prev => new Set(prev).add(key));
+          setShownNotifications((prev) => new Set(prev).add(key));
         }
       }
       // Check for 30 minute warning
       else if (minutes <= 30 && minutes > 15) {
         const key = `${notificationKey}30min`;
         if (!shownNotifications.has(key)) {
-          setShownNotifications(prev => new Set(prev).add(key));
+          setShownNotifications((prev) => new Set(prev).add(key));
         }
       }
     };
@@ -840,7 +848,11 @@ const Home = () => {
 
           return prevTodos.map((t) => {
             const childIndex = children.findIndex((c) => c.id === t.id);
-            if (childIndex !== -1 && t.type !== "Blocker" && t.type !== "Meeting") {
+            if (
+              childIndex !== -1 &&
+              t.type !== "Blocker" &&
+              t.type !== "Meeting"
+            ) {
               const order = nextOrder + childIndex;
               return { ...t, isPriority: true, priorityOrder: order };
             }
@@ -866,7 +878,9 @@ const Home = () => {
         let nextOrder = priorityTodos.length;
 
         // Check if all children are meetings
-        const allChildrenAreMeetings = children.every((c) => c.type === "Meeting");
+        const allChildrenAreMeetings = children.every(
+          (c) => c.type === "Meeting",
+        );
 
         // If all children are meetings, just add the parent (no children)
         if (allChildrenAreMeetings) {
@@ -880,7 +894,11 @@ const Home = () => {
         return prevTodos.map((t) => {
           // Add children first (except Blockers and Meetings)
           const childIndex = children.findIndex((c) => c.id === t.id);
-          if (childIndex !== -1 && t.type !== "Blocker" && t.type !== "Meeting") {
+          if (
+            childIndex !== -1 &&
+            t.type !== "Blocker" &&
+            t.type !== "Meeting"
+          ) {
             const order = nextOrder + childIndex;
             return { ...t, isPriority: true, priorityOrder: order };
           }
@@ -1415,7 +1433,9 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
 
             if (hasUncompletedChildren) {
               // Check if all children are meetings
-              const allChildrenAreMeetings = children.every((c) => c.type === "Meeting");
+              const allChildrenAreMeetings = children.every(
+                (c) => c.type === "Meeting",
+              );
 
               // If all children are meetings, just add the parent
               if (allChildrenAreMeetings) {
@@ -1544,8 +1564,8 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
       newTodoType === "Meeting"
         ? newTodoMeetingTime
         : newTodoType !== "Meeting" && inheritedDueDate && !inheritedDueTime
-        ? "23:59"
-        : inheritedDueTime;
+          ? "23:59"
+          : inheritedDueTime;
 
     if (newTodoType === "Meeting" && inheritedDueDate && newTodoMeetingTime) {
       const parsedTime = parseTimeString(newTodoMeetingTime);
@@ -1790,13 +1810,15 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
   });
 
   // Parse time string in AM/PM or 24-hour format to hours and minutes
-  const parseTimeString = (timeString: string): { hours: number; minutes: number } | null => {
+  const parseTimeString = (
+    timeString: string,
+  ): { hours: number; minutes: number } | null => {
     // Try AM/PM format first
     const ampmMatch = timeString.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
     if (ampmMatch) {
       let hours = parseInt(ampmMatch[1]);
       const minutes = parseInt(ampmMatch[2]);
-      const isPM = ampmMatch[3].toUpperCase() === 'PM';
+      const isPM = ampmMatch[3].toUpperCase() === "PM";
 
       // Convert to 24-hour format
       if (isPM && hours !== 12) hours += 12;
@@ -1822,7 +1844,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
 
   // Format time to AM/PM format (converts 24-hour format if needed)
   const formatTimeToAMPM = (timeString: string | undefined): string => {
-    if (!timeString) return '';
+    if (!timeString) return "";
 
     // If already in AM/PM format, return as is
     if (/AM|PM/i.test(timeString)) return timeString;
@@ -1838,7 +1860,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
       if (hours === 0) hours = 12;
       else if (hours > 12) hours -= 12;
 
-      return `${hours}:${minutes} ${isPM ? 'PM' : 'AM'}`;
+      return `${hours}:${minutes} ${isPM ? "PM" : "AM"}`;
     }
 
     return timeString;
@@ -1847,7 +1869,10 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
   // Get actual meeting timestamp considering both dueDate and meetingTime
   const getMeetingTimestamp = (meeting: Todo) => {
     if (!meeting.dueDate) return 0;
-    const baseTime = typeof meeting.dueDate === 'string' ? new Date(meeting.dueDate).getTime() : meeting.dueDate;
+    const baseTime =
+      typeof meeting.dueDate === "string"
+        ? new Date(meeting.dueDate).getTime()
+        : meeting.dueDate;
 
     // Check for time in meetingTime or dueTime fields
     const timeString = meeting.meetingTime || meeting.dueTime;
@@ -1934,7 +1959,9 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
       workspace === "everything"
         ? todos
         : todos.filter((todo) => todo.workspace === workspace);
-    return allWorkspaceTodos.filter((todo) => todo.type === type && !todo.completed).length;
+    return allWorkspaceTodos.filter(
+      (todo) => todo.type === type && !todo.completed,
+    ).length;
   };
 
   // Metrics calculations
@@ -2251,7 +2278,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
   // Get next upcoming meeting(s)
   const getNextMeeting = () => {
     const now = Date.now();
-    const fifteenMinutesAgo = now - (15 * 60 * 1000);
+    const fifteenMinutesAgo = now - 15 * 60 * 1000;
     const todayStart = new Date();
     todayStart.setHours(0, 0, 0, 0);
     const todayEnd = new Date();
@@ -2270,12 +2297,22 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
       .sort((a, b) => {
         const aTime = getMeetingTimestamp(a);
         const bTime = getMeetingTimestamp(b);
-        const aBaseDueDate = typeof a.dueDate === 'string' ? new Date(a.dueDate).getTime() : a.dueDate!;
-        const bBaseDueDate = typeof b.dueDate === 'string' ? new Date(b.dueDate).getTime() : b.dueDate!;
+        const aBaseDueDate =
+          typeof a.dueDate === "string"
+            ? new Date(a.dueDate).getTime()
+            : a.dueDate!;
+        const bBaseDueDate =
+          typeof b.dueDate === "string"
+            ? new Date(b.dueDate).getTime()
+            : b.dueDate!;
 
         // Check if meetings are today
-        const aIsToday = aBaseDueDate >= todayStart.getTime() && aBaseDueDate <= todayEnd.getTime();
-        const bIsToday = bBaseDueDate >= todayStart.getTime() && bBaseDueDate <= todayEnd.getTime();
+        const aIsToday =
+          aBaseDueDate >= todayStart.getTime() &&
+          aBaseDueDate <= todayEnd.getTime();
+        const bIsToday =
+          bBaseDueDate >= todayStart.getTime() &&
+          bBaseDueDate <= todayEnd.getTime();
 
         // Prioritize today's meetings over future meetings
         if (aIsToday && !bIsToday) return -1;
@@ -3383,29 +3420,29 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                   New To-do
                 </Button>
                 {!focusMode && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => {
-                    if (
-                      !isCreateProjectExpanded &&
-                      workspace === "everything"
-                    ) {
-                      setNewProjectWorkspace("personal");
-                    }
-                    setIsCreateProjectExpanded(!isCreateProjectExpanded);
-                    if (!isCreateProjectExpanded) {
-                      setIsAddTodoExpanded(false);
-                      setIsToddExpanded(false);
-                      setIsAlertsExpanded(false);
-                      setIsSmartSuggestionsExpanded(false);
-                    }
-                  }}
-                  className="text-sm"
-                >
-                  <Briefcase className="h-4 w-4 mr-1" />
-                  New Project
-                </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      if (
+                        !isCreateProjectExpanded &&
+                        workspace === "everything"
+                      ) {
+                        setNewProjectWorkspace("personal");
+                      }
+                      setIsCreateProjectExpanded(!isCreateProjectExpanded);
+                      if (!isCreateProjectExpanded) {
+                        setIsAddTodoExpanded(false);
+                        setIsToddExpanded(false);
+                        setIsAlertsExpanded(false);
+                        setIsSmartSuggestionsExpanded(false);
+                      }
+                    }}
+                    className="text-sm"
+                  >
+                    <Briefcase className="h-4 w-4 mr-1" />
+                    New Project
+                  </Button>
                 )}
                 {!focusMode && !autoAlerts && (
                   <Button
@@ -3495,36 +3532,36 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
             </div>
             <div className="flex items-center gap-3">
               {!focusMode && (
-              <div className="hidden md:flex items-center gap-4 text-sm">
-                <div className="flex flex-col items-end gap-0.5">
-                  <div className="text-xs text-slate-500 dark:text-slate-400">
-                    Today
+                <div className="hidden md:flex items-center gap-4 text-sm">
+                  <div className="flex flex-col items-end gap-0.5">
+                    <div className="text-xs text-slate-500 dark:text-slate-400">
+                      Today
+                    </div>
+                    <div className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-orange-600">
+                      {100 - getWorkLeftForDayScore()}%
+                    </div>
+                    <div className="w-12 h-1 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-orange-500 to-orange-600 transition-all duration-500"
+                        style={{ width: `${100 - getWorkLeftForDayScore()}%` }}
+                      />
+                    </div>
                   </div>
-                  <div className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-orange-600">
-                    {100 - getWorkLeftForDayScore()}%
-                  </div>
-                  <div className="w-12 h-1 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-orange-500 to-orange-600 transition-all duration-500"
-                      style={{ width: `${100 - getWorkLeftForDayScore()}%` }}
-                    />
+                  <div className="flex flex-col items-end gap-0.5">
+                    <div className="text-xs text-slate-500 dark:text-slate-400">
+                      Overall
+                    </div>
+                    <div className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-blue-600">
+                      {100 - getWorkLeftScore()}%
+                    </div>
+                    <div className="w-12 h-1 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-500"
+                        style={{ width: `${100 - getWorkLeftScore()}%` }}
+                      />
+                    </div>
                   </div>
                 </div>
-                <div className="flex flex-col items-end gap-0.5">
-                  <div className="text-xs text-slate-500 dark:text-slate-400">
-                    Overall
-                  </div>
-                  <div className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-blue-600">
-                    {100 - getWorkLeftScore()}%
-                  </div>
-                  <div className="w-12 h-1 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-500"
-                      style={{ width: `${100 - getWorkLeftScore()}%` }}
-                    />
-                  </div>
-                </div>
-              </div>
               )}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -3758,7 +3795,8 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
             )}
 
             {/* Expandable Create Project */}
-            {!focusMode && isCreateProjectExpanded &&
+            {!focusMode &&
+              isCreateProjectExpanded &&
               (() => {
                 // Auto-set workspace when not on homepage
                 if (
@@ -4021,27 +4059,29 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
             )}
 
             {/* Expandable Smart Suggestions Widget */}
-            {!focusMode && isSmartSuggestionsExpanded && getSmartSuggestionsCount() > 0 && (
-              <Card className="mb-6 border border-slate-200 dark:border-slate-800 animate-in fade-in slide-in-from-top-2 duration-200">
-                <CardHeader>
-                  <CardTitle className="text-base font-medium flex items-center gap-2">
-                    <Lightbulb className="h-4 w-4" />
-                    Suggestions
-                    <Badge variant="secondary" className="ml-1">
-                      {getSmartSuggestionsCount()}
-                    </Badge>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="pt-6">
-                  <SmartSuggestionsWidget
-                    todos={autoAlerts ? todos : cachedAlertsTodos}
-                    workspace={workspace}
-                    selectedProjectPage={selectedProjectPage}
-                    onTodoClick={handleTodoClick}
-                  />
-                </CardContent>
-              </Card>
-            )}
+            {!focusMode &&
+              isSmartSuggestionsExpanded &&
+              getSmartSuggestionsCount() > 0 && (
+                <Card className="mb-6 border border-slate-200 dark:border-slate-800 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <CardHeader>
+                    <CardTitle className="text-base font-medium flex items-center gap-2">
+                      <Lightbulb className="h-4 w-4" />
+                      Suggestions
+                      <Badge variant="secondary" className="ml-1">
+                        {getSmartSuggestionsCount()}
+                      </Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="pt-6">
+                    <SmartSuggestionsWidget
+                      todos={autoAlerts ? todos : cachedAlertsTodos}
+                      workspace={workspace}
+                      selectedProjectPage={selectedProjectPage}
+                      onTodoClick={handleTodoClick}
+                    />
+                  </CardContent>
+                </Card>
+              )}
 
             {/* Next Meeting Banner */}
             {(() => {
@@ -4051,7 +4091,13 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
               const minutes = getTimeUntilMeeting(nextMeeting);
               if (minutes === null) return null;
 
-              const meetingDate = nextMeeting.dueDate ? new Date(typeof nextMeeting.dueDate === 'string' ? nextMeeting.dueDate : nextMeeting.dueDate) : null;
+              const meetingDate = nextMeeting.dueDate
+                ? new Date(
+                    typeof nextMeeting.dueDate === "string"
+                      ? nextMeeting.dueDate
+                      : nextMeeting.dueDate,
+                  )
+                : null;
               const meetingStarted = minutes <= 0;
               const isUrgent = minutes <= 15 && minutes > 0;
               const isWarning = minutes <= 30 && minutes > 15;
@@ -4060,43 +4106,51 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                 <div
                   className={`mb-3 p-3 rounded-lg border-2 cursor-pointer transition-all ${
                     meetingStarted
-                      ? 'bg-red-50 dark:bg-red-950 border-red-500 animate-pulse'
+                      ? "bg-red-50 dark:bg-red-950 border-red-500 animate-pulse"
                       : isUrgent
-                      ? 'bg-orange-50 dark:bg-orange-950 border-orange-500'
-                      : isWarning
-                      ? 'bg-yellow-50 dark:bg-yellow-950 border-yellow-500'
-                      : 'bg-blue-50 dark:bg-blue-950 border-blue-500'
+                        ? "bg-orange-50 dark:bg-orange-950 border-orange-500"
+                        : isWarning
+                          ? "bg-yellow-50 dark:bg-yellow-950 border-yellow-500"
+                          : "bg-blue-50 dark:bg-blue-950 border-blue-500"
                   }`}
                   onClick={() => setNextMeetingExpanded(!nextMeetingExpanded)}
-                  title={`${formatTimeUntilMeeting(minutes)} ${meetingStarted ? '' : 'until meeting'}`}
+                  title={`${formatTimeUntilMeeting(minutes)} ${meetingStarted ? "" : "until meeting"}`}
                 >
                   {!nextMeetingExpanded ? (
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Users className={`h-4 w-4 ${
-                          meetingStarted
-                            ? 'text-red-600 dark:text-red-400'
-                            : isUrgent
-                            ? 'text-orange-600 dark:text-orange-400'
-                            : isWarning
-                            ? 'text-yellow-600 dark:text-yellow-400'
-                            : 'text-blue-600 dark:text-blue-400'
-                        }`} />
+                        <Users
+                          className={`h-4 w-4 ${
+                            meetingStarted
+                              ? "text-red-600 dark:text-red-400"
+                              : isUrgent
+                                ? "text-orange-600 dark:text-orange-400"
+                                : isWarning
+                                  ? "text-yellow-600 dark:text-yellow-400"
+                                  : "text-blue-600 dark:text-blue-400"
+                          }`}
+                        />
                         <span className="text-sm font-medium">
-                          {meetingStarted ? '🔴 Meeting Started: ' : 'Next Meeting: '}
+                          {meetingStarted
+                            ? "🔴 Meeting Started: "
+                            : "Next Meeting: "}
                           {nextMeeting.text}
                         </span>
                       </div>
-                      <div className={`text-xs font-semibold ${
-                        meetingStarted
-                          ? 'text-red-700 dark:text-red-300'
-                          : isUrgent
-                          ? 'text-orange-700 dark:text-orange-300'
-                          : isWarning
-                          ? 'text-yellow-700 dark:text-yellow-300'
-                          : 'text-blue-700 dark:text-blue-300'
-                      }`}>
-                        {meetingStarted ? formatTimeUntilMeeting(minutes) : `in ${formatTimeUntilMeeting(minutes)}`}
+                      <div
+                        className={`text-xs font-semibold ${
+                          meetingStarted
+                            ? "text-red-700 dark:text-red-300"
+                            : isUrgent
+                              ? "text-orange-700 dark:text-orange-300"
+                              : isWarning
+                                ? "text-yellow-700 dark:text-yellow-300"
+                                : "text-blue-700 dark:text-blue-300"
+                        }`}
+                      >
+                        {meetingStarted
+                          ? formatTimeUntilMeeting(minutes)
+                          : `in ${formatTimeUntilMeeting(minutes)}`}
                       </div>
                     </div>
                   ) : (
@@ -4105,7 +4159,9 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-2">
                             <Users className="h-5 w-5 text-red-600 dark:text-red-400" />
-                            <h3 className="font-semibold text-base">{nextMeeting.text}</h3>
+                            <h3 className="font-semibold text-base">
+                              {nextMeeting.text}
+                            </h3>
                           </div>
                           {meetingStarted && (
                             <div className="bg-red-100 dark:bg-red-900 border border-red-300 dark:border-red-700 rounded p-2 mb-2">
@@ -4118,33 +4174,60 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                             {meetingDate && (
                               <div className="flex items-center gap-2 text-muted-foreground">
                                 <Calendar className="h-4 w-4" />
-                                <span>{format(meetingDate, 'EEEE, MMMM d, yyyy')}</span>
+                                <span>
+                                  {format(meetingDate, "EEEE, MMMM d, yyyy")}
+                                </span>
                               </div>
                             )}
                             {nextMeeting.meetingTime && (
                               <div className="flex items-center gap-2 text-muted-foreground">
                                 <Clock className="h-4 w-4" />
-                                <span>{formatTimeToAMPM(nextMeeting.meetingTime)}</span>
+                                <span>
+                                  {formatTimeToAMPM(nextMeeting.meetingTime)}
+                                </span>
                               </div>
                             )}
                             {nextMeeting.agenda && (
                               <div className="mt-2">
-                                <p className="text-xs text-muted-foreground mb-1">Agenda:</p>
+                                <p className="text-xs text-muted-foreground mb-1">
+                                  Agenda:
+                                </p>
                                 <p className="text-sm">{nextMeeting.agenda}</p>
                               </div>
                             )}
                           </div>
                           {(() => {
-                            const childTodos = todos.filter(t => t.parentId === nextMeeting.id && !t.completed);
+                            const childTodos = todos.filter(
+                              (t) =>
+                                t.parentId === nextMeeting.id && !t.completed,
+                            );
                             if (childTodos.length > 0) {
                               return (
                                 <div className="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700">
-                                  <p className="text-xs font-semibold mb-2">Prep Tasks ({childTodos.filter(t => !t.completed).length} remaining):</p>
+                                  <p className="text-xs font-semibold mb-2">
+                                    Prep Tasks (
+                                    {
+                                      childTodos.filter((t) => !t.completed)
+                                        .length
+                                    }{" "}
+                                    remaining):
+                                  </p>
                                   <ul className="space-y-1">
-                                    {childTodos.map(child => (
-                                      <li key={child.id} className="text-sm flex items-start gap-2">
-                                        <span className="text-muted-foreground">•</span>
-                                        <span className={child.completed ? 'line-through text-muted-foreground' : ''}>
+                                    {childTodos.map((child) => (
+                                      <li
+                                        key={child.id}
+                                        className="text-sm flex items-start gap-2"
+                                      >
+                                        <span className="text-muted-foreground">
+                                          •
+                                        </span>
+                                        <span
+                                          className={
+                                            child.completed
+                                              ? "line-through text-muted-foreground"
+                                              : ""
+                                          }
+                                        >
                                           {child.text}
                                         </span>
                                       </li>
@@ -4281,18 +4364,14 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                   // Separate actionable from blocked priorities
                   const actionablePriorities = priorityTodos.filter((t) => {
                     const hasUncompletedChild = todos.some(
-                      (child) =>
-                        child.parentId === t.id &&
-                        !child.completed,
+                      (child) => child.parentId === t.id && !child.completed,
                     );
                     return !hasUncompletedChild;
                   });
 
                   const blockedPriorities = priorityTodos.filter((t) => {
                     const hasUncompletedChild = todos.some(
-                      (child) =>
-                        child.parentId === t.id &&
-                        !child.completed,
+                      (child) => child.parentId === t.id && !child.completed,
                     );
                     return hasUncompletedChild;
                   });
@@ -4424,33 +4503,46 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                                         <p className="text-xs font-medium text-amber-700 dark:text-amber-400">
                                           Blocked by:
                                         </p>
-                                        {blockingChildren.map((blockingChild) => {
-                                          const childConfig = TODO_TYPE_CONFIG[blockingChild.type];
-                                          return (
-                                            <div
-                                              key={blockingChild.id}
-                                              className="flex items-center gap-2 text-xs cursor-pointer hover:underline"
-                                              onClick={() =>
-                                                openSummaryDialog(blockingChild)
-                                              }
-                                            >
-                                              {blockingChild.type === "Meeting" ? (
-                                                <Users className="h-3 w-3 text-purple-500" />
-                                              ) : blockingChild.type === "Blocker" ? (
-                                                <AlertTriangle className="h-3 w-3 text-red-500" />
-                                              ) : blockingChild.type === "Deliverable" ? (
-                                                <Target className="h-3 w-3 text-blue-500" />
-                                              ) : blockingChild.type === "Quick Win" ? (
-                                                <Zap className="h-3 w-3 text-green-500" />
-                                              ) : (
-                                                <CheckCircle2 className="h-3 w-3 text-slate-500" />
-                                              )}
-                                              <span className={`${blockingChild.type === "Meeting" ? "text-purple-600 dark:text-purple-400" : blockingChild.type === "Blocker" ? "text-red-600 dark:text-red-400" : "text-slate-600 dark:text-slate-400"}`}>
-                                                {blockingChild.text}
-                                              </span>
-                                            </div>
-                                          );
-                                        })}
+                                        {blockingChildren.map(
+                                          (blockingChild) => {
+                                            const childConfig =
+                                              TODO_TYPE_CONFIG[
+                                                blockingChild.type
+                                              ];
+                                            return (
+                                              <div
+                                                key={blockingChild.id}
+                                                className="flex items-center gap-2 text-xs cursor-pointer hover:underline"
+                                                onClick={() =>
+                                                  openSummaryDialog(
+                                                    blockingChild,
+                                                  )
+                                                }
+                                              >
+                                                {blockingChild.type ===
+                                                "Meeting" ? (
+                                                  <Users className="h-3 w-3 text-purple-500" />
+                                                ) : blockingChild.type ===
+                                                  "Blocker" ? (
+                                                  <AlertTriangle className="h-3 w-3 text-red-500" />
+                                                ) : blockingChild.type ===
+                                                  "Deliverable" ? (
+                                                  <Target className="h-3 w-3 text-blue-500" />
+                                                ) : blockingChild.type ===
+                                                  "Quick Win" ? (
+                                                  <Zap className="h-3 w-3 text-green-500" />
+                                                ) : (
+                                                  <CheckCircle2 className="h-3 w-3 text-slate-500" />
+                                                )}
+                                                <span
+                                                  className={`${blockingChild.type === "Meeting" ? "text-purple-600 dark:text-purple-400" : blockingChild.type === "Blocker" ? "text-red-600 dark:text-red-400" : "text-slate-600 dark:text-slate-400"}`}
+                                                >
+                                                  {blockingChild.text}
+                                                </span>
+                                              </div>
+                                            );
+                                          },
+                                        )}
                                       </div>
                                     </div>
                                   </div>
@@ -4469,273 +4561,67 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
             {/* Upcoming Meetings and Deadlines */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
               {!focusMode && (
-              <Card className="border border-slate-200 dark:border-slate-800">
-                <CardHeader
-                  className="pb-3 cursor-pointer"
-                  onClick={() => setIsMeetingsExpanded(!isMeetingsExpanded)}
-                >
-                  <CardTitle className="text-base font-medium flex items-center gap-2">
-                    <Users className="h-4 w-4" />
-                    Meetings
-                    {meetingTodos.length > 0 && (
-                      <Badge variant="secondary" className="text-xs">
-                        {meetingTodos.length}
-                      </Badge>
-                    )}
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="ml-auto h-6 w-6 p-0"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setIsMeetingsExpanded(!isMeetingsExpanded);
-                      }}
-                    >
-                      {isMeetingsExpanded ? (
-                        <ChevronUp className="h-3 w-3" />
-                      ) : (
-                        <ChevronDown className="h-3 w-3" />
-                      )}
-                    </Button>
-                  </CardTitle>
-                </CardHeader>
-                {isMeetingsExpanded && (
-                  <CardContent>
-                    {meetingTodos.length === 0 ? (
-                      <div className="text-center py-4 text-muted-foreground text-sm">
-                        No upcoming meetings
-                      </div>
-                    ) : (
-                      <div className="flex gap-3 overflow-x-auto pb-2">
-                        {meetingTodos.map((meeting) => {
-                          const meetingConfig = TODO_TYPE_CONFIG["Meeting"];
-                          const hasUncompletedChildren = allWorkspaceTodos.some(
-                            (t) => t.parentId === meeting.id && !t.completed,
-                          );
-                          return (
-                            <div
-                              key={meeting.id}
-                              className={`flex-shrink-0 flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-800 transition-all min-w-[300px] bg-white dark:bg-slate-900 border-l-4 ${meetingConfig.borderLight} ${meetingConfig.borderDark} hover:shadow-md ${hasUncompletedChildren ? "ring-2 ring-amber-500 dark:ring-amber-400" : ""}`}
-                            >
-                              <Checkbox
-                                checked={meeting.completed}
-                                onCheckedChange={() => toggleTodo(meeting.id)}
-                              />
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-start gap-2">
-                                  <div
-                                    className="font-medium text-sm break-words cursor-pointer hover:underline flex-1"
-                                    onClick={() => openSummaryDialog(meeting)}
-                                  >
-                                    {meeting.text}
-                                  </div>
-                                  {hasUncompletedChildren && (
-                                    <AlertTriangle
-                                      className="h-4 w-4 text-amber-500 dark:text-amber-400 flex-shrink-0"
-                                      title="Has uncompleted children"
-                                    />
-                                  )}
-                                </div>
-                                <div className="flex items-center gap-2 mt-1 flex-wrap">
-                                  <Badge
-                                    variant="outline"
-                                    className="text-xs gap-1"
-                                  >
-                                    <CalendarIcon className="h-3 w-3" />
-                                    {meeting.dueDate
-                                      ? format(
-                                          new Date(meeting.dueDate),
-                                          "MMM d",
-                                        )
-                                      : "No date"}
-                                  </Badge>
-                                  {meeting.meetingTime && (
-                                    <Badge
-                                      variant="outline"
-                                      className="text-xs gap-1"
-                                    >
-                                      <Clock className="h-3 w-3" />
-                                      {formatTimeToAMPM(meeting.meetingTime)}
-                                    </Badge>
-                                  )}
-                                  <Badge
-                                    variant={
-                                      meeting.priority === "P0"
-                                        ? "destructive"
-                                        : "outline"
-                                    }
-                                    className={`text-xs ${
-                                      meeting.priority === "P1"
-                                        ? "border-orange-500 text-orange-500"
-                                        : ""
-                                    }`}
-                                  >
-                                    {meeting.priority}
-                                  </Badge>
-                                  {workspace === "everything" && (
-                                    <Badge
-                                      variant="secondary"
-                                      className="text-xs capitalize"
-                                    >
-                                      {meeting.workspace}
-                                    </Badge>
-                                  )}
-                                  {hasUncompletedChildren && (
-                                    <Badge
-                                      variant="outline"
-                                      className="text-xs gap-1 border-amber-500 text-amber-600 dark:text-amber-400"
-                                    >
-                                      {
-                                        allWorkspaceTodos.filter(
-                                          (t) =>
-                                            t.parentId === meeting.id &&
-                                            !t.completed,
-                                        ).length
-                                      }{" "}
-                                      pending
-                                    </Badge>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </CardContent>
-                )}
-              </Card>
-              )}
-
-              {/* Upcoming Deadlines */}
-              {!focusMode && (
-              <Card className="border border-slate-200 dark:border-slate-800">
-                <CardHeader
-                  className="pb-3 cursor-pointer"
-                  onClick={() => setIsDeadlinesExpanded(!isDeadlinesExpanded)}
-                >
-                  <CardTitle className="text-base font-medium flex items-center gap-2">
-                    <CalendarIcon className="h-4 w-4" />
-                    Deadlines
-                    {(() => {
-                      // Include ALL todos (parents and children) for deadline count
-                      const allTodos = todos.filter((t) => {
-                        if (
-                          workspace !== "everything" &&
-                          t.workspace !== workspace
-                        )
-                          return false;
-                        if (
-                          selectedProjectPage &&
-                          t.project !== selectedProjectPage
-                        )
-                          return false;
-                        return true;
-                      });
-                      const deadlineCount = allTodos.filter(
-                        (t) =>
-                          !t.completed && t.dueDate && t.type !== "Meeting",
-                      ).length;
-                      return deadlineCount > 0 ? (
+                <Card className="border border-slate-200 dark:border-slate-800">
+                  <CardHeader
+                    className="pb-3 cursor-pointer"
+                    onClick={() => setIsMeetingsExpanded(!isMeetingsExpanded)}
+                  >
+                    <CardTitle className="text-base font-medium flex items-center gap-2">
+                      <Users className="h-4 w-4" />
+                      Meetings
+                      {meetingTodos.length > 0 && (
                         <Badge variant="secondary" className="text-xs">
-                          {deadlineCount}
+                          {meetingTodos.length}
                         </Badge>
-                      ) : null;
-                    })()}
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="ml-auto h-6 w-6 p-0"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setIsDeadlinesExpanded(!isDeadlinesExpanded);
-                      }}
-                    >
-                      {isDeadlinesExpanded ? (
-                        <ChevronUp className="h-3 w-3" />
-                      ) : (
-                        <ChevronDown className="h-3 w-3" />
                       )}
-                    </Button>
-                  </CardTitle>
-                </CardHeader>
-                {isDeadlinesExpanded && (
-                  <CardContent>
-                    {(() => {
-                      // Include ALL todos (parents and children) for deadlines
-                      const allWorkspaceTodosWithChildren = todos.filter(
-                        (t) => {
-                          if (
-                            workspace !== "everything" &&
-                            t.workspace !== workspace
-                          )
-                            return false;
-                          if (
-                            selectedProjectPage &&
-                            t.project !== selectedProjectPage
-                          )
-                            return false;
-                          return true;
-                        },
-                      );
-
-                      const upcomingDeadlines = allWorkspaceTodosWithChildren
-                        .filter(
-                          (t) =>
-                            !t.completed && t.dueDate && t.type !== "Meeting",
-                        )
-                        .sort((a, b) => {
-                          const dateA = new Date(a.dueDate!);
-                          const dateB = new Date(b.dueDate!);
-                          return dateA.getTime() - dateB.getTime();
-                        })
-                        .slice(0, 5);
-
-                      if (upcomingDeadlines.length === 0) {
-                        return (
-                          <div className="text-center py-8 text-muted-foreground text-sm">
-                            No upcoming deadlines
-                          </div>
-                        );
-                      }
-
-                      return (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="ml-auto h-6 w-6 p-0"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsMeetingsExpanded(!isMeetingsExpanded);
+                        }}
+                      >
+                        {isMeetingsExpanded ? (
+                          <ChevronUp className="h-3 w-3" />
+                        ) : (
+                          <ChevronDown className="h-3 w-3" />
+                        )}
+                      </Button>
+                    </CardTitle>
+                  </CardHeader>
+                  {isMeetingsExpanded && (
+                    <CardContent>
+                      {meetingTodos.length === 0 ? (
+                        <div className="text-center py-4 text-muted-foreground text-sm">
+                          No upcoming meetings
+                        </div>
+                      ) : (
                         <div className="flex gap-3 overflow-x-auto pb-2">
-                          {upcomingDeadlines.map((todo) => {
-                            const typeConfig = TODO_TYPE_CONFIG[todo.type];
-                            const dueDate = new Date(todo.dueDate!);
-                            const today = new Date();
-                            today.setHours(0, 0, 0, 0);
-                            const daysUntil = differenceInDays(dueDate, today);
-                            const isOverdue = daysUntil < 0;
-                            const isToday = daysUntil === 0;
-
-                            // Check for incomplete dependencies
+                          {meetingTodos.map((meeting) => {
+                            const meetingConfig = TODO_TYPE_CONFIG["Meeting"];
                             const hasUncompletedChildren =
-                              allWorkspaceTodosWithChildren.some(
-                                (t) => t.parentId === todo.id && !t.completed,
+                              allWorkspaceTodos.some(
+                                (t) =>
+                                  t.parentId === meeting.id && !t.completed,
                               );
-                            const incompleteDeps =
-                              allWorkspaceTodosWithChildren.filter(
-                                (t) => t.parentId === todo.id && !t.completed,
-                              );
-
                             return (
                               <div
-                                key={todo.id}
-                                className={`flex-shrink-0 flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-800 transition-all min-w-[300px] bg-white dark:bg-slate-900 border-l-4 ${typeConfig.borderLight} ${typeConfig.borderDark} hover:shadow-md ${hasUncompletedChildren ? "ring-2 ring-amber-500 dark:ring-amber-400" : ""}`}
+                                key={meeting.id}
+                                className={`flex-shrink-0 flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-800 transition-all min-w-[300px] bg-white dark:bg-slate-900 border-l-4 ${meetingConfig.borderLight} ${meetingConfig.borderDark} hover:shadow-md ${hasUncompletedChildren ? "ring-2 ring-amber-500 dark:ring-amber-400" : ""}`}
                               >
                                 <Checkbox
-                                  checked={todo.completed}
-                                  onCheckedChange={() => toggleTodo(todo.id)}
+                                  checked={meeting.completed}
+                                  onCheckedChange={() => toggleTodo(meeting.id)}
                                 />
                                 <div className="flex-1 min-w-0">
                                   <div className="flex items-start gap-2">
                                     <div
                                       className="font-medium text-sm break-words cursor-pointer hover:underline flex-1"
-                                      onClick={() => openSummaryDialog(todo)}
+                                      onClick={() => openSummaryDialog(meeting)}
                                     >
-                                      {todo.text}
+                                      {meeting.text}
                                     </div>
                                     {hasUncompletedChildren && (
                                       <AlertTriangle
@@ -4750,47 +4636,57 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                                       className="text-xs gap-1"
                                     >
                                       <CalendarIcon className="h-3 w-3" />
-                                      {format(new Date(todo.dueDate!), "MMM d")}
+                                      {meeting.dueDate
+                                        ? format(
+                                            new Date(meeting.dueDate),
+                                            "MMM d",
+                                          )
+                                        : "No date"}
                                     </Badge>
-                                    {isOverdue && (
+                                    {meeting.meetingTime && (
                                       <Badge
-                                        variant="destructive"
-                                        className="text-xs"
+                                        variant="outline"
+                                        className="text-xs gap-1"
                                       >
-                                        Overdue
+                                        <Clock className="h-3 w-3" />
+                                        {formatTimeToAMPM(meeting.meetingTime)}
                                       </Badge>
                                     )}
-                                    {isToday && (
-                                      <Badge
-                                        variant="default"
-                                        className="text-xs bg-red-600"
-                                      >
-                                        Due Today
-                                      </Badge>
-                                    )}
-                                    {!isOverdue &&
-                                      !isToday &&
-                                      daysUntil <= 3 && (
-                                        <Badge
-                                          variant="outline"
-                                          className="text-xs text-orange-600"
-                                        >
-                                          {daysUntil} day
-                                          {daysUntil !== 1 ? "s" : ""}
-                                        </Badge>
-                                      )}
                                     <Badge
-                                      variant="outline"
-                                      className="text-xs"
+                                      variant={
+                                        meeting.priority === "P0"
+                                          ? "destructive"
+                                          : "outline"
+                                      }
+                                      className={`text-xs ${
+                                        meeting.priority === "P1"
+                                          ? "border-orange-500 text-orange-500"
+                                          : ""
+                                      }`}
                                     >
-                                      {todo.priority}
+                                      {meeting.priority}
                                     </Badge>
+                                    {workspace === "everything" && (
+                                      <Badge
+                                        variant="secondary"
+                                        className="text-xs capitalize"
+                                      >
+                                        {meeting.workspace}
+                                      </Badge>
+                                    )}
                                     {hasUncompletedChildren && (
                                       <Badge
                                         variant="outline"
                                         className="text-xs gap-1 border-amber-500 text-amber-600 dark:text-amber-400"
                                       >
-                                        {incompleteDeps.length} pending
+                                        {
+                                          allWorkspaceTodos.filter(
+                                            (t) =>
+                                              t.parentId === meeting.id &&
+                                              !t.completed,
+                                          ).length
+                                        }{" "}
+                                        pending
                                       </Badge>
                                     )}
                                   </div>
@@ -4799,11 +4695,215 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                             );
                           })}
                         </div>
-                      );
-                    })()}
-                  </CardContent>
-                )}
-              </Card>
+                      )}
+                    </CardContent>
+                  )}
+                </Card>
+              )}
+
+              {/* Upcoming Deadlines */}
+              {!focusMode && (
+                <Card className="border border-slate-200 dark:border-slate-800">
+                  <CardHeader
+                    className="pb-3 cursor-pointer"
+                    onClick={() => setIsDeadlinesExpanded(!isDeadlinesExpanded)}
+                  >
+                    <CardTitle className="text-base font-medium flex items-center gap-2">
+                      <CalendarIcon className="h-4 w-4" />
+                      Deadlines
+                      {(() => {
+                        // Include ALL todos (parents and children) for deadline count
+                        const allTodos = todos.filter((t) => {
+                          if (
+                            workspace !== "everything" &&
+                            t.workspace !== workspace
+                          )
+                            return false;
+                          if (
+                            selectedProjectPage &&
+                            t.project !== selectedProjectPage
+                          )
+                            return false;
+                          return true;
+                        });
+                        const deadlineCount = allTodos.filter(
+                          (t) =>
+                            !t.completed && t.dueDate && t.type !== "Meeting",
+                        ).length;
+                        return deadlineCount > 0 ? (
+                          <Badge variant="secondary" className="text-xs">
+                            {deadlineCount}
+                          </Badge>
+                        ) : null;
+                      })()}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="ml-auto h-6 w-6 p-0"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsDeadlinesExpanded(!isDeadlinesExpanded);
+                        }}
+                      >
+                        {isDeadlinesExpanded ? (
+                          <ChevronUp className="h-3 w-3" />
+                        ) : (
+                          <ChevronDown className="h-3 w-3" />
+                        )}
+                      </Button>
+                    </CardTitle>
+                  </CardHeader>
+                  {isDeadlinesExpanded && (
+                    <CardContent>
+                      {(() => {
+                        // Include ALL todos (parents and children) for deadlines
+                        const allWorkspaceTodosWithChildren = todos.filter(
+                          (t) => {
+                            if (
+                              workspace !== "everything" &&
+                              t.workspace !== workspace
+                            )
+                              return false;
+                            if (
+                              selectedProjectPage &&
+                              t.project !== selectedProjectPage
+                            )
+                              return false;
+                            return true;
+                          },
+                        );
+
+                        const upcomingDeadlines = allWorkspaceTodosWithChildren
+                          .filter(
+                            (t) =>
+                              !t.completed && t.dueDate && t.type !== "Meeting",
+                          )
+                          .sort((a, b) => {
+                            const dateA = new Date(a.dueDate!);
+                            const dateB = new Date(b.dueDate!);
+                            return dateA.getTime() - dateB.getTime();
+                          })
+                          .slice(0, 5);
+
+                        if (upcomingDeadlines.length === 0) {
+                          return (
+                            <div className="text-center py-8 text-muted-foreground text-sm">
+                              No upcoming deadlines
+                            </div>
+                          );
+                        }
+
+                        return (
+                          <div className="flex gap-3 overflow-x-auto pb-2">
+                            {upcomingDeadlines.map((todo) => {
+                              const typeConfig = TODO_TYPE_CONFIG[todo.type];
+                              const dueDate = new Date(todo.dueDate!);
+                              const today = new Date();
+                              today.setHours(0, 0, 0, 0);
+                              const daysUntil = differenceInDays(
+                                dueDate,
+                                today,
+                              );
+                              const isOverdue = daysUntil < 0;
+                              const isToday = daysUntil === 0;
+
+                              // Check for incomplete dependencies
+                              const hasUncompletedChildren =
+                                allWorkspaceTodosWithChildren.some(
+                                  (t) => t.parentId === todo.id && !t.completed,
+                                );
+                              const incompleteDeps =
+                                allWorkspaceTodosWithChildren.filter(
+                                  (t) => t.parentId === todo.id && !t.completed,
+                                );
+
+                              return (
+                                <div
+                                  key={todo.id}
+                                  className={`flex-shrink-0 flex items-center gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-800 transition-all min-w-[300px] bg-white dark:bg-slate-900 border-l-4 ${typeConfig.borderLight} ${typeConfig.borderDark} hover:shadow-md ${hasUncompletedChildren ? "ring-2 ring-amber-500 dark:ring-amber-400" : ""}`}
+                                >
+                                  <Checkbox
+                                    checked={todo.completed}
+                                    onCheckedChange={() => toggleTodo(todo.id)}
+                                  />
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-start gap-2">
+                                      <div
+                                        className="font-medium text-sm break-words cursor-pointer hover:underline flex-1"
+                                        onClick={() => openSummaryDialog(todo)}
+                                      >
+                                        {todo.text}
+                                      </div>
+                                      {hasUncompletedChildren && (
+                                        <AlertTriangle
+                                          className="h-4 w-4 text-amber-500 dark:text-amber-400 flex-shrink-0"
+                                          title="Has uncompleted children"
+                                        />
+                                      )}
+                                    </div>
+                                    <div className="flex items-center gap-2 mt-1 flex-wrap">
+                                      <Badge
+                                        variant="outline"
+                                        className="text-xs gap-1"
+                                      >
+                                        <CalendarIcon className="h-3 w-3" />
+                                        {format(
+                                          new Date(todo.dueDate!),
+                                          "MMM d",
+                                        )}
+                                      </Badge>
+                                      {isOverdue && (
+                                        <Badge
+                                          variant="destructive"
+                                          className="text-xs"
+                                        >
+                                          Overdue
+                                        </Badge>
+                                      )}
+                                      {isToday && (
+                                        <Badge
+                                          variant="default"
+                                          className="text-xs bg-red-600"
+                                        >
+                                          Due Today
+                                        </Badge>
+                                      )}
+                                      {!isOverdue &&
+                                        !isToday &&
+                                        daysUntil <= 3 && (
+                                          <Badge
+                                            variant="outline"
+                                            className="text-xs text-orange-600"
+                                          >
+                                            {daysUntil} day
+                                            {daysUntil !== 1 ? "s" : ""}
+                                          </Badge>
+                                        )}
+                                      <Badge
+                                        variant="outline"
+                                        className="text-xs"
+                                      >
+                                        {todo.priority}
+                                      </Badge>
+                                      {hasUncompletedChildren && (
+                                        <Badge
+                                          variant="outline"
+                                          className="text-xs gap-1 border-amber-500 text-amber-600 dark:text-amber-400"
+                                        >
+                                          {incompleteDeps.length} pending
+                                        </Badge>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        );
+                      })()}
+                    </CardContent>
+                  )}
+                </Card>
               )}
             </div>
 
@@ -5014,277 +5114,288 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
             )}
 
             {!focusMode && (
-            <Card className="border border-slate-200 dark:border-slate-800">
-              <CardHeader
-                className="cursor-pointer"
-                onClick={() => setIsTasksExpanded(!isTasksExpanded)}
-              >
-                <CardTitle className="text-base font-medium flex items-center gap-2">
-                  {selectedProjectPage ? (
-                    <>
-                      <Briefcase className="h-4 w-4" />
-                      {selectedProjectPage}
-                      <Badge variant="secondary" className="ml-2 text-xs">
-                        {workspaceTodos.filter((t) => !t.completed).length}
-                      </Badge>
-                    </>
-                  ) : (
-                    "To-dos"
-                  )}
-                  <Badge variant="secondary" className="ml-auto text-xs">
-                    {(() => {
-                      // Count all todos in workspace, including children
-                      const allWorkspaceTodos =
-                        workspace === "everything"
-                          ? todos
-                          : todos.filter(
-                              (todo) => todo.workspace === workspace,
-                            );
-                      const filtered = selectedProjectPage
-                        ? allWorkspaceTodos.filter(
-                            (t) => t.project === selectedProjectPage,
-                          )
-                        : allWorkspaceTodos;
-                      return filtered.length;
-                    })()}
-                  </Badge>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="ml-2 h-6 w-6 p-0"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIsTasksExpanded(!isTasksExpanded);
-                    }}
-                  >
-                    {isTasksExpanded ? (
-                      <ChevronUp className="h-3 w-3" />
+              <Card className="border border-slate-200 dark:border-slate-800">
+                <CardHeader
+                  className="cursor-pointer"
+                  onClick={() => setIsTasksExpanded(!isTasksExpanded)}
+                >
+                  <CardTitle className="text-base font-medium flex items-center gap-2">
+                    {selectedProjectPage ? (
+                      <>
+                        <Briefcase className="h-4 w-4" />
+                        {selectedProjectPage}
+                        <Badge variant="secondary" className="ml-2 text-xs">
+                          {workspaceTodos.filter((t) => !t.completed).length}
+                        </Badge>
+                      </>
                     ) : (
-                      <ChevronDown className="h-3 w-3" />
+                      "To-dos"
                     )}
-                  </Button>
-                </CardTitle>
-              </CardHeader>
-              {isTasksExpanded && (
-                <CardContent className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                  <div className="lg:col-span-3 space-y-6">
-                    {selectedProjectPage &&
-                      (() => {
-                        const currentProject = projects.find(
-                          (p) => p.name === selectedProjectPage,
-                        );
-                        return (
-                          <div className="space-y-2">
-                            <div className="flex items-center gap-2 p-3 bg-accent/50 rounded-lg border">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => setSelectedProjectPage(null)}
-                                className="gap-2"
-                              >
-                                ← Back to All{" "}
-                                {workspace !== "everything"
-                                  ? workspace.charAt(0).toUpperCase() +
-                                    workspace.slice(1)
-                                  : ""}{" "}
-                                To-Dos
-                              </Button>
-                              <div className="flex-1"></div>
-                              <span className="text-sm text-muted-foreground capitalize">
-                                {workspace !== "everything" ? workspace : ""} /{" "}
-                                {selectedProjectPage}
-                              </span>
-                            </div>
-                            {currentProject?.description && (
-                              <div className="p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                                <p className="text-sm text-muted-foreground">
-                                  <strong className="text-foreground">
-                                    Project Description:
-                                  </strong>{" "}
-                                  {currentProject.description}
-                                </p>
-                              </div>
-                            )}
-                          </div>
-                        );
+                    <Badge variant="secondary" className="ml-auto text-xs">
+                      {(() => {
+                        // Count all todos in workspace, including children
+                        const allWorkspaceTodos =
+                          workspace === "everything"
+                            ? todos
+                            : todos.filter(
+                                (todo) => todo.workspace === workspace,
+                              );
+                        const filtered = selectedProjectPage
+                          ? allWorkspaceTodos.filter(
+                              (t) => t.project === selectedProjectPage,
+                            )
+                          : allWorkspaceTodos;
+                        return filtered.length;
                       })()}
-                    <div className="flex gap-2 flex-wrap">
-                      <Button
-                        variant={filter === "active" ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setFilter("active")}
-                      >
-                        Active ({activeCount})
-                      </Button>
-                      <Button
-                        variant={filter === "dueToday" ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setFilter("dueToday")}
-                      >
-                        Due Today ({dueTodayCount})
-                      </Button>
-                      <Button
-                        variant={filter === "actionable" ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setFilter("actionable")}
-                      >
-                        Actionable ({actionableCount})
-                      </Button>
-                      <Button
-                        variant={filter === "blocked" ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setFilter("blocked")}
-                      >
-                        Blocked ({blockedCount})
-                      </Button>
-                      <Button
-                        variant={filter === "all" ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setFilter("all")}
-                      >
-                        All ({workspaceTodos.length})
-                      </Button>
-                      <Button
-                        variant={filter === "completed" ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setFilter("completed")}
-                      >
-                        Completed ({completedCount})
-                      </Button>
-                      {completedCount > 0 && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={clearCompleted}
-                          className="ml-auto"
-                        >
-                          Clear Completed
-                        </Button>
-                      )}
-                    </div>
-
-                    <div className="space-y-2">
-                      {filteredTodos.length === 0 ? (
-                        <div className="text-center py-12 text-slate-500 dark:text-slate-400">
-                          {filter === "active" && workspaceTodos.length > 0
-                            ? "No active to-dos. Great job!"
-                            : filter === "completed" &&
-                                workspaceTodos.length > 0
-                              ? "No completed to-dos yet."
-                              : filter === "dueToday" && workspaceTodos.length > 0
-                                ? "No to-dos due today!"
-                                : filter === "actionable" && workspaceTodos.length > 0
-                                  ? "No actionable to-dos right now."
-                                  : filter === "blocked" && workspaceTodos.length > 0
-                                    ? "No blocked to-dos!"
-                                    : selectedTypeFilter
-                                      ? `No ${selectedTypeFilter} to-dos`
-                                      : selectedProjectFilter
-                                        ? `No to-dos in project "${selectedProjectFilter}"`
-                                        : "No to-dos yet. Add one to get started!"}
-                        </div>
+                    </Badge>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="ml-2 h-6 w-6 p-0"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsTasksExpanded(!isTasksExpanded);
+                      }}
+                    >
+                      {isTasksExpanded ? (
+                        <ChevronUp className="h-3 w-3" />
                       ) : (
-                        filteredTodos.map(renderTodoItem)
+                        <ChevronDown className="h-3 w-3" />
                       )}
-                    </div>
-                  </div>
-
-                  <div className="lg:col-span-1 space-y-4">
-                    <div className="space-y-2">
-                      <div className="text-sm font-medium">Type</div>
-                      <div className="flex flex-col gap-1.5">
+                    </Button>
+                  </CardTitle>
+                </CardHeader>
+                {isTasksExpanded && (
+                  <CardContent className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                    <div className="lg:col-span-3 space-y-6">
+                      {selectedProjectPage &&
+                        (() => {
+                          const currentProject = projects.find(
+                            (p) => p.name === selectedProjectPage,
+                          );
+                          return (
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-2 p-3 bg-accent/50 rounded-lg border">
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => setSelectedProjectPage(null)}
+                                  className="gap-2"
+                                >
+                                  ← Back to All{" "}
+                                  {workspace !== "everything"
+                                    ? workspace.charAt(0).toUpperCase() +
+                                      workspace.slice(1)
+                                    : ""}{" "}
+                                  To-Dos
+                                </Button>
+                                <div className="flex-1"></div>
+                                <span className="text-sm text-muted-foreground capitalize">
+                                  {workspace !== "everything" ? workspace : ""}{" "}
+                                  / {selectedProjectPage}
+                                </span>
+                              </div>
+                              {currentProject?.description && (
+                                <div className="p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                                  <p className="text-sm text-muted-foreground">
+                                    <strong className="text-foreground">
+                                      Project Description:
+                                    </strong>{" "}
+                                    {currentProject.description}
+                                  </p>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })()}
+                      <div className="flex gap-2 flex-wrap">
+                        <Button
+                          variant={filter === "active" ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setFilter("active")}
+                        >
+                          Active ({activeCount})
+                        </Button>
                         <Button
                           variant={
-                            selectedTypeFilter === null ? "default" : "outline"
+                            filter === "dueToday" ? "default" : "outline"
                           }
                           size="sm"
-                          onClick={() => setSelectedTypeFilter(null)}
-                          className="justify-start"
+                          onClick={() => setFilter("dueToday")}
                         >
-                          Nested View
+                          Due Today ({dueTodayCount})
                         </Button>
-                        {(Object.keys(TODO_TYPE_CONFIG) as TodoType[]).map(
-                          (type) => {
-                            const Icon = TODO_TYPE_CONFIG[type].icon;
-                            const typeConfig = TODO_TYPE_CONFIG[type];
-                            return (
-                              <Button
-                                key={type}
-                                variant={
-                                  selectedTypeFilter === type
-                                    ? "default"
-                                    : "outline"
-                                }
-                                size="sm"
-                                onClick={() => setSelectedTypeFilter(type)}
-                                className={`justify-start gap-1.5 ${selectedTypeFilter !== type ? `border-2 ${typeConfig.borderLight} ${typeConfig.borderDark}` : ""}`}
-                              >
-                                <Icon
-                                  className={`h-3.5 w-3.5 ${selectedTypeFilter !== type ? `${typeConfig.textLight} ${typeConfig.textDark}` : ""}`}
-                                />
-                                {type} ({typeCount(type)})
-                              </Button>
-                            );
-                          },
+                        <Button
+                          variant={
+                            filter === "actionable" ? "default" : "outline"
+                          }
+                          size="sm"
+                          onClick={() => setFilter("actionable")}
+                        >
+                          Actionable ({actionableCount})
+                        </Button>
+                        <Button
+                          variant={filter === "blocked" ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setFilter("blocked")}
+                        >
+                          Blocked ({blockedCount})
+                        </Button>
+                        <Button
+                          variant={filter === "all" ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setFilter("all")}
+                        >
+                          All ({workspaceTodos.length})
+                        </Button>
+                        <Button
+                          variant={
+                            filter === "completed" ? "default" : "outline"
+                          }
+                          size="sm"
+                          onClick={() => setFilter("completed")}
+                        >
+                          Completed ({completedCount})
+                        </Button>
+                        {completedCount > 0 && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={clearCompleted}
+                            className="ml-auto"
+                          >
+                            Clear Completed
+                          </Button>
+                        )}
+                      </div>
+
+                      <div className="space-y-2">
+                        {filteredTodos.length === 0 ? (
+                          <div className="text-center py-12 text-slate-500 dark:text-slate-400">
+                            {filter === "active" && workspaceTodos.length > 0
+                              ? "No active to-dos. Great job!"
+                              : filter === "completed" &&
+                                  workspaceTodos.length > 0
+                                ? "No completed to-dos yet."
+                                : filter === "dueToday" &&
+                                    workspaceTodos.length > 0
+                                  ? "No to-dos due today!"
+                                  : filter === "actionable" &&
+                                      workspaceTodos.length > 0
+                                    ? "No actionable to-dos right now."
+                                    : filter === "blocked" &&
+                                        workspaceTodos.length > 0
+                                      ? "No blocked to-dos!"
+                                      : selectedTypeFilter
+                                        ? `No ${selectedTypeFilter} to-dos`
+                                        : selectedProjectFilter
+                                          ? `No to-dos in project "${selectedProjectFilter}"`
+                                          : "No to-dos yet. Add one to get started!"}
+                          </div>
+                        ) : (
+                          filteredTodos.map(renderTodoItem)
                         )}
                       </div>
                     </div>
 
-                    {allProjects.length > 0 && !selectedProjectPage && (
+                    <div className="lg:col-span-1 space-y-4">
                       <div className="space-y-2">
-                        <div className="flex items-center gap-2 text-sm font-medium">
-                          <Briefcase className="h-4 w-4" />
-                          Projects
-                        </div>
+                        <div className="text-sm font-medium">Type</div>
                         <div className="flex flex-col gap-1.5">
                           <Button
                             variant={
-                              selectedProjectFilter === null
+                              selectedTypeFilter === null
                                 ? "default"
                                 : "outline"
                             }
                             size="sm"
-                            onClick={() => setSelectedProjectFilter(null)}
+                            onClick={() => setSelectedTypeFilter(null)}
                             className="justify-start"
                           >
-                            All Projects
+                            Nested View
                           </Button>
-                          {allProjects.map((project) => {
-                            return (
-                              <Button
-                                key={project.id}
-                                variant={
-                                  selectedProjectFilter === project.name
-                                    ? "default"
-                                    : "outline"
-                                }
-                                size="sm"
-                                onClick={() =>
-                                  setSelectedProjectFilter(project.name)
-                                }
-                                className="justify-start"
-                              >
-                                <span className="flex-1 text-left">
-                                  {project.name}
-                                </span>
-                                {workspace === "everything" && (
-                                  <Badge
-                                    variant="secondary"
-                                    className="ml-2 text-[10px] capitalize"
-                                  >
-                                    {project.workspace}
-                                  </Badge>
-                                )}
-                              </Button>
-                            );
-                          })}
+                          {(Object.keys(TODO_TYPE_CONFIG) as TodoType[]).map(
+                            (type) => {
+                              const Icon = TODO_TYPE_CONFIG[type].icon;
+                              const typeConfig = TODO_TYPE_CONFIG[type];
+                              return (
+                                <Button
+                                  key={type}
+                                  variant={
+                                    selectedTypeFilter === type
+                                      ? "default"
+                                      : "outline"
+                                  }
+                                  size="sm"
+                                  onClick={() => setSelectedTypeFilter(type)}
+                                  className={`justify-start gap-1.5 ${selectedTypeFilter !== type ? `border-2 ${typeConfig.borderLight} ${typeConfig.borderDark}` : ""}`}
+                                >
+                                  <Icon
+                                    className={`h-3.5 w-3.5 ${selectedTypeFilter !== type ? `${typeConfig.textLight} ${typeConfig.textDark}` : ""}`}
+                                  />
+                                  {type} ({typeCount(type)})
+                                </Button>
+                              );
+                            },
+                          )}
                         </div>
                       </div>
-                    )}
-                  </div>
-                </CardContent>
-              )}
-            </Card>
+
+                      {allProjects.length > 0 && !selectedProjectPage && (
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2 text-sm font-medium">
+                            <Briefcase className="h-4 w-4" />
+                            Projects
+                          </div>
+                          <div className="flex flex-col gap-1.5">
+                            <Button
+                              variant={
+                                selectedProjectFilter === null
+                                  ? "default"
+                                  : "outline"
+                              }
+                              size="sm"
+                              onClick={() => setSelectedProjectFilter(null)}
+                              className="justify-start"
+                            >
+                              All Projects
+                            </Button>
+                            {allProjects.map((project) => {
+                              return (
+                                <Button
+                                  key={project.id}
+                                  variant={
+                                    selectedProjectFilter === project.name
+                                      ? "default"
+                                      : "outline"
+                                  }
+                                  size="sm"
+                                  onClick={() =>
+                                    setSelectedProjectFilter(project.name)
+                                  }
+                                  className="justify-start"
+                                >
+                                  <span className="flex-1 text-left">
+                                    {project.name}
+                                  </span>
+                                  {workspace === "everything" && (
+                                    <Badge
+                                      variant="secondary"
+                                      className="ml-2 text-[10px] capitalize"
+                                    >
+                                      {project.workspace}
+                                    </Badge>
+                                  )}
+                                </Button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                )}
+              </Card>
             )}
           </TabsContent>
         </Tabs>
@@ -5614,7 +5725,9 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
 
                   {newTodoType === "Meeting" && (
                     <div className="space-y-2">
-                      <label className="text-sm font-medium">Meeting Time *</label>
+                      <label className="text-sm font-medium">
+                        Meeting Time *
+                      </label>
                       <Input
                         type="text"
                         placeholder="e.g., 2:30 PM"
@@ -6046,7 +6159,9 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                         <p className="text-xs text-muted-foreground font-medium mb-1">
                           Meeting Time
                         </p>
-                        <p className="text-sm">{formatTimeToAMPM(viewingTodo.meetingTime)}</p>
+                        <p className="text-sm">
+                          {formatTimeToAMPM(viewingTodo.meetingTime)}
+                        </p>
                       </div>
                     )}
                   {viewingTodo.project && (
