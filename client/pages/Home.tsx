@@ -132,7 +132,7 @@ interface Todo {
   priorityOrder?: number;
 }
 
-type FilterType = "all" | "active" | "completed";
+type FilterType = "all" | "active" | "completed" | "dueToday" | "actionable" | "blocked";
 
 const TODO_TYPE_CONFIG: Record<
   TodoType,
@@ -261,7 +261,7 @@ const Home = () => {
   const [selectedProjectPage, setSelectedProjectPage] = useState<string | null>(
     null,
   );
-  const [filter, setFilter] = useState<FilterType>("all");
+  const [filter, setFilter] = useState<FilterType>("active");
   const [selectedTypeFilter, setSelectedTypeFilter] = useState<TodoType | null>(
     null,
   );
