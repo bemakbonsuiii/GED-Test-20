@@ -1001,17 +1001,31 @@ const Home = () => {
       let data;
 
       if (!response.ok) {
+        const clonedResponse = response.clone();
         let errorData: any = { error: "Unknown error" };
         try {
-          errorData = await response.json();
+          errorData = await clonedResponse.json();
         } catch (e) {
           console.error("Could not parse error response:", e);
+          try {
+            const errorText = await clonedResponse.text();
+            console.error("Error response text:", errorText);
+          } catch (e2) {
+            console.error("Could not read error response text:", e2);
+          }
         }
 
         console.error(
           "Todd error (status " + response.status + "):",
-          errorData,
+          JSON.stringify(errorData),
         );
+
+        // Handle 401 Unauthorized errors (invalid API key)
+        if (response.status === 401) {
+          throw new Error(
+            "🔑 Invalid OpenAI API key. Please check your API key at: https://platform.openai.com/api-keys",
+          );
+        }
 
         // Handle rate limit errors
         if (response.status === 429) {
