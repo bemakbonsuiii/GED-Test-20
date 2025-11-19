@@ -1755,46 +1755,59 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
     return "text-muted-foreground";
   };
 
-  const filteredTodos = workspaceTodos.filter((todo) => {
-    if (filter === "active" && todo.completed) return false;
-    if (filter === "completed" && !todo.completed) return false;
+  const filteredTodos = workspaceTodos
+    .filter((todo) => {
+      if (filter === "active" && todo.completed) return false;
+      if (filter === "completed" && !todo.completed) return false;
 
-    if (filter === "dueToday") {
-      if (todo.completed) return false;
-      if (!todo.dueDate) return false;
-      const dueDate = new Date(todo.dueDate);
-      if (!isToday(dueDate)) return false;
-    }
+      if (filter === "dueToday") {
+        if (todo.completed) return false;
+        if (!todo.dueDate) return false;
+        const dueDate = new Date(todo.dueDate);
+        if (!isToday(dueDate)) return false;
+      }
 
-    if (filter === "actionable") {
-      if (todo.completed) return false;
-      // Exclude meetings from actionable
-      if (todo.type === "Meeting") return false;
-      // Must be able to start (start date in past or today)
-      const now = Date.now();
-      const canStart = !todo.startDate || todo.startDate <= now;
-      if (!canStart) return false;
-      // Must not have any uncompleted children
-      const hasUncompletedChildren = todos.some(
-        (child) => child.parentId === todo.id && !child.completed,
-      );
-      if (hasUncompletedChildren) return false;
-    }
+      if (filter === "actionable") {
+        if (todo.completed) return false;
+        // Exclude meetings from actionable
+        if (todo.type === "Meeting") return false;
+        // Must be able to start (start date in past or today)
+        const now = Date.now();
+        const canStart = !todo.startDate || todo.startDate <= now;
+        if (!canStart) return false;
+        // Must not have any uncompleted children
+        const hasUncompletedChildren = todos.some(
+          (child) => child.parentId === todo.id && !child.completed,
+        );
+        if (hasUncompletedChildren) return false;
+      }
 
-    if (filter === "blocked") {
-      if (todo.completed) return false;
-      // Must have uncompleted children
-      const hasUncompletedChildren = todos.some(
-        (child) => child.parentId === todo.id && !child.completed,
-      );
-      if (!hasUncompletedChildren) return false;
-    }
+      if (filter === "blocked") {
+        if (todo.completed) return false;
+        // Must have uncompleted children
+        const hasUncompletedChildren = todos.some(
+          (child) => child.parentId === todo.id && !child.completed,
+        );
+        if (!hasUncompletedChildren) return false;
+      }
 
-    if (selectedTypeFilter && todo.type !== selectedTypeFilter) return false;
-    if (selectedProjectFilter && todo.project !== selectedProjectFilter)
-      return false;
-    return true;
-  });
+      if (selectedTypeFilter && todo.type !== selectedTypeFilter) return false;
+      if (selectedProjectFilter && todo.project !== selectedProjectFilter)
+        return false;
+      return true;
+    })
+    .sort((a, b) => {
+      // Sort chronologically by due date (earliest first)
+      // Todos without due dates go to the bottom
+      if (!a.dueDate && !b.dueDate) return 0;
+      if (!a.dueDate) return 1;
+      if (!b.dueDate) return -1;
+
+      const aTime = typeof a.dueDate === "string" ? new Date(a.dueDate).getTime() : a.dueDate;
+      const bTime = typeof b.dueDate === "string" ? new Date(b.dueDate).getTime() : b.dueDate;
+
+      return aTime - bTime;
+    });
 
   // Get all meetings (including children) for the Meetings widget
   const allWorkspaceTodos = (
