@@ -75,7 +75,9 @@ export async function handleAIPrioritize(req: Request, res: Response) {
     const threeDaysFromNow = new Date(today);
     threeDaysFromNow.setDate(threeDaysFromNow.getDate() + 3);
 
-    const prompt = `You are a productivity assistant helping prioritize tasks. Analyze the following to-dos and recommend the top 3-5 that should be worked on next.
+    const requestedCount = req.body.count || 3;
+
+    const prompt = `You are a productivity assistant helping prioritize tasks. Analyze the following to-dos and recommend the top ${requestedCount} that should be worked on next.
 
 CRITICAL EXCLUSIONS:
 - NEVER suggest completed todos
@@ -111,14 +113,14 @@ PRIORITIZATION ORDER (STRICT - FOLLOW THIS EXACTLY):
 To-dos:
 ${JSON.stringify(todosData, null, 2)}
 
-Return ONLY a JSON array of 3-5 todo IDs in priority order, with a brief reason for each. Format:
+Return ONLY a JSON array of EXACTLY ${requestedCount} todo IDs in priority order, with a brief reason for each. Format:
 [
   { "id": "todo-id", "reason": "Brief explanation why this should be prioritized" },
   { "id": "todo-id", "reason": "Brief explanation why this should be prioritized" },
   { "id": "todo-id", "reason": "Brief explanation why this should be prioritized" }
 ]
 
-CRITICAL: You MUST return EXACTLY the number of items shown in the first instruction above. If you were told to select ${itemCount} items, you MUST provide EXACTLY ${itemCount} todo IDs in your response array - no more, no less. This is MANDATORY.`;
+CRITICAL: You MUST return EXACTLY ${requestedCount} items in your response array. If there are not enough high-priority items, include lower-priority but actionable items to meet exactly ${requestedCount} items. This is MANDATORY - you cannot return fewer than ${requestedCount} items.`;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
