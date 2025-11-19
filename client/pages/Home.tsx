@@ -1312,7 +1312,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
           throw new Error(
             "🔑 Invalid OpenAI API key.\\n\\n" +
               "Please verify your API key at: https://platform.openai.com/api-keys\\n" +
-              "Then update it in Settings → Environment Variables",
+              "Then update it in Settings �� Environment Variables",
           );
         }
 
@@ -1878,6 +1878,33 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
 
   const activeCount = workspaceTodos.filter((todo) => !todo.completed).length;
   const completedCount = workspaceTodos.filter((todo) => todo.completed).length;
+
+  const dueTodayCount = workspaceTodos.filter((todo) => {
+    if (todo.completed) return false;
+    if (!todo.dueDate) return false;
+    const dueDate = new Date(todo.dueDate);
+    return isToday(dueDate);
+  }).length;
+
+  const actionableCount = workspaceTodos.filter((todo) => {
+    if (todo.completed) return false;
+    const now = Date.now();
+    const canStart = !todo.startDate || todo.startDate <= now;
+    if (!canStart) return false;
+    const hasUncompletedChildren = todos.some(
+      (child) => child.parentId === todo.id && !child.completed,
+    );
+    return !hasUncompletedChildren;
+  }).length;
+
+  const blockedCount = workspaceTodos.filter((todo) => {
+    if (todo.completed) return false;
+    const hasUncompletedChildren = todos.some(
+      (child) => child.parentId === todo.id && !child.completed,
+    );
+    return hasUncompletedChildren;
+  }).length;
+
   const allProjects = getAllProjects();
 
   const typeCount = (type: TodoType) => {
