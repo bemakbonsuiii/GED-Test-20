@@ -5429,14 +5429,15 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                     <div className="space-y-2">
                       <label className="text-sm font-medium">Meeting Time *</label>
                       <Input
-                        type="time"
+                        type="text"
+                        placeholder="e.g., 2:30 PM"
                         value={newTodoMeetingTime}
                         onChange={(e) => setNewTodoMeetingTime(e.target.value)}
                         required
                       />
                       {!newTodoMeetingTime && (
                         <p className="text-xs text-red-500">
-                          Required: Meeting time must be set
+                          Required: Enter time in format like "2:30 PM"
                         </p>
                       )}
                     </div>
@@ -5448,13 +5449,14 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                         Due Time (Optional)
                       </label>
                       <Input
-                        type="time"
+                        type="text"
+                        placeholder="e.g., 5:00 PM"
                         value={newTodoDueTime}
                         onChange={(e) => setNewTodoDueTime(e.target.value)}
                       />
                       {!newTodoDueTime && (
                         <p className="text-xs text-muted-foreground">
-                          Optional: Set specific time for due date
+                          Optional: Enter time in format like "5:00 PM"
                         </p>
                       )}
                     </div>
