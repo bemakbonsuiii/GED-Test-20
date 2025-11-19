@@ -2058,13 +2058,23 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
   // Get next upcoming meeting
   const getNextMeeting = () => {
     const now = Date.now();
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    const todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999);
+
     const upcomingMeetings = todos
       .filter((t) => {
         if (t.completed || t.type !== "Meeting") return false;
         if (!t.dueDate) return false;
         const meetingTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
-        // Include meetings up to 2 hours in the past (in case meeting just started)
-        return meetingTime >= now - (2 * 60 * 60 * 1000);
+
+        // Include all meetings today, OR future meetings, OR meetings that started within last 2 hours
+        const isToday = meetingTime >= todayStart.getTime() && meetingTime <= todayEnd.getTime();
+        const isFuture = meetingTime > todayEnd.getTime();
+        const recentlyStarted = meetingTime >= now - (2 * 60 * 60 * 1000) && meetingTime < todayStart.getTime();
+
+        return isToday || isFuture || recentlyStarted;
       })
       .sort((a, b) => {
         const aTime = typeof a.dueDate === 'string' ? new Date(a.dueDate).getTime() : a.dueDate!;
