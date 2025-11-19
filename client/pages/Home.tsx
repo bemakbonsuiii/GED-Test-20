@@ -268,6 +268,7 @@ const Home = () => {
     null,
   );
   const [filter, setFilter] = useState<FilterType>("active");
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedTypeFilter, setSelectedTypeFilter] = useState<TodoType | null>(
     null,
   );
@@ -1794,6 +1795,16 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
       if (selectedTypeFilter && todo.type !== selectedTypeFilter) return false;
       if (selectedProjectFilter && todo.project !== selectedProjectFilter)
         return false;
+
+      // Search filter
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        const titleMatch = todo.title.toLowerCase().includes(query);
+        const descriptionMatch = todo.description?.toLowerCase().includes(query);
+        const projectMatch = todo.project?.toLowerCase().includes(query);
+        if (!titleMatch && !descriptionMatch && !projectMatch) return false;
+      }
+
       return true;
     })
     .sort((a, b) => {
