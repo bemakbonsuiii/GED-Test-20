@@ -998,21 +998,18 @@ const Home = () => {
 
       console.log("askTodd: Response received, status:", response.status);
 
-      // Clone response immediately to avoid body stream issues
-      const responseClone = response.clone();
-
       let data;
 
       if (!response.ok) {
-        const clonedResponse = responseClone.clone();
         let errorData: any = { error: "Unknown error" };
         try {
-          errorData = await clonedResponse.json();
+          const jsonClone = response.clone();
+          errorData = await jsonClone.json();
         } catch (e) {
           console.error("Could not parse error response:", e);
           try {
-            const textResponse = responseClone.clone();
-            const errorText = await textResponse.text();
+            const textClone = response.clone();
+            const errorText = await textClone.text();
             console.error("Error response text:", errorText);
           } catch (e2) {
             console.error("Could not read error response text:", e2);
@@ -1194,21 +1191,18 @@ const Home = () => {
         }),
       });
 
-      // Clone response immediately to avoid body stream issues
-      const responseClone = response.clone();
-
       let data;
 
       if (!response.ok) {
-        const clonedResponse = responseClone.clone();
         let errorData: any = { error: "Unknown error" };
         try {
-          errorData = await clonedResponse.json();
+          const jsonClone = response.clone();
+          errorData = await jsonClone.json();
         } catch (e) {
           console.error("Could not parse error response:", e);
           try {
-            const textResponse = responseClone.clone();
-            const errorText = await textResponse.text();
+            const textClone = response.clone();
+            const errorText = await textClone.text();
             console.error("Error response text:", errorText);
           } catch (e2) {
             console.error("Could not read error response text:", e2);
