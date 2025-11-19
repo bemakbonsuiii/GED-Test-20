@@ -1500,8 +1500,8 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
             }
           }
 
-          // Enforce maximum of 5 suggestions
-          const limitedSuggestions = validSuggestions.slice(0, 5);
+          // Enforce the exact count requested by user
+          const limitedSuggestions = validSuggestions.slice(0, itemCount);
 
           console.log(
             "Valid suggestions (limited to 3-5):",

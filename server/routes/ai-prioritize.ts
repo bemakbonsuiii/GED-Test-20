@@ -118,7 +118,7 @@ Return ONLY a JSON array of 3-5 todo IDs in priority order, with a brief reason 
   { "id": "todo-id", "reason": "Brief explanation why this should be prioritized" }
 ]
 
-You MUST return at least 3 recommendations and up to 5 if there are enough actionable items.`;
+CRITICAL: You MUST return EXACTLY the number of items shown in the first instruction above. If you were told to select ${itemCount} items, you MUST provide EXACTLY ${itemCount} todo IDs in your response array - no more, no less. This is MANDATORY.`;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
