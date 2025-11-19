@@ -1743,6 +1743,8 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
 
     if (filter === "actionable") {
       if (todo.completed) return false;
+      // Exclude meetings from actionable
+      if (todo.type === "Meeting") return false;
       // Must be able to start (start date in past or today)
       const now = Date.now();
       const canStart = !todo.startDate || todo.startDate <= now;
@@ -1888,6 +1890,8 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
 
   const actionableCount = workspaceTodos.filter((todo) => {
     if (todo.completed) return false;
+    // Exclude meetings from actionable
+    if (todo.type === "Meeting") return false;
     const now = Date.now();
     const canStart = !todo.startDate || todo.startDate <= now;
     if (!canStart) return false;
@@ -1967,6 +1971,9 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
 
     // Helper function to check if a todo is actionable
     const isActionable = (t: Todo) => {
+      // Exclude meetings from actionable
+      if (t.type === "Meeting") return false;
+
       // Must be able to start (start date in past or today)
       const canStart = !t.startDate || t.startDate <= now;
       if (!canStart) return false;
