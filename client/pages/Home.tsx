@@ -1801,8 +1801,10 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
         const titleMatch = todo.title?.toLowerCase().includes(query) || false;
-        const descriptionMatch = todo.description?.toLowerCase().includes(query) || false;
-        const projectMatch = todo.project?.toLowerCase().includes(query) || false;
+        const descriptionMatch =
+          todo.description?.toLowerCase().includes(query) || false;
+        const projectMatch =
+          todo.project?.toLowerCase().includes(query) || false;
         if (!titleMatch && !descriptionMatch && !projectMatch) return false;
       }
 
