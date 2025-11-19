@@ -1466,6 +1466,12 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
       return;
     }
 
+    // Validate: Meetings must have a meeting time
+    if (newTodoType === "Meeting" && !newTodoMeetingTime) {
+      alert("Meetings must have a meeting time. Please set the meeting time.");
+      return;
+    }
+
     // For Blockers, inherit parent's properties
     let inheritedStartDate = newTodoStartDate;
     let inheritedDueDate = newTodoDueDate;
@@ -1728,11 +1734,16 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
   const meetingTodos = allWorkspaceTodos
     .filter((todo) => todo.type === "Meeting" && !todo.completed)
     .sort((a, b) => {
-      // Sort meetings with dates first, then by date, then undated meetings
+      // Sort meetings chronologically using actual meeting timestamps
+      const aTime = getMeetingTimestamp(a);
+      const bTime = getMeetingTimestamp(b);
+
+      // Meetings without dates go to the end
       if (!a.dueDate && !b.dueDate) return 0;
       if (!a.dueDate) return 1;
       if (!b.dueDate) return -1;
-      return a.dueDate - b.dueDate;
+
+      return aTime - bTime;
     });
 
   const activeCount = workspaceTodos.filter((todo) => !todo.completed).length;
@@ -5423,15 +5434,16 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
 
                   {newTodoType === "Meeting" && (
                     <div className="space-y-2">
-                      <label className="text-sm font-medium">Time</label>
+                      <label className="text-sm font-medium">Meeting Time *</label>
                       <Input
                         type="time"
                         value={newTodoMeetingTime}
                         onChange={(e) => setNewTodoMeetingTime(e.target.value)}
+                        required
                       />
                       {!newTodoMeetingTime && (
-                        <p className="text-xs text-muted-foreground">
-                          Optional: Set meeting time
+                        <p className="text-xs text-red-500">
+                          Required: Meeting time must be set
                         </p>
                       )}
                     </div>
