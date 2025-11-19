@@ -4011,7 +4011,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                             {nextMeeting.meetingTime && (
                               <div className="flex items-center gap-2 text-muted-foreground">
                                 <Clock className="h-4 w-4" />
-                                <span>{nextMeeting.meetingTime}</span>
+                                <span>{formatTimeToAMPM(nextMeeting.meetingTime)}</span>
                               </div>
                             )}
                             {nextMeeting.agenda && (
