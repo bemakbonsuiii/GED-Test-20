@@ -2055,31 +2055,55 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
     return score;
   };
 
+  // Get actual meeting timestamp considering both dueDate and meetingTime
+  const getMeetingTimestamp = (meeting: Todo) => {
+    if (!meeting.dueDate) return 0;
+    const baseTime = typeof meeting.dueDate === 'string' ? new Date(meeting.dueDate).getTime() : meeting.dueDate;
+
+    // If there's a meetingTime, parse it and adjust the timestamp
+    if (meeting.meetingTime) {
+      const dateObj = new Date(baseTime);
+      const timeMatch = meeting.meetingTime.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+      if (timeMatch) {
+        let hours = parseInt(timeMatch[1]);
+        const minutes = parseInt(timeMatch[2]);
+        const isPM = timeMatch[3].toUpperCase() === 'PM';
+
+        // Convert to 24-hour format
+        if (isPM && hours !== 12) hours += 12;
+        if (!isPM && hours === 12) hours = 0;
+
+        dateObj.setHours(hours, minutes, 0, 0);
+        return dateObj.getTime();
+      }
+    }
+
+    return baseTime;
+  };
+
   // Get next upcoming meeting(s)
   const getNextMeeting = () => {
     const now = Date.now();
     const fifteenMinutesAgo = now - (15 * 60 * 1000);
-    const thirtyMinutesFromNow = now + (30 * 60 * 1000);
 
     const upcomingMeetings = todos
       .filter((t) => {
         if (t.completed || t.type !== "Meeting") return false;
         if (!t.dueDate) return false;
-        const meetingTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+        const meetingTime = getMeetingTimestamp(t);
 
         // Only include meetings that haven't passed (or started within last 15 minutes)
         return meetingTime >= fifteenMinutesAgo;
       })
       .sort((a, b) => {
-        const aTime = typeof a.dueDate === 'string' ? new Date(a.dueDate).getTime() : a.dueDate!;
-        const bTime = typeof b.dueDate === 'string' ? new Date(b.dueDate).getTime() : b.dueDate!;
+        const aTime = getMeetingTimestamp(a);
+        const bTime = getMeetingTimestamp(b);
         return aTime - bTime;
       });
 
     if (upcomingMeetings.length === 0) return null;
 
     // Return the first upcoming meeting
-    // (In the future, we could return multiple if they're within 30 min window)
     return upcomingMeetings[0];
   };
 
