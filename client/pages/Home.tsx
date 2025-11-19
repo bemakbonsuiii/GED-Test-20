@@ -987,7 +987,7 @@ const Home = () => {
             details.includes("hour")
           ) {
             throw new Error(
-              "��️ OpenAI DAILY token limit reached (100,000 tokens used).\\n\\n" +
+              "⚠️ OpenAI DAILY token limit reached (100,000 tokens used).\\n\\n" +
                 "Options:\\n" +
                 "1. Wait ~36 hours for the limit to reset\\n" +
                 "2. Add a payment method at: https://platform.openai.com/account/billing",
@@ -1519,19 +1519,23 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
         : inheritedDueTime;
 
     if (newTodoType === "Meeting" && inheritedDueDate && newTodoMeetingTime) {
-      const [hours, minutes] = newTodoMeetingTime.split(":");
-      const dateWithTime = new Date(inheritedDueDate);
-      dateWithTime.setHours(parseInt(hours), parseInt(minutes));
-      dueDateTime = dateWithTime.getTime();
+      const parsedTime = parseTimeString(newTodoMeetingTime);
+      if (parsedTime) {
+        const dateWithTime = new Date(inheritedDueDate);
+        dateWithTime.setHours(parsedTime.hours, parsedTime.minutes);
+        dueDateTime = dateWithTime.getTime();
+      }
     } else if (
       newTodoType !== "Meeting" &&
       inheritedDueDate &&
       effectiveDueTime
     ) {
-      const [hours, minutes] = effectiveDueTime.split(":");
-      const dateWithTime = new Date(inheritedDueDate);
-      dateWithTime.setHours(parseInt(hours), parseInt(minutes));
-      dueDateTime = dateWithTime.getTime();
+      const parsedTime = parseTimeString(effectiveDueTime);
+      if (parsedTime) {
+        const dateWithTime = new Date(inheritedDueDate);
+        dateWithTime.setHours(parsedTime.hours, parsedTime.minutes);
+        dueDateTime = dateWithTime.getTime();
+      }
     }
 
     const todoWorkspace = getActualWorkspace();
