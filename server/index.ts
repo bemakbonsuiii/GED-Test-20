@@ -1,12 +1,9 @@
-import { config } from "dotenv";
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
 import { handleAIPrioritize } from "./routes/ai-prioritize";
 import { handleToddAssistant } from "./routes/todd-assistant";
-
-// Force dotenv to override existing environment variables
-config({ override: true });
 
 export function createServer() {
   const app = express();
