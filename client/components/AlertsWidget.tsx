@@ -166,24 +166,22 @@ export const AlertsWidget: React.FC<AlertsWidgetProps> = ({ todos, workspace, se
       }
     });
 
-    // Check for imminent deadlines (due today or tomorrow)
+    // Check for imminent deadlines (due TODAY only - tomorrow items are suggestions unless they have incomplete children)
     const imminentDeadlines = relevantTodos.filter(t => {
       if (t.completed || t.type === "Meeting") return false;
       if (!t.dueDate) return false;
       const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
       const dueDate = new Date(dueTime);
-      return isToday(dueDate) || isTomorrow(dueDate);
+      return isToday(dueDate);
     });
 
     imminentDeadlines.forEach(todo => {
       const dueTime = typeof todo.dueDate === 'string' ? new Date(todo.dueDate).getTime() : todo.dueDate!;
-      const dueDate = new Date(dueTime);
-      const when = isToday(dueDate) ? "today" : "tomorrow";
       alerts.push({
         id: `deadline-${todo.id}`,
         type: "imminent-deadline",
         priority: 3,
-        message: `Due ${when}: "${todo.text}"${todo.dueTime ? ` at ${todo.dueTime}` : ''}`,
+        message: `Due today: "${todo.text}"${todo.dueTime ? ` at ${todo.dueTime}` : ''}`,
         icon: Clock,
         color: "text-yellow-600 dark:text-yellow-400",
         todoId: todo.id,
