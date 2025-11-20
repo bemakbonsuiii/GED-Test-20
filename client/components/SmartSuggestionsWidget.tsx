@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Lightbulb, TrendingUp, Clock, Calendar, Zap } from "lucide-react";
 import { isToday, isTomorrow, differenceInDays, addDays } from "date-fns";
 
@@ -252,6 +252,13 @@ export const SmartSuggestionsWidget: React.FC<SmartSuggestionsWidgetProps> = ({
   };
 
   const suggestions = getSuggestions();
+
+  // Report count to parent
+  useEffect(() => {
+    if (onCountChange) {
+      onCountChange(suggestions.length);
+    }
+  }, [suggestions.length, onCountChange]);
 
   if (suggestions.length === 0) {
     return (

@@ -4072,6 +4072,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                       workspace={workspace}
                       selectedProjectPage={selectedProjectPage}
                       onTodoClick={handleTodoClick}
+                      onCountChange={setSmartSuggestionsCount}
                     />
                   </CardContent>
                 </Card>
