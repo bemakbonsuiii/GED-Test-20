@@ -2261,21 +2261,18 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
 
     // Completed tasks/meetings for today (including priorities)
     const completedToday = filteredByProject.filter((t) => {
-      if (!t.completed) return false;
+      if (!t.completed || !t.completedAt) return false;
+      // Count todos completed today, or priority items that are completed
       if (t.isPriority) return true;
-      if (t.dueDate) {
-        const dueTime =
-          typeof t.dueDate === "string"
-            ? new Date(t.dueDate).getTime()
-            : t.dueDate;
-        return dueTime >= today.getTime() && dueTime <= todayEnd.getTime();
-      }
-      return false;
+      return t.completedAt >= today.getTime() && t.completedAt <= todayEnd.getTime();
     });
 
-    // Completed overdue tasks
+    // Completed overdue tasks (completed today, but were overdue)
     const completedOverdue = filteredByProject.filter((t) => {
-      if (!t.completed) return false;
+      if (!t.completed || !t.completedAt) return false;
+      // Check if completed today
+      if (t.completedAt < today.getTime() || t.completedAt > todayEnd.getTime()) return false;
+      // And was overdue when completed
       if (!t.dueDate) return false;
       const dueTime =
         typeof t.dueDate === "string"
@@ -2615,15 +2612,9 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
     });
 
     const completedToday = wsTodos.filter((t) => {
-      if (!t.completed) return false;
-      if (t.dueDate) {
-        const dueTime =
-          typeof t.dueDate === "string"
-            ? new Date(t.dueDate).getTime()
-            : t.dueDate;
-        return dueTime >= today.getTime() && dueTime <= todayEnd.getTime();
-      }
-      return false;
+      if (!t.completed || !t.completedAt) return false;
+      // Check if the todo was completed today
+      return t.completedAt >= today.getTime() && t.completedAt <= todayEnd.getTime();
     });
 
     // Actionable tasks for this workspace
@@ -2706,15 +2697,9 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
     });
 
     const completedToday = projectTodos.filter((t) => {
-      if (!t.completed) return false;
-      if (t.dueDate) {
-        const dueTime =
-          typeof t.dueDate === "string"
-            ? new Date(t.dueDate).getTime()
-            : t.dueDate;
-        return dueTime >= today.getTime() && dueTime <= todayEnd.getTime();
-      }
-      return false;
+      if (!t.completed || !t.completedAt) return false;
+      // Check if the todo was completed today
+      return t.completedAt >= today.getTime() && t.completedAt <= todayEnd.getTime();
     });
 
     // Actionable tasks for this project
