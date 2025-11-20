@@ -69,7 +69,7 @@ export const SmartSuggestionsWidget: React.FC<SmartSuggestionsWidgetProps> = ({
       suggestions.push({
         id: `tomorrow-${todo.id}`,
         type: "upcoming-deadline",
-        message: `Due tomorrow: "${todo.text}"${todo.dueTime ? ` at ${todo.dueTime}` : ''}`,
+        message: `Consider preparing "${todo.text}" - it's due tomorrow${todo.dueTime ? ` at ${todo.dueTime}` : ''}`,
         icon: Calendar,
         color: "text-blue-600 dark:text-blue-400",
         priority: 1,
