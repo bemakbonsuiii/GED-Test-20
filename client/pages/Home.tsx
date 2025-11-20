@@ -116,6 +116,7 @@ interface Todo {
   id: string;
   text: string;
   completed: boolean;
+  completedAt?: number;
   createdAt: number;
   type: TodoType;
   startDate?: number;
@@ -1702,7 +1703,13 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
   const toggleTodo = (id: string) => {
     setTodos(
       todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo,
+        todo.id === id
+          ? {
+              ...todo,
+              completed: !todo.completed,
+              completedAt: !todo.completed ? Date.now() : undefined,
+            }
+          : todo,
       ),
     );
   };
@@ -2052,15 +2059,9 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
     });
 
     const completedToday = todos.filter((t) => {
-      if (!t.completed) return false;
-      if (t.dueDate) {
-        const dueTime =
-          typeof t.dueDate === "string"
-            ? new Date(t.dueDate).getTime()
-            : t.dueDate;
-        return dueTime >= today.getTime() && dueTime <= todayEnd.getTime();
-      }
-      return false;
+      if (!t.completed || !t.completedAt) return false;
+      // Check if the todo was completed today (not just due today)
+      return t.completedAt >= today.getTime() && t.completedAt <= todayEnd.getTime();
     });
 
     return {
@@ -2101,8 +2102,16 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
     // Get all actionable todos (completed and incomplete)
     const allActionableTodos = todos.filter(isActionable);
 
-    // Numerator: Completed actionable todos (completed today, but we don't track completion time)
-    const completedActionable = allActionableTodos.filter((t) => t.completed);
+    // Numerator: Completed actionable todos that were completed today
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    const todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999);
+
+    const completedActionable = allActionableTodos.filter((t) => {
+      if (!t.completed || !t.completedAt) return false;
+      return t.completedAt >= todayStart.getTime() && t.completedAt <= todayEnd.getTime();
+    });
 
     // Denominator: Incomplete actionable todos
     const incompleteActionable = allActionableTodos.filter((t) => !t.completed);
