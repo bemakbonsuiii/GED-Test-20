@@ -4052,17 +4052,30 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
               </Card>
             )}
 
+            {/* Hidden widget to calculate count */}
+            {!focusMode && (
+              <div style={{ display: 'none' }}>
+                <SmartSuggestionsWidget
+                  todos={autoAlerts ? todos : cachedAlertsTodos}
+                  workspace={workspace}
+                  selectedProjectPage={selectedProjectPage}
+                  onTodoClick={handleTodoClick}
+                  onCountChange={setSmartSuggestionsCount}
+                />
+              </div>
+            )}
+
             {/* Expandable Smart Suggestions Widget */}
             {!focusMode &&
               isSmartSuggestionsExpanded &&
-              getSmartSuggestionsCount() > 0 && (
+              smartSuggestionsCount > 0 && (
                 <Card className="mb-6 border border-slate-200 dark:border-slate-800 animate-in fade-in slide-in-from-top-2 duration-200">
                   <CardHeader>
                     <CardTitle className="text-base font-medium flex items-center gap-2">
                       <Lightbulb className="h-4 w-4" />
                       Suggestions
                       <Badge variant="secondary" className="ml-1">
-                        {getSmartSuggestionsCount()}
+                        {smartSuggestionsCount}
                       </Badge>
                     </CardTitle>
                   </CardHeader>
