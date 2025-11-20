@@ -2475,7 +2475,28 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
       }
     });
 
-    // Check for imminent deadlines (due today or tomorrow)
+    // Check for upcoming deliverables (today or tomorrow) with incomplete dependencies
+    const upcomingDeliverablesWithDeps = relevantTodos.filter((t) => {
+      if (t.completed || t.type !== "Deliverable") return false;
+      if (!t.dueDate) return false;
+      const dueTime =
+        typeof t.dueDate === "string"
+          ? new Date(t.dueDate).getTime()
+          : t.dueDate;
+      const dueDate = new Date(dueTime);
+      return isToday(dueDate) || isTomorrow(dueDate);
+    });
+
+    upcomingDeliverablesWithDeps.forEach((deliverable) => {
+      const childTodos = relevantTodos.filter(
+        (t) => t.parentId === deliverable.id && !t.completed,
+      );
+      if (childTodos.length > 0) {
+        alertCount++;
+      }
+    });
+
+    // Check for imminent deadlines (due TODAY only - tomorrow items are suggestions unless they have incomplete children)
     const imminentDeadlines = relevantTodos.filter((t) => {
       if (t.completed || t.type === "Meeting") return false;
       if (!t.dueDate) return false;
@@ -2484,7 +2505,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
           ? new Date(t.dueDate).getTime()
           : t.dueDate;
       const dueDate = new Date(dueTime);
-      return isToday(dueDate) || isTomorrow(dueDate);
+      return isToday(dueDate);
     });
     alertCount += imminentDeadlines.length;
 
