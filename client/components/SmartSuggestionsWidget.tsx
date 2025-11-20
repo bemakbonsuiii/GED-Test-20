@@ -20,6 +20,7 @@ interface SmartSuggestionsWidgetProps {
   workspace: string;
   selectedProjectPage: string | null;
   onTodoClick?: (todoId: string) => void;
+  onCountChange?: (count: number) => void;
 }
 
 interface Suggestion {
@@ -107,7 +108,8 @@ export const SmartSuggestionsWidget: React.FC<SmartSuggestionsWidgetProps> = ({
   todos,
   workspace,
   selectedProjectPage,
-  onTodoClick
+  onTodoClick,
+  onCountChange
 }) => {
   const getSuggestions = (): Suggestion[] => {
     const suggestions: Suggestion[] = [];

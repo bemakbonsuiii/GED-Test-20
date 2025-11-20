@@ -96,7 +96,7 @@ import {
 import { MetricsWidget } from "../components/MetricsWidget";
 import { CircularScore } from "../components/CircularScore";
 import { AlertsWidget } from "../components/AlertsWidget";
-import { SmartSuggestionsWidget, getSuggestionsCount } from "../components/SmartSuggestionsWidget";
+import { SmartSuggestionsWidget } from "../components/SmartSuggestionsWidget";
 import { loadTestData } from "../utils/loadTestData";
 
 type TodoType = "Task" | "Deliverable" | "Quick Win" | "Meeting" | "Blocker";
@@ -2555,11 +2555,10 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
     return alertCount;
   };
 
-  // Get smart suggestions count - use the widget's actual logic
-  const getSmartSuggestionsCount = () => {
-    const todosToUse = autoAlerts ? todos : cachedAlertsTodos;
-    return getSuggestionsCount(todosToUse, workspace, selectedProjectPage);
-  };
+  const [smartSuggestionsCount, setSmartSuggestionsCount] = useState(0);
+
+  // Get smart suggestions count - will be set by the widget itself
+  const getSmartSuggestionsCount = () => smartSuggestionsCount;
 
   // Workspace-specific metrics
   const getWorkspaceMetrics = (targetWorkspace: WorkspaceType) => {
