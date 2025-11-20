@@ -10,6 +10,7 @@ interface Todo {
   type: "Task" | "Deliverable" | "Quick Win" | "Meeting";
   startDate?: number;
   dueDate?: number;
+  dueTime?: string;
   project?: string;
   workspace: string;
   priority: string;
@@ -95,7 +96,7 @@ export const SmartSuggestionsWidget: React.FC<SmartSuggestionsWidgetProps> = ({
       });
     });
 
-    // 2. Suggest getting a head start on upcoming items (3-5 days out) if today is light
+    // 3. Suggest getting a head start on upcoming items (3-5 days out) if today is light
     const todayTasks = incompleteTodos.filter(t => {
       if (t.dueDate) {
         const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
@@ -114,7 +115,7 @@ export const SmartSuggestionsWidget: React.FC<SmartSuggestionsWidgetProps> = ({
         return daysUntil >= 3 && daysUntil <= 5;
       });
 
-      upcomingTasks.slice(0, 1).forEach(todo => {
+      upcomingTasks.slice(0, 2).forEach(todo => {
         const dueTime = typeof todo.dueDate === 'string' ? new Date(todo.dueDate).getTime() : todo.dueDate!;
         const daysUntil = differenceInDays(new Date(dueTime), today);
         suggestions.push({
@@ -123,13 +124,13 @@ export const SmartSuggestionsWidget: React.FC<SmartSuggestionsWidgetProps> = ({
           message: `Light day ahead! Get a head start on "${todo.text}" (due in ${daysUntil} days).`,
           icon: TrendingUp,
           color: "text-blue-600 dark:text-blue-400",
-          priority: 2,
+          priority: 3,
           todoId: todo.id,
         });
       });
     }
 
-    // 3. Identify light days in the next 7 days and suggest redistributing work
+    // 4. Identify light days in the next 7 days and suggest redistributing work
     const nextSevenDays = Array.from({ length: 7 }, (_, i) => {
       const date = addDays(today, i + 1);
       const tasksOnDay = incompleteTodos.filter(t => {
@@ -156,11 +157,11 @@ export const SmartSuggestionsWidget: React.FC<SmartSuggestionsWidgetProps> = ({
         message: `Day ${daysUntilLight + 1} looks light while day ${daysUntilHeavy + 1} has ${heavyDay.count} tasks. Consider moving some tasks to balance your workload.`,
         icon: Calendar,
         color: "text-purple-600 dark:text-purple-400",
-        priority: 4,
+        priority: 6,
       });
     }
 
-    // 4. Suggest tackling quick wins when there are many
+    // 5. Suggest tackling quick wins when there are many
     const quickWins = incompleteTodos.filter(t => t.type === "Quick Win");
     if (quickWins.length >= 3) {
       suggestions.push({
@@ -169,21 +170,21 @@ export const SmartSuggestionsWidget: React.FC<SmartSuggestionsWidgetProps> = ({
         message: `You have ${quickWins.length} Quick Wins ready. Knock out a few to build momentum!`,
         icon: Zap,
         color: "text-green-600 dark:text-green-400",
-        priority: 5,
+        priority: 7,
         todoIds: quickWins.map(t => t.id),
       });
     }
 
-    // 5. Upcoming deadline without much progress
+    // 6. Upcoming deliverables (2-3 days out) - track progress
     const upcomingDeadlines = incompleteTodos.filter(t => {
       if (!t.dueDate) return false;
       const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
       const dueDate = new Date(dueTime);
       const daysUntil = differenceInDays(dueDate, today);
-      return daysUntil >= 1 && daysUntil <= 3 && t.type === "Deliverable";
+      return daysUntil >= 2 && daysUntil <= 3 && t.type === "Deliverable";
     });
 
-    upcomingDeadlines.slice(0, 1).forEach(todo => {
+    upcomingDeadlines.slice(0, 2).forEach(todo => {
       const dueTime = typeof todo.dueDate === 'string' ? new Date(todo.dueDate).getTime() : todo.dueDate!;
       const daysUntil = differenceInDays(new Date(dueTime), today);
       suggestions.push({
@@ -192,7 +193,7 @@ export const SmartSuggestionsWidget: React.FC<SmartSuggestionsWidgetProps> = ({
         message: `Deliverable "${todo.text}" is due in ${daysUntil} day${daysUntil !== 1 ? 's' : ''}. Make sure you're on track!`,
         icon: Calendar,
         color: "text-orange-600 dark:text-orange-400",
-        priority: 1,
+        priority: 2,
         todoId: todo.id,
       });
     });
