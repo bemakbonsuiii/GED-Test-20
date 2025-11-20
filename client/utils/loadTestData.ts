@@ -14,6 +14,7 @@ interface Todo {
   id: string;
   text: string;
   completed: boolean;
+  completedAt?: number;
   createdAt: number;
   type: TodoType;
   startDate?: number;
@@ -175,6 +176,7 @@ export function loadTestData() {
       id: "todo-8",
       text: "Create presentation deck",
       completed: true,
+      completedAt: now - 3600000 * 2, // Completed 2 hours ago
       createdAt: now - 86400000 * 3,
       type: "Deliverable",
       dueDate: todayMs - 86400000,
@@ -370,6 +372,7 @@ export function loadTestData() {
       id: "todo-24",
       text: "Send weekly status email",
       completed: true,
+      completedAt: now - 3600000 * 4, // Completed 4 hours ago
       createdAt: now - 86400000 * 3,
       type: "Quick Win",
       dueDate: todayMs - 86400000 * 2,
@@ -381,6 +384,7 @@ export function loadTestData() {
       id: "todo-25",
       text: "Finish reading design book",
       completed: true,
+      completedAt: now - 3600000 * 5, // Completed 5 hours ago
       createdAt: now - 86400000 * 30,
       type: "Task",
       dueDate: todayMs - 86400000 * 5,
@@ -391,6 +395,7 @@ export function loadTestData() {
       id: "todo-26",
       text: "Weekly team sync",
       completed: true,
+      completedAt: now - 3600000 * 6, // Completed 6 hours ago
       createdAt: now - 86400000 * 7,
       type: "Meeting",
       dueDate: todayMs - 86400000 * 7,
