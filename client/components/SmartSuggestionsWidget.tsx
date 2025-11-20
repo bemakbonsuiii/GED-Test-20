@@ -56,13 +56,33 @@ export const SmartSuggestionsWidget: React.FC<SmartSuggestionsWidgetProps> = ({
 
     const incompleteTodos = relevantTodos.filter(t => !t.completed);
 
-    // 1. Detect stale todos (created more than 7 days ago, no action)
+    // 1. Suggest items due tomorrow (highest priority for suggestions)
+    const tomorrowTodos = incompleteTodos.filter(t => {
+      if (!t.dueDate) return false;
+      const dueTime = typeof t.dueDate === 'string' ? new Date(t.dueDate).getTime() : t.dueDate;
+      const dueDate = new Date(dueTime);
+      return isTomorrow(dueDate);
+    });
+
+    tomorrowTodos.forEach(todo => {
+      suggestions.push({
+        id: `tomorrow-${todo.id}`,
+        type: "upcoming-deadline",
+        message: `Due tomorrow: "${todo.text}"${todo.dueTime ? ` at ${todo.dueTime}` : ''}`,
+        icon: Calendar,
+        color: "text-blue-600 dark:text-blue-400",
+        priority: 1,
+        todoId: todo.id,
+      });
+    });
+
+    // 2. Detect stale todos (created more than 7 days ago, no action)
     const staleTodos = incompleteTodos.filter(t => {
       const daysSinceCreated = differenceInDays(new Date(), new Date(t.createdAt));
       return daysSinceCreated >= 7;
     });
 
-    staleTodos.slice(0, 2).forEach(todo => {
+    staleTodos.slice(0, 3).forEach(todo => {
       const daysSinceCreated = differenceInDays(new Date(), new Date(todo.createdAt));
       suggestions.push({
         id: `stale-${todo.id}`,
@@ -70,7 +90,7 @@ export const SmartSuggestionsWidget: React.FC<SmartSuggestionsWidgetProps> = ({
         message: `"${todo.text}" has been sitting for ${daysSinceCreated} days. Consider breaking it down or scheduling it.`,
         icon: Clock,
         color: "text-amber-600 dark:text-amber-400",
-        priority: 3,
+        priority: 4,
         todoId: todo.id,
       });
     });
