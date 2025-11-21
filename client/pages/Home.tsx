@@ -212,20 +212,7 @@ const Home = () => {
   const [todos, setTodos] = useState<Todo[]>(() => {
     try {
       const saved = localStorage.getItem("todos");
-      if (!saved) return [];
-      const parsed = JSON.parse(saved);
-      // Force reset: Set ALL completed todos to yesterday to reset daily progress
-      const yesterday = Date.now() - 86400000; // 24 hours ago
-      const migrated = parsed.map((todo: Todo) => {
-        if (todo.completed) {
-          return {
-            ...todo,
-            completedAt: yesterday,
-          };
-        }
-        return todo;
-      });
-      return migrated;
+      return saved ? JSON.parse(saved) : [];
     } catch (error) {
       console.error("Error loading todos from localStorage:", error);
       return [];
