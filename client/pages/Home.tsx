@@ -1302,7 +1302,7 @@ const Home = () => {
         workspace === "everything"
           ? "all workspaces"
           : `the ${workspace} workspace`;
-      const autoPrioritizePrompt = `Analyze all my to-dos in ${workspaceLabel} and automatically select ${itemCount} most important items I should focus on today. You MUST suggest EXACTLY ${itemCount} item${itemCount === 1 ? '' : 's'}.
+      const autoPrioritizePrompt = `Analyze all my to-dos in ${workspaceLabel} and automatically select ${itemCount} most important items I should focus on today. You MUST suggest EXACTLY ${itemCount} item${itemCount === 1 ? "" : "s"}.
 
 PRIORITY ORDER (STRICT):
 1. OVERDUE items MUST be prioritized FIRST above everything else
@@ -2061,7 +2061,9 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
     const completedToday = todos.filter((t) => {
       if (!t.completed || !t.completedAt) return false;
       // Check if the todo was completed today (not just due today)
-      return t.completedAt >= today.getTime() && t.completedAt <= todayEnd.getTime();
+      return (
+        t.completedAt >= today.getTime() && t.completedAt <= todayEnd.getTime()
+      );
     });
 
     return {
@@ -2110,7 +2112,10 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
 
     const completedActionable = allActionableTodos.filter((t) => {
       if (!t.completed || !t.completedAt) return false;
-      return t.completedAt >= todayStart.getTime() && t.completedAt <= todayEnd.getTime();
+      return (
+        t.completedAt >= todayStart.getTime() &&
+        t.completedAt <= todayEnd.getTime()
+      );
     });
 
     // Denominator: Incomplete actionable todos
@@ -2264,14 +2269,17 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
       if (!t.completed || !t.completedAt) return false;
       // Count todos completed today, or priority items that are completed
       if (t.isPriority) return true;
-      return t.completedAt >= today.getTime() && t.completedAt <= todayEnd.getTime();
+      return (
+        t.completedAt >= today.getTime() && t.completedAt <= todayEnd.getTime()
+      );
     });
 
     // Completed overdue tasks (completed today, but were overdue)
     const completedOverdue = filteredByProject.filter((t) => {
       if (!t.completed || !t.completedAt) return false;
       // Check if completed today
-      if (t.completedAt < today.getTime() || t.completedAt > todayEnd.getTime()) return false;
+      if (t.completedAt < today.getTime() || t.completedAt > todayEnd.getTime())
+        return false;
       // And was overdue when completed
       if (!t.dueDate) return false;
       const dueTime =
@@ -2614,7 +2622,9 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
     const completedToday = wsTodos.filter((t) => {
       if (!t.completed || !t.completedAt) return false;
       // Check if the todo was completed today
-      return t.completedAt >= today.getTime() && t.completedAt <= todayEnd.getTime();
+      return (
+        t.completedAt >= today.getTime() && t.completedAt <= todayEnd.getTime()
+      );
     });
 
     // Actionable tasks for this workspace
@@ -2699,7 +2709,9 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
     const completedToday = projectTodos.filter((t) => {
       if (!t.completed || !t.completedAt) return false;
       // Check if the todo was completed today
-      return t.completedAt >= today.getTime() && t.completedAt <= todayEnd.getTime();
+      return (
+        t.completedAt >= today.getTime() && t.completedAt <= todayEnd.getTime()
+      );
     });
 
     // Actionable tasks for this project
@@ -4069,7 +4081,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
 
             {/* Hidden widget to calculate count */}
             {!focusMode && (
-              <div style={{ display: 'none' }}>
+              <div style={{ display: "none" }}>
                 <SmartSuggestionsWidget
                   todos={autoAlerts ? todos : cachedAlertsTodos}
                   workspace={workspace}
@@ -4305,13 +4317,28 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => { setAutoPrioritizeCount(1); autoPrioritize(1); }}>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setAutoPrioritizeCount(1);
+                              autoPrioritize(1);
+                            }}
+                          >
                             Prioritize 1 item
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => { setAutoPrioritizeCount(3); autoPrioritize(3); }}>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setAutoPrioritizeCount(3);
+                              autoPrioritize(3);
+                            }}
+                          >
                             Prioritize 3 items
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => { setAutoPrioritizeCount(5); autoPrioritize(5); }}>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setAutoPrioritizeCount(5);
+                              autoPrioritize(5);
+                            }}
+                          >
                             Prioritize 5 items
                           </DropdownMenuItem>
                         </DropdownMenuContent>
