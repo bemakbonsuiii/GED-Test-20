@@ -411,7 +411,9 @@ const Home = () => {
         // Mark that we've done the daily reset for today
         if (lastResetDate !== todayDateString) {
           localStorage.setItem("last-daily-reset", todayDateString);
-          console.log("Daily reset complete: Set old completed todos to yesterday");
+          console.log(
+            "Daily reset complete: Set old completed todos to yesterday",
+          );
         }
       } catch (e) {
         console.error("Failed to parse todos from localStorage");
@@ -5069,8 +5071,8 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                         />
                       </div>
                       <p className="text-xs text-muted-foreground">
-                        To-dos due today ��� {getDailyTasksMetrics().percentage}%
-                        complete
+                        To-dos due today ��� {getDailyTasksMetrics().percentage}
+                        % complete
                       </p>
                     </div>
 

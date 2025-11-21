@@ -37,36 +37,36 @@ export function loadTestData() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const todayMs = today.getTime();
-  
+
   const projects: Project[] = [
     {
       id: "proj-1",
       name: "Website Redesign",
       description: "Complete overhaul of company website with new branding",
       workspace: "work",
-      createdAt: now - 86400000 * 10
+      createdAt: now - 86400000 * 10,
     },
     {
       id: "proj-2",
       name: "Q1 Marketing Campaign",
       description: "Launch new product marketing campaign for Q1",
       workspace: "work",
-      createdAt: now - 86400000 * 15
+      createdAt: now - 86400000 * 15,
     },
     {
       id: "proj-3",
       name: "Personal Finance",
       description: "Get finances organized and plan budget",
       workspace: "personal",
-      createdAt: now - 86400000 * 5
+      createdAt: now - 86400000 * 5,
     },
     {
       id: "proj-4",
       name: "Photography Portfolio",
       description: "Build online portfolio for photography work",
       workspace: "creative",
-      createdAt: now - 86400000 * 20
-    }
+      createdAt: now - 86400000 * 20,
+    },
   ];
 
   const todos: Todo[] = [
@@ -84,7 +84,7 @@ export function loadTestData() {
       priority: "P0",
       notes: "Need to include metrics from all departments",
       isPriority: true,
-      priorityOrder: 0
+      priorityOrder: 0,
     },
     {
       id: "todo-2",
@@ -99,7 +99,7 @@ export function loadTestData() {
       priority: "P0",
       links: "Figma|https://figma.com/mockups",
       isPriority: true,
-      priorityOrder: 1
+      priorityOrder: 1,
     },
     {
       id: "todo-3",
@@ -113,9 +113,9 @@ export function loadTestData() {
       priority: "P0",
       notes: "Users reporting errors on checkout page",
       isPriority: true,
-      priorityOrder: 2
+      priorityOrder: 2,
     },
-    
+
     // Meetings with children
     {
       id: "todo-4",
@@ -128,7 +128,7 @@ export function loadTestData() {
       workspace: "work",
       priority: "P1",
       agenda: "Review last sprint, plan upcoming tasks, assign story points",
-      links: "Zoom|https://zoom.us/j/123456"
+      links: "Zoom|https://zoom.us/j/123456",
     },
     {
       id: "todo-5",
@@ -142,7 +142,7 @@ export function loadTestData() {
       priority: "P1",
       parentId: "todo-4",
       isPriority: true,
-      priorityOrder: 3
+      priorityOrder: 3,
     },
     {
       id: "todo-6",
@@ -156,7 +156,7 @@ export function loadTestData() {
       priority: "P1",
       parentId: "todo-4",
       isPriority: true,
-      priorityOrder: 4
+      priorityOrder: 4,
     },
     {
       id: "todo-7",
@@ -170,7 +170,7 @@ export function loadTestData() {
       workspace: "work",
       priority: "P0",
       agenda: "Present final designs and timeline",
-      links: "Google Meet|https://meet.google.com/abc-defg-hij"
+      links: "Google Meet|https://meet.google.com/abc-defg-hij",
     },
     {
       id: "todo-8",
@@ -182,7 +182,7 @@ export function loadTestData() {
       dueDate: todayMs - 86400000,
       workspace: "work",
       priority: "P0",
-      parentId: "todo-7"
+      parentId: "todo-7",
     },
     {
       id: "todo-9",
@@ -194,7 +194,7 @@ export function loadTestData() {
       dueTime: "18:00",
       workspace: "work",
       priority: "P0",
-      parentId: "todo-7"
+      parentId: "todo-7",
     },
 
     // Work tasks - various priorities
@@ -209,7 +209,7 @@ export function loadTestData() {
       project: "Website Redesign",
       workspace: "work",
       priority: "P2",
-      notes: "Update API docs with new endpoints"
+      notes: "Update API docs with new endpoints",
     },
     {
       id: "todo-11",
@@ -221,7 +221,7 @@ export function loadTestData() {
       dueTime: "16:00",
       workspace: "work",
       priority: "P1",
-      links: "GitHub|https://github.com/company/repo/pull/234"
+      links: "GitHub|https://github.com/company/repo/pull/234",
     },
     {
       id: "todo-12",
@@ -231,7 +231,7 @@ export function loadTestData() {
       type: "Task",
       workspace: "work",
       priority: "P2",
-      project: "Website Redesign"
+      project: "Website Redesign",
     },
     {
       id: "todo-13",
@@ -243,7 +243,7 @@ export function loadTestData() {
       dueTime: "23:59",
       workspace: "work",
       priority: "P1",
-      notes: "Use GitHub Actions for automated testing and deployment"
+      notes: "Use GitHub Actions for automated testing and deployment",
     },
 
     // Personal tasks
@@ -257,7 +257,7 @@ export function loadTestData() {
       meetingTime: "9:00 AM",
       workspace: "personal",
       priority: "P0",
-      agenda: "Annual checkup"
+      agenda: "Annual checkup",
     },
     {
       id: "todo-15",
@@ -270,7 +270,7 @@ export function loadTestData() {
       project: "Personal Finance",
       workspace: "personal",
       priority: "P1",
-      notes: "Gather all receipts and forms for tax season"
+      notes: "Gather all receipts and forms for tax season",
     },
     {
       id: "todo-16",
@@ -281,7 +281,7 @@ export function loadTestData() {
       dueDate: todayMs,
       dueTime: "19:00",
       workspace: "personal",
-      priority: "P1"
+      priority: "P1",
     },
     {
       id: "todo-17",
@@ -293,7 +293,7 @@ export function loadTestData() {
       dueTime: "18:00",
       workspace: "personal",
       priority: "P2",
-      notes: "Milk, eggs, bread, vegetables"
+      notes: "Milk, eggs, bread, vegetables",
     },
     {
       id: "todo-18",
@@ -304,7 +304,7 @@ export function loadTestData() {
       project: "Personal Finance",
       workspace: "personal",
       priority: "P2",
-      links: "Vanguard|https://investor.vanguard.com"
+      links: "Vanguard|https://investor.vanguard.com",
     },
     {
       id: "todo-19",
@@ -316,7 +316,7 @@ export function loadTestData() {
       dueTime: "23:59",
       workspace: "personal",
       priority: "P2",
-      notes: "Research destinations, book flights and hotels"
+      notes: "Research destinations, book flights and hotels",
     },
 
     // Creative tasks
@@ -331,7 +331,7 @@ export function loadTestData() {
       project: "Photography Portfolio",
       workspace: "creative",
       priority: "P1",
-      notes: "Use Lightroom for initial edits"
+      notes: "Use Lightroom for initial edits",
     },
     {
       id: "todo-21",
@@ -343,7 +343,7 @@ export function loadTestData() {
       dueTime: "23:59",
       workspace: "creative",
       priority: "P0",
-      notes: "Client wants 3 options to choose from"
+      notes: "Client wants 3 options to choose from",
     },
     {
       id: "todo-22",
@@ -354,7 +354,7 @@ export function loadTestData() {
       project: "Photography Portfolio",
       workspace: "creative",
       priority: "P2",
-      links: "Portfolio|https://myportfolio.com"
+      links: "Portfolio|https://myportfolio.com",
     },
     {
       id: "todo-23",
@@ -364,7 +364,7 @@ export function loadTestData() {
       type: "Quick Win",
       workspace: "creative",
       priority: "P2",
-      links: "Tutorial|https://youtube.com/watch?v=example"
+      links: "Tutorial|https://youtube.com/watch?v=example",
     },
 
     // Completed tasks (for metrics)
@@ -378,7 +378,7 @@ export function loadTestData() {
       dueDate: todayMs - 86400000 * 2,
       dueTime: "09:00",
       workspace: "work",
-      priority: "P1"
+      priority: "P1",
     },
     {
       id: "todo-25",
@@ -389,7 +389,7 @@ export function loadTestData() {
       type: "Task",
       dueDate: todayMs - 86400000 * 5,
       workspace: "personal",
-      priority: "P2"
+      priority: "P2",
     },
     {
       id: "todo-26",
@@ -402,9 +402,9 @@ export function loadTestData() {
       meetingTime: "10:00 AM",
       workspace: "work",
       priority: "P1",
-      agenda: "Discuss weekly progress and blockers"
+      agenda: "Discuss weekly progress and blockers",
     },
-    
+
     // More future tasks
     {
       id: "todo-27",
@@ -416,7 +416,7 @@ export function loadTestData() {
       dueTime: "23:59",
       workspace: "work",
       priority: "P2",
-      notes: "Compare React, Vue, and Svelte for next project"
+      notes: "Compare React, Vue, and Svelte for next project",
     },
     {
       id: "todo-28",
@@ -425,7 +425,7 @@ export function loadTestData() {
       createdAt: now - 86400000 * 14,
       type: "Quick Win",
       workspace: "personal",
-      priority: "P2"
+      priority: "P2",
     },
     {
       id: "todo-29",
@@ -438,7 +438,7 @@ export function loadTestData() {
       workspace: "work",
       priority: "P1",
       agenda: "Set goals and priorities for next quarter",
-      project: "Q1 Marketing Campaign"
+      project: "Q1 Marketing Campaign",
     },
     {
       id: "todo-30",
@@ -450,7 +450,7 @@ export function loadTestData() {
       dueTime: "20:00",
       workspace: "personal",
       priority: "P1",
-      notes: "Use external hard drive and cloud backup"
+      notes: "Use external hard drive and cloud backup",
     },
     // Deliverable with incomplete blocker (to test deadline widget indicators)
     {
@@ -464,7 +464,7 @@ export function loadTestData() {
       project: "Website Redesign",
       workspace: "work",
       priority: "P1",
-      notes: "Need all approvals before submission"
+      notes: "Need all approvals before submission",
     },
     {
       id: "todo-32",
@@ -477,7 +477,7 @@ export function loadTestData() {
       workspace: "work",
       priority: "P0",
       parentId: "todo-31",
-      notes: "Waiting on legal team review"
+      notes: "Waiting on legal team review",
     },
     {
       id: "todo-33",
@@ -488,7 +488,7 @@ export function loadTestData() {
       workspace: "work",
       priority: "P1",
       parentId: "todo-32",
-      notes: "Need to complete before legal review"
+      notes: "Need to complete before legal review",
     },
     // Deliverable with regular dependencies (not blockers)
     {
@@ -502,7 +502,7 @@ export function loadTestData() {
       project: "Q1 Marketing Campaign",
       workspace: "work",
       priority: "P0",
-      notes: "All materials must be ready before launch"
+      notes: "All materials must be ready before launch",
     },
     {
       id: "todo-35",
@@ -514,7 +514,7 @@ export function loadTestData() {
       dueTime: "12:00",
       workspace: "work",
       priority: "P1",
-      parentId: "todo-34"
+      parentId: "todo-34",
     },
     {
       id: "todo-36",
@@ -526,8 +526,8 @@ export function loadTestData() {
       dueTime: "14:00",
       workspace: "work",
       priority: "P1",
-      parentId: "todo-34"
-    }
+      parentId: "todo-34",
+    },
   ];
 
   return { todos, projects };
