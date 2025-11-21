@@ -212,7 +212,19 @@ const Home = () => {
   const [todos, setTodos] = useState<Todo[]>(() => {
     try {
       const saved = localStorage.getItem("todos");
-      return saved ? JSON.parse(saved) : [];
+      if (!saved) return [];
+      const parsed = JSON.parse(saved);
+      // Migrate: Set completedAt for old completed todos (set to 7 days ago)
+      const migrated = parsed.map((todo: Todo) => {
+        if (todo.completed && !todo.completedAt) {
+          return {
+            ...todo,
+            completedAt: Date.now() - 86400000 * 7, // 7 days ago
+          };
+        }
+        return todo;
+      });
+      return migrated;
     } catch (error) {
       console.error("Error loading todos from localStorage:", error);
       return [];
