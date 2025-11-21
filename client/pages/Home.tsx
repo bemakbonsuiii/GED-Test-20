@@ -376,24 +376,45 @@ const Home = () => {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        const migrated = parsed.map((todo: any) => ({
-          ...todo,
-          type: todo.isMeeting ? "Meeting" : todo.type || "Task",
-          workspace:
-            todo.workspace === "personal" ||
-            todo.workspace === "work" ||
-            todo.workspace === "creative"
-              ? todo.workspace
-              : "personal",
-          priority: todo.priority || "P2",
-          agenda: todo.agenda,
-          meetingTime: todo.meetingTime,
-          dueTime: todo.dueTime,
-          isPriority: todo.isPriority || false,
-          priorityOrder: todo.priorityOrder,
-          startDate: todo.startDate,
-        }));
+
+        // ONE-TIME MIGRATION: Force reset all completedAt to yesterday
+        const MIGRATION_VERSION = "reset-completed-2024";
+        const migrationDone = localStorage.getItem("migration-" + MIGRATION_VERSION);
+        const yesterday = Date.now() - 86400000;
+
+        const migrated = parsed.map((todo: any) => {
+          const base = {
+            ...todo,
+            type: todo.isMeeting ? "Meeting" : todo.type || "Task",
+            workspace:
+              todo.workspace === "personal" ||
+              todo.workspace === "work" ||
+              todo.workspace === "creative"
+                ? todo.workspace
+                : "personal",
+            priority: todo.priority || "P2",
+            agenda: todo.agenda,
+            meetingTime: todo.meetingTime,
+            dueTime: todo.dueTime,
+            isPriority: todo.isPriority || false,
+            priorityOrder: todo.priorityOrder,
+            startDate: todo.startDate,
+          };
+
+          // Force reset completedAt for all completed todos if migration not done
+          if (!migrationDone && todo.completed) {
+            return { ...base, completedAt: yesterday };
+          }
+
+          return base;
+        });
+
         setTodos(migrated);
+
+        if (!migrationDone) {
+          localStorage.setItem("migration-" + MIGRATION_VERSION, "done");
+          console.log("Migration complete: Reset all completed todos to yesterday");
+        }
       } catch (e) {
         console.error("Failed to parse todos from localStorage");
       }
