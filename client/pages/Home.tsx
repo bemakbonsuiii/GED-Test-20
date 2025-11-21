@@ -364,10 +364,14 @@ const Home = () => {
       try {
         const parsed = JSON.parse(saved);
 
-        // ONE-TIME MIGRATION: Force reset all completedAt to yesterday
-        const MIGRATION_VERSION = "reset-completed-2024";
-        const migrationDone = localStorage.getItem("migration-" + MIGRATION_VERSION);
+        // DAILY RESET: Reset old completedAt timestamps to yesterday if they're from previous days
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const todayStart = today.getTime();
         const yesterday = Date.now() - 86400000;
+
+        const lastResetDate = localStorage.getItem("last-daily-reset");
+        const todayDateString = today.toDateString();
 
         const migrated = parsed.map((todo: any) => {
           const base = {
@@ -388,9 +392,12 @@ const Home = () => {
             startDate: todo.startDate,
           };
 
-          // Force reset completedAt for all completed todos if migration not done
-          if (!migrationDone && todo.completed) {
-            return { ...base, completedAt: yesterday };
+          // If it's a new day and todo is completed with old/missing completedAt, reset to yesterday
+          if (lastResetDate !== todayDateString && todo.completed) {
+            // If completedAt is missing or from before today, set to yesterday
+            if (!todo.completedAt || todo.completedAt < todayStart) {
+              return { ...base, completedAt: yesterday };
+            }
           }
 
           return base;
@@ -398,9 +405,10 @@ const Home = () => {
 
         setTodos(migrated);
 
-        if (!migrationDone) {
-          localStorage.setItem("migration-" + MIGRATION_VERSION, "done");
-          console.log("Migration complete: Reset all completed todos to yesterday");
+        // Mark that we've done the daily reset for today
+        if (lastResetDate !== todayDateString) {
+          localStorage.setItem("last-daily-reset", todayDateString);
+          console.log("Daily reset complete: Set old completed todos to yesterday");
         }
       } catch (e) {
         console.error("Failed to parse todos from localStorage");
