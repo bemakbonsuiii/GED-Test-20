@@ -5170,7 +5170,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                     )}
                     <Badge variant="secondary" className="ml-auto text-xs">
                       {(() => {
-                        // Count all todos in workspace, including children
+                        // Count all incomplete todos in workspace, including children
                         const allWorkspaceTodos =
                           workspace === "everything"
                             ? todos
@@ -5182,7 +5182,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                               (t) => t.project === selectedProjectPage,
                             )
                           : allWorkspaceTodos;
-                        return filtered.length;
+                        return filtered.filter((t) => !t.completed).length;
                       })()}
                     </Badge>
                     <Button
