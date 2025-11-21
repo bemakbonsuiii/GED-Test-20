@@ -214,12 +214,13 @@ const Home = () => {
       const saved = localStorage.getItem("todos");
       if (!saved) return [];
       const parsed = JSON.parse(saved);
-      // Migrate: Set completedAt for old completed todos (set to 7 days ago)
+      // Force reset: Set ALL completed todos to yesterday to reset daily progress
+      const yesterday = Date.now() - 86400000; // 24 hours ago
       const migrated = parsed.map((todo: Todo) => {
-        if (todo.completed && !todo.completedAt) {
+        if (todo.completed) {
           return {
             ...todo,
-            completedAt: Date.now() - 86400000 * 7, // 7 days ago
+            completedAt: yesterday,
           };
         }
         return todo;
