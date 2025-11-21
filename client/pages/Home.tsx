@@ -2121,7 +2121,8 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
     // Denominator: Incomplete actionable todos
     const incompleteActionable = allActionableTodos.filter((t) => !t.completed);
 
-    const total = incompleteActionable.length;
+    // Total for the day = incomplete + completed today
+    const total = incompleteActionable.length + completedActionable.length;
     const completed = completedActionable.length;
 
     return {
@@ -5036,7 +5037,7 @@ IMPORTANT: You MUST return between 3-5 todo IDs. Return ONLY the todo IDs, no ex
                         />
                       </div>
                       <p className="text-xs text-muted-foreground">
-                        To-dos due today • {getDailyTasksMetrics().percentage}%
+                        To-dos due today ��� {getDailyTasksMetrics().percentage}%
                         complete
                       </p>
                     </div>
