@@ -368,7 +368,10 @@ const Home = () => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const todayStart = today.getTime();
-        const yesterday = Date.now() - 86400000;
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        yesterday.setHours(12, 0, 0, 0); // Set to noon yesterday
+        const yesterdayTime = yesterday.getTime();
 
         const lastResetDate = localStorage.getItem("last-daily-reset");
         const todayDateString = today.toDateString();
@@ -396,7 +399,7 @@ const Home = () => {
           if (lastResetDate !== todayDateString && todo.completed) {
             // If completedAt is missing or from before today, set to yesterday
             if (!todo.completedAt || todo.completedAt < todayStart) {
-              return { ...base, completedAt: yesterday };
+              return { ...base, completedAt: yesterdayTime };
             }
           }
 
